@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Set : MonoBehaviour {
-
-    float stepTimer = 0;
-
+    
 	void Start()
 	{
 		// Default position not valid? Then it's game over
@@ -16,8 +14,30 @@ public class Set : MonoBehaviour {
 		}
 	}
 
-	void Update()
+    private void OnDrawGizmos()
+    {
+        Vector3 source = new Vector3(.5f, -.5f);
+        Vector3 target = new Vector3(.5f, 15.5f);
+
+        Gizmos.color = new Color(1, 1, 1, .2F);
+
+        for (int i = 0; i < 9; i++){
+            Gizmos.DrawLine(source, target);
+            source.x += 1;
+            target.x += 1;
+        }
+
+    }
+
+    void Update()
 	{
+        CheckMoveLeft();
+        CheckMoveRight();
+        CheckRotate();
+        CheckFallDown();
+	}
+
+    void CheckMoveLeft(){
 		// Move Left
 		if (Input.GetKeyDown(KeyCode.LeftArrow))
 		{
@@ -32,8 +52,11 @@ public class Set : MonoBehaviour {
 				// Its not valid. revert.
 				transform.position += new Vector3(1, 0, 0);
 		}
-		// Move Right
-		else if (Input.GetKeyDown(KeyCode.RightArrow))
+    }
+
+    void CheckMoveRight(){
+       // Move Right
+        if (Input.GetKeyDown(KeyCode.RightArrow))
 		{
 			// Modify position
 			transform.position += new Vector3(1, 0, 0);
@@ -45,9 +68,12 @@ public class Set : MonoBehaviour {
 			else
 				// It's not valid. revert.
 				transform.position += new Vector3(-1, 0, 0);
-		}
-		// Rotate
-		else if (Input.GetKeyDown(KeyCode.UpArrow))
+		} 
+    }
+
+    void CheckRotate(){
+        // Rotate
+        if (Input.GetKeyDown(KeyCode.X))
 		{
 			transform.Rotate(0, 0, -90);
 
@@ -59,35 +85,35 @@ public class Set : MonoBehaviour {
 				// It's not valid. revert.
 				transform.Rotate(0, 0, 90);
 		}
+    }
+
+    void CheckFallDown(){
 		// Fall
-		else if (Input.GetKeyDown(KeyCode.DownArrow) || Time.time - stepTimer >= 1)
+		if (Input.GetKeyDown(KeyCode.DownArrow))
 		{
 			// Modify position
 			transform.position += new Vector3(0, -1, 0);
 
 			// See if valid
-			if (LegalGridPos())
+            while (LegalGridPos())
 			{
 				// It's valid. Update grid.
 				UpdateGrid();
+                transform.position += new Vector3(0, -1, 0);
 			}
-			else
-			{
-				// It's not valid. revert.
-				transform.position += new Vector3(0, 1, 0);
+			// It's not valid. revert.
+			transform.position += new Vector3(0, 1, 0);
 
-				// Clear filled horizontal lines
-				Grid.DeleteFullRows();
+			// Clear filled horizontal lines
+			Grid.DeleteFullRows();
 
-				// Spawn next Group
-				FindObjectOfType<Spawn>().CreateNext();
+			// Spawn next Group
+			FindObjectOfType<Spawn>().CreateNext();
 
-				// Disable script
-				enabled = false;
-			}
-			stepTimer = Time.time;
+			// Disable script
+			enabled = false;
 		}
-	}
+    }
 
 	bool LegalGridPos()
 	{
