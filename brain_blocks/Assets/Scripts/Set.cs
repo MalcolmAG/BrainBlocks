@@ -3,16 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Set : MonoBehaviour {
-    
-	void Start()
-	{
-		// Default position not valid? Then it's game over
-        if (!LegalGridPos())
-		{
-			Debug.Log("GAME OVER");
-			Destroy(gameObject);
-		}
-	}
 
     private void OnDrawGizmos()
     {
@@ -29,13 +19,58 @@ public class Set : MonoBehaviour {
 
     }
 
+    private bool orientation;
+
+    private void Start()
+    {
+        orientation = true;
+    }
+
     void Update()
 	{
-        CheckMoveLeft();
-        CheckMoveRight();
-        CheckRotate();
-        CheckFallDown();
+        if (orientation)
+        {
+            CheckRotate();
+            CheckSnap();
+        }
+        else
+        {
+            CheckMoveLeft();
+            CheckMoveRight();
+
+            CheckFallDown();
+            // Default position not valid? Then it's game over
+            if (!LegalGridPos())
+            {
+                Debug.Log("GAME OVER");
+                Destroy(gameObject);
+            }
+        }
 	}
+
+	void CheckRotate(){
+		// Rotate
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+		{
+			transform.Rotate(0, 0, -90);
+
+			// See if valid
+			if (LegalGridPos())
+				// It's valid. Update grid.
+				UpdateGrid();
+			else
+				// It's not valid. revert.
+				transform.Rotate(0, 0, 90);
+		}
+	}
+
+    void CheckSnap(){
+        if (Input.GetKeyDown(KeyCode.DownArrow)){
+            //snap to line
+            orientation = false;
+            
+        }
+    }
 
     void CheckMoveLeft(){
 		// Move Left
@@ -71,21 +106,7 @@ public class Set : MonoBehaviour {
 		} 
     }
 
-    void CheckRotate(){
-        // Rotate
-        if (Input.GetKeyDown(KeyCode.X))
-		{
-			transform.Rotate(0, 0, -90);
 
-			// See if valid
-			if (LegalGridPos())
-				// It's valid. Update grid.
-				UpdateGrid();
-			else
-				// It's not valid. revert.
-				transform.Rotate(0, 0, 90);
-		}
-    }
 
     void CheckFallDown(){
 		// Fall
