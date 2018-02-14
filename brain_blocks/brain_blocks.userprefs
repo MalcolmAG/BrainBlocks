@@ -1,7 +1,7 @@
 ﻿<Properties StartupConfiguration="{1CE5CE23-5434-AF8A-9ABD-DC12C5007FFD}|">
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Set.cs">
     <Files>
-      <File FileName="Assets/Scripts/Set.cs" Line="203" Column="30" />
+      <File FileName="Assets/Scripts/Set.cs" Line="228" Column="14" />
       <File FileName="Assets/Scripts/Grid.cs" Line="10" Column="32" />
       <File FileName="Assets/Scripts/Spawn.cs" Line="18" Column="49" />
     </Files>

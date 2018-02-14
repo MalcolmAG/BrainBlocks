@@ -128,14 +128,9 @@ public class Set : MonoBehaviour {
 		} 
     }
 
-
-
     void CheckFallDown(){
 		// Fall
-		if (Input.GetKeyDown(KeyCode.DownArrow))
-		{
-            //Remove ghost
-            ghost.transform.position = ghostStandByPos;
+        if (Input.GetKeyDown(KeyCode.DownArrow)){
 			// Modify position
 			transform.position += new Vector3(0, -1, 0);
 
@@ -154,6 +149,9 @@ public class Set : MonoBehaviour {
 
 			// Spawn next Group
 			FindObjectOfType<Spawn>().CreateNext();
+
+            //Check Game Over
+            CheckGameOver();
 
 			// Disable script
 			enabled = false;
@@ -197,6 +195,12 @@ public class Set : MonoBehaviour {
 
     void UpdateGhost()
     {
+        if (!enabled)
+        {
+            //Remove ghost
+            ghost.transform.position = ghostStandByPos;
+            return;
+        }
         ghost.transform.position = transform.position;
         ghost.transform.rotation = transform.rotation;
 
@@ -218,6 +222,14 @@ public class Set : MonoBehaviour {
             if (dropping)
                 //Continue Dropping
                 ghost.transform.position += Vector3.down;
+        }
+    }
+
+    void CheckGameOver(){
+        foreach (Transform child in transform){
+            Vector2 v = Grid.ToGrid(child.position);
+            if (v.y >= snapPos)
+                Debug.Log("GAME OVER");
         }
     }
 
