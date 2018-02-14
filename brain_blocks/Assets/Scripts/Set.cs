@@ -3,39 +3,96 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Set : MonoBehaviour {
-    
-	void Start()
-	{
-		// Default position not valid? Then it's game over
-        if (!LegalGridPos())
+
+    public GameObject ghost;
+
+    private bool orientation;
+
+    private readonly float snapPos = 16f;
+
+    private readonly float unSnapPos = 18f;
+
+    private readonly Vector2 ghostStandByPos = Vector2.down * 10;
+
+    private void Start(){
+        orientation = true;
+        ghost = GameObject.Find(tag + "_ghost");
+    }
+
+    void Update(){
+        if (orientation)
+        {
+            CheckRotate();
+            CheckSnap();
+        }
+        else
+        {
+            CheckUnSnap();
+            CheckMoveLeft();
+            CheckMoveRight();
+
+            CheckFallDown();
+            // Default position not valid? Then it's game over
+            if (!LegalGridPos())
+            {
+                Debug.Log("GAME OVER");
+                Destroy(gameObject);
+            }
+        }
+        if(enabled) UpdateGhost();
+
+  	}
+
+	void CheckRotate(){
+		// Rotate
+        if (Input.GetKeyDown(KeyCode.UpArrow))
 		{
-			Debug.Log("GAME OVER");
-			Destroy(gameObject);
+            
+            transform.Rotate(0, 0, -90);
+            ghost.transform.Rotate(0, 0, -90);
+			// See if valid
+			if (LegalGridPos())
+				// It's valid. Update grid.
+				UpdateGrid();
+			else
+				// It's not valid. revert.
+				transform.Rotate(0, 0, 90);
+                ghost.transform.Rotate(0, 0, 90);
+
 		}
 	}
 
-    private void OnDrawGizmos()
-    {
-        Vector3 source = new Vector3(.5f, -.5f);
-        Vector3 target = new Vector3(.5f, 15.5f);
-
-        Gizmos.color = new Color(1, 1, 1, .2F);
-
-        for (int i = 0; i < 9; i++){
-            Gizmos.DrawLine(source, target);
-            source.x += 1;
-            target.x += 1;
+    void CheckSnap(){
+        //Snap orientated group to top of play field
+        if (Input.GetKeyDown(KeyCode.DownArrow)){
+            orientation = false;
+            bool snap = true;
+            while (snap){
+                //Check if block is at the top
+    			foreach (Transform child in transform)
+    			{
+                    if (Grid.ToGrid(child.position).y == snapPos)
+    				{
+    					snap = false;
+    				}
+    			}
+                //Move down one and update if still snapping
+                if (snap)
+                {
+                    transform.position += new Vector3(0, -1, 0);
+                    UpdateGrid();
+                }
+            }
+            
         }
-
     }
 
-    void Update()
-	{
-        CheckMoveLeft();
-        CheckMoveRight();
-        CheckRotate();
-        CheckFallDown();
-	}
+    void CheckUnSnap(){
+        if(Input.GetKeyDown(KeyCode.UpArrow)){
+            transform.position = new Vector2(transform.position.x, unSnapPos);
+            orientation = true;
+        }
+    }
 
     void CheckMoveLeft(){
 		// Move Left
@@ -71,26 +128,14 @@ public class Set : MonoBehaviour {
 		} 
     }
 
-    void CheckRotate(){
-        // Rotate
-        if (Input.GetKeyDown(KeyCode.X))
-		{
-			transform.Rotate(0, 0, -90);
 
-			// See if valid
-			if (LegalGridPos())
-				// It's valid. Update grid.
-				UpdateGrid();
-			else
-				// It's not valid. revert.
-				transform.Rotate(0, 0, 90);
-		}
-    }
 
     void CheckFallDown(){
 		// Fall
 		if (Input.GetKeyDown(KeyCode.DownArrow))
 		{
+            //Remove ghost
+            ghost.transform.position = ghostStandByPos;
 			// Modify position
 			transform.position += new Vector3(0, -1, 0);
 
@@ -149,7 +194,31 @@ public class Set : MonoBehaviour {
 			Grid.grid[(int)v.x, (int)v.y] = child;
 		}
 	}
-	
 
+    void UpdateGhost()
+    {
+        ghost.transform.position = transform.position;
+        ghost.transform.rotation = transform.rotation;
+
+        bool dropping = true;
+        while (dropping)
+        {
+            foreach (Transform child in ghost.transform)
+            {
+                Vector2 v = Grid.ToGrid(child.position);
+                if (Grid.grid[(int)v.x, (int)v.y] != null &&
+                    Grid.grid[(int)v.x, (int)v.y].parent != transform)
+                {
+                    dropping = false;
+                    //Revert
+                    ghost.transform.position += Vector3.up;
+                }
+                else if ((int)v.y == 0) dropping = false;
+            }
+            if (dropping)
+                //Continue Dropping
+                ghost.transform.position += Vector3.down;
+        }
+    }
 
 }
