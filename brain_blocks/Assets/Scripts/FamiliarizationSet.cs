@@ -2,53 +2,47 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Set : MonoBehaviour {
+public class FamiliarizationSet : MonoBehaviour {
+    
+	public GameObject ghost;
 
-    public GameObject ghost;
+	private bool orientation;
 
-    private bool orientation;
+	private readonly float snapPos = 16f;
 
-    private readonly float snapPos = 16f;
+	private readonly Vector2 ghostStandByPos = Vector2.down * 10;
 
-    private readonly float unSnapPos = 19f;
+	private void Start()
+	{
+		orientation = true;
+		ghost = GameObject.Find(tag + "_ghost");
+	}
 
-    private readonly Vector2 ghostStandByPos = Vector2.down * 10;
-
-    private void Start(){
-        orientation = true;
-        ghost = GameObject.Find(tag + "_ghost");
-    }
-
-    void Update(){
-        if (orientation)
-        {
-            CheckRotate();
-            CheckSnap();
-        }
-        else
-        {
-            CheckUnSnap();
-            CheckMoveLeft();
-            CheckMoveRight();
-
-            CheckFallDown();
-            // Default position not valid? Then it's game over
-            if (!LegalGridPos())
-            {
-                Debug.Log("GAME OVER");
-                Destroy(gameObject);
-            }
-        }
-        UpdateGhost();
-
-  	}
-
-	void CheckRotate(){
-		// Rotate
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+	void Update()
+	{
+		if (orientation)
 		{
-            
-            transform.Rotate(0, 0, -90);
+			CheckRotate();
+			CheckSnap();
+		}
+		else
+		{
+			CheckMoveLeft();
+			CheckMoveRight();
+
+			CheckFallDown();
+		}
+		UpdateGhost();
+
+	}
+
+	void CheckRotate()
+	{
+		// Rotate
+		if (Input.GetKeyDown(KeyCode.UpArrow))
+		{
+
+			transform.Rotate(0, 0, -90);
 			// See if valid
 			if (LegalGridPos())
 				// It's valid. Update grid.
@@ -59,20 +53,28 @@ public class Set : MonoBehaviour {
 		}
 	}
 
-    void CheckSnap(){
+	void CheckSnap()
+	{
         //Snap orientated group to top of play field
-        if (Input.GetKeyDown(KeyCode.DownArrow)){
-            orientation = false;
-            bool snap = true;
-            while (snap){
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            //Don't allow snap if orientation is wrong
+            if (!FindObjectOfType<FamiliarizationController>().CheckOrientation()){
+                return;
+            }   
+            //Check for correct orientation
+			orientation = false;
+			bool snap = true;
+            while (snap)
+            {
                 //Check if block is at the top
-    			foreach (Transform child in transform)
-    			{
+                foreach (Transform child in transform)
+                {
                     if (Grid.ToGrid(child.position).y == snapPos)
-    				{
-    					snap = false;
-    				}
-    			}
+                    {
+                        snap = false;
+                    }
+                }
                 //Move down one and update if still snapping
                 if (snap)
                 {
@@ -80,18 +82,12 @@ public class Set : MonoBehaviour {
                     UpdateGrid();
                 }
             }
-            
-        }
-    }
 
-    void CheckUnSnap(){
-        if(Input.GetKeyDown(KeyCode.UpArrow)){
-            transform.position = new Vector2(transform.position.x, unSnapPos);
-            orientation = true;
-        }
-    }
+		}
+	}
 
-    void CheckMoveLeft(){
+	void CheckMoveLeft()
+	{
 		// Move Left
 		if (Input.GetKeyDown(KeyCode.LeftArrow))
 		{
@@ -106,11 +102,12 @@ public class Set : MonoBehaviour {
 				// Its not valid. revert.
 				transform.position += new Vector3(1, 0, 0);
 		}
-    }
+	}
 
-    void CheckMoveRight(){
-       // Move Right
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+	void CheckMoveRight()
+	{
+		// Move Right
+		if (Input.GetKeyDown(KeyCode.RightArrow))
 		{
 			// Modify position
 			transform.position += new Vector3(1, 0, 0);
@@ -122,47 +119,52 @@ public class Set : MonoBehaviour {
 			else
 				// It's not valid. revert.
 				transform.position += new Vector3(-1, 0, 0);
-		} 
-    }
+		}
+	}
 
-    void CheckFallDown(){
+	void CheckFallDown()
+	{
 		// Fall
-        if (Input.GetKeyDown(KeyCode.DownArrow)){
-			// Modify position
-			transform.position += new Vector3(0, -1, 0);
+		if (Input.GetKeyDown(KeyCode.DownArrow))
+		{
+            if (!FindObjectOfType<FamiliarizationController>().CheckPosition()){
+                return;
+            }
+
+				// Modify position
+				transform.position += new Vector3(0, -1, 0);
 
 			// See if valid
-            while (LegalGridPos())
+			while (LegalGridPos())
 			{
 				// It's valid. Update grid.
 				UpdateGrid();
-                transform.position += new Vector3(0, -1, 0);
+				transform.position += new Vector3(0, -1, 0);
 			}
 			// It's not valid. revert.
 			transform.position += new Vector3(0, 1, 0);
+
+            Debug.Log("Here");
 
 			// Clear filled horizontal lines
 			Grid.DeleteFullRows();
 
 			// Spawn next Group
-			FindObjectOfType<Spawn>().CreateNext();
-
-            //Check Game Over
-            CheckGameOver();
+            FindObjectOfType<FamiliarizationController>().CreateNext();
 
 			// Disable script
 			enabled = false;
 		}
-    }
+	}
 
 	bool LegalGridPos()
-	{
+    {
 		foreach (Transform child in transform)
 		{
-            Vector2 v = Grid.ToGrid(child.position);
+			Vector2 v = Grid.ToGrid(child.position);
 
 			// Is the set leaving the playing field
-            if (!Grid.InsideBorder(v))
+			if (!Grid.InsideBorder(v))
 				return false;
 
 			// Block in grid cell (and not part of same group)?
@@ -185,7 +187,7 @@ public class Set : MonoBehaviour {
 		// Add new children to grid
 		foreach (Transform child in transform)
 		{
-            Vector2 v = Grid.ToGrid(child.position);
+			Vector2 v = Grid.ToGrid(child.position);
 			Grid.grid[(int)v.x, (int)v.y] = child;
 		}
 	}
@@ -222,12 +224,6 @@ public class Set : MonoBehaviour {
         }
     }
 
-    void CheckGameOver(){
-        foreach (Transform child in transform){
-            Vector2 v = Grid.ToGrid(child.position);
-            if (v.y >= snapPos)
-                Debug.Log("GAME OVER");
-        }
-    }
-
 }
+
+

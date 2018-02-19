@@ -104,6 +104,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\FamiliarizationController.cs" />
+    <Compile Include="Assets\Scripts\FamiliarizationSet.cs" />
     <Compile Include="Assets\Scripts\Grid.cs" />
     <Compile Include="Assets\Scripts\Set.cs" />
     <Compile Include="Assets\Scripts\Spawn.cs" />
