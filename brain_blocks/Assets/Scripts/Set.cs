@@ -10,7 +10,7 @@ public class Set : MonoBehaviour {
 
     private readonly float snapPos = 16f;
 
-    private readonly float unSnapPos = 18f;
+    private readonly float unSnapPos = 19f;
 
     private readonly Vector2 ghostStandByPos = Vector2.down * 10;
 
@@ -39,7 +39,7 @@ public class Set : MonoBehaviour {
                 Destroy(gameObject);
             }
         }
-        if(enabled) UpdateGhost();
+        UpdateGhost();
 
   	}
 
@@ -199,6 +199,7 @@ public class Set : MonoBehaviour {
         {
             //Remove ghost
             ghost.transform.position = ghostStandByPos;
+            Debug.Log("positon updated");
             return;
         }
         ghost.transform.position = transform.position;
