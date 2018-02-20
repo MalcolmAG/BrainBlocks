@@ -2,69 +2,75 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FamiliarizationSet : MonoBehaviour {
-    
-	public GameObject ghost;
+public class FamiliarizationSet : MonoBehaviour
+{
 
-	private bool orientation;
+    public GameObject ghost;
 
-	private readonly float snapPos = 16f;
+    private bool orientation;
 
-	private readonly Vector2 ghostStandByPos = Vector2.down * 10;
+    private bool completed;
 
-	private void Start()
-	{
-		orientation = true;
-		ghost = GameObject.Find(tag + "_ghost");
-	}
+    private readonly float snapPos = 16f;
 
-	void Update()
-	{
-		if (orientation)
-		{
-			CheckRotate();
-			CheckSnap();
-		}
-		else
-		{
-			CheckMoveLeft();
-			CheckMoveRight();
+    private readonly Vector2 ghostStandByPos = Vector2.down * 10;
 
-			CheckFallDown();
-		}
-		UpdateGhost();
+    private void Start()
+    {
+        completed = false;
+        orientation = true;
+        ghost = GameObject.Find(tag + "_ghost");
+    }
 
-	}
+    void Update()
+    {
+        if (orientation)
+        {
+            CheckRotate();
+            CheckSnap();
+        }
+        else
+        {
+            CheckMoveLeft();
+            CheckMoveRight();
 
-	void CheckRotate()
-	{
-		// Rotate
-		if (Input.GetKeyDown(KeyCode.UpArrow))
-		{
+            CheckFallDown();
+        }
+        if(!completed)
+            UpdateGhost();
 
-			transform.Rotate(0, 0, -90);
-			// See if valid
-			if (LegalGridPos())
-				// It's valid. Update grid.
-				UpdateGrid();
-			else
-				// It's not valid. revert.
-				transform.Rotate(0, 0, 90);
-		}
-	}
+    }
 
-	void CheckSnap()
-	{
+    void CheckRotate()
+    {
+        // Rotate
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+
+            transform.Rotate(0, 0, -90);
+            // See if valid
+            if (LegalGridPos())
+                // It's valid. Update grid.
+                UpdateGrid();
+            else
+                // It's not valid. revert.
+                transform.Rotate(0, 0, 90);
+        }
+    }
+
+    void CheckSnap()
+    {
         //Snap orientated group to top of play field
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             //Don't allow snap if orientation is wrong
-            if (!FindObjectOfType<FamiliarizationController>().CheckOrientation()){
+            if (!FindObjectOfType<FamiliarizationController>().CorrectOrientation()){
+                Debug.Log("checking snap");
                 return;
-            }   
+            }
             //Check for correct orientation
-			orientation = false;
-			bool snap = true;
+            orientation = false;
+            bool snap = true;
             while (snap)
             {
                 //Check if block is at the top
@@ -83,79 +89,84 @@ public class FamiliarizationSet : MonoBehaviour {
                 }
             }
 
-		}
-	}
+        }
+    }
 
-	void CheckMoveLeft()
-	{
-		// Move Left
-		if (Input.GetKeyDown(KeyCode.LeftArrow))
-		{
-			// Modify position
-			transform.position += new Vector3(-1, 0, 0);
+    void CheckMoveLeft()
+    {
+        // Move Left
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            // Modify position
+            transform.position += new Vector3(-1, 0, 0);
 
-			// See if valid
-			if (LegalGridPos())
-				// Its valid. Update grid.
-				UpdateGrid();
-			else
-				// Its not valid. revert.
-				transform.position += new Vector3(1, 0, 0);
-		}
-	}
+            // See if valid
+            if (LegalGridPos())
+                // Its valid. Update grid.
+                UpdateGrid();
+            else
+                // Its not valid. revert.
+                transform.position += new Vector3(1, 0, 0);
+        }
+    }
 
-	void CheckMoveRight()
-	{
-		// Move Right
-		if (Input.GetKeyDown(KeyCode.RightArrow))
-		{
-			// Modify position
-			transform.position += new Vector3(1, 0, 0);
+    void CheckMoveRight()
+    {
+        // Move Right
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            // Modify position
+            transform.position += new Vector3(1, 0, 0);
 
-			// See if valid
-			if (LegalGridPos())
-				// It's valid. Update grid.
-				UpdateGrid();
-			else
-				// It's not valid. revert.
-				transform.position += new Vector3(-1, 0, 0);
-		}
-	}
+            // See if valid
+            if (LegalGridPos())
+                // It's valid. Update grid.
+                UpdateGrid();
+            else
+                // It's not valid. revert.
+                transform.position += new Vector3(-1, 0, 0);
+        }
+    }
 
-	void CheckFallDown()
-	{
-		// Fall
-		if (Input.GetKeyDown(KeyCode.DownArrow))
-		{
-            if (!FindObjectOfType<FamiliarizationController>().CheckPosition()){
+    void CheckFallDown()
+    {
+        // Fall
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            if (!FindObjectOfType<FamiliarizationController>().CorrectPosition())
                 return;
-            }
+			
+            //Remove ghost
+            ghost.transform.position = ghostStandByPos;
+            completed = true;
 
-				// Modify position
-				transform.position += new Vector3(0, -1, 0);
+			StartCoroutine(GoDown());
+        }
+    }
 
-			// See if valid
-			while (LegalGridPos())
-			{
-				// It's valid. Update grid.
-				UpdateGrid();
-				transform.position += new Vector3(0, -1, 0);
-			}
-			// It's not valid. revert.
-			transform.position += new Vector3(0, 1, 0);
+    IEnumerator GoDown()
+    {
+        // Modify position
+        transform.position += new Vector3(0, -1, 0);
 
-            Debug.Log("Here");
+        // See if valid
+        while (LegalGridPos())
+        {
+            // It's valid. Update grid.
+            UpdateGrid();
+            transform.position += new Vector3(0, -1, 0);
+        }
+        // It's not valid. revert.
+        transform.position += new Vector3(0, 1, 0);
 
-			// Clear filled horizontal lines
-			Grid.DeleteFullRows();
+        yield return new WaitForSeconds(2f);
 
-			// Spawn next Group
-            FindObjectOfType<FamiliarizationController>().CreateNext();
+        Grid.grid = new Transform[Grid.w, Grid.h];
 
-			// Disable script
-			enabled = false;
-		}
-	}
+        // Start next trial
+        FindObjectOfType<FamiliarizationController>().CreateNext();
+
+    }
 
 	bool LegalGridPos()
     {
@@ -194,12 +205,6 @@ public class FamiliarizationSet : MonoBehaviour {
 
     void UpdateGhost()
     {
-        if (!enabled)
-        {
-            //Remove ghost
-            ghost.transform.position = ghostStandByPos;
-            return;
-        }
         ghost.transform.position = transform.position;
         ghost.transform.rotation = transform.rotation;
 
