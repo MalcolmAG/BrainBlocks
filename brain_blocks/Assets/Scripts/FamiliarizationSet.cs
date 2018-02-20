@@ -65,7 +65,6 @@ public class FamiliarizationSet : MonoBehaviour
         {
             //Don't allow snap if orientation is wrong
             if (!FindObjectOfType<FamiliarizationController>().CorrectOrientation()){
-                Debug.Log("checking snap");
                 return;
             }
             //Check for correct orientation
