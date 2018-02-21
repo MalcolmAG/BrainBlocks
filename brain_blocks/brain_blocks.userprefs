@@ -1,9 +1,9 @@
 ﻿<Properties StartupConfiguration="{1CE5CE23-5434-AF8A-9ABD-DC12C5007FFD}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Set.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/FamiliarizationController.cs">
     <Files>
-      <File FileName="Assets/Scripts/Set.cs" Line="19" Column="1" />
-      <File FileName="Assets/Scripts/Grid.cs" Line="10" Column="32" />
-      <File FileName="Assets/Scripts/Spawn.cs" Line="18" Column="49" />
+      <File FileName="Assets/Scripts/Grid.cs" Line="8" Column="56" />
+      <File FileName="Assets/Scripts/FamiliarizationController.cs" Line="92" Column="28" />
+      <File FileName="Assets/Scripts/FamiliarizationSet.cs" Line="177" Column="21" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />

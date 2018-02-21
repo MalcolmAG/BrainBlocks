@@ -49,7 +49,6 @@ public class Set : MonoBehaviour {
 		{
             
             transform.Rotate(0, 0, -90);
-            ghost.transform.Rotate(0, 0, -90);
 			// See if valid
 			if (LegalGridPos())
 				// It's valid. Update grid.
@@ -57,8 +56,6 @@ public class Set : MonoBehaviour {
 			else
 				// It's not valid. revert.
 				transform.Rotate(0, 0, 90);
-                ghost.transform.Rotate(0, 0, 90);
-
 		}
 	}
 
@@ -199,7 +196,6 @@ public class Set : MonoBehaviour {
         {
             //Remove ghost
             ghost.transform.position = ghostStandByPos;
-            Debug.Log("positon updated");
             return;
         }
         ghost.transform.position = transform.position;
