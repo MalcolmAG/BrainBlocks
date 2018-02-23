@@ -1,9 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class FamiliarizationController : MonoBehaviour {
+
+    public Button retrain;
+    public GameObject instructions;
+    public GameObject finishedMessage;
 
 	public GameObject[] options;
     private GameObject group;
@@ -14,6 +19,9 @@ public class FamiliarizationController : MonoBehaviour {
 
 	void Start()
 	{
+        finishedMessage.SetActive(false);
+		if (MasterController.gameMode == MasterController.NORMAL_MODE)
+			retrain.gameObject.SetActive(false);
         trialStage = 0;
 		CreateNext();
 	}
@@ -88,15 +96,24 @@ public class FamiliarizationController : MonoBehaviour {
         return (t/4) == (g/4);
     }
 
+    //Checks if user is done with trial
     void CheckStage(){
-        if (trialStage == 5)
+        if (trialStage == 2)
         {
-            Debug.Log("Finished Trial");
-            SceneManager.LoadScene("main");
+            finishedMessage.SetActive(true);
         }
         else
             trialStage++;
+    }
 
-        
+
+    public void StartTrials(){
+
+        instructions.SetActive(false);
+
+	}
+
+    public void NextScene(){
+        SceneManager.LoadScene("main");
     }
 }
