@@ -114,8 +114,8 @@
     <Compile Include="Assets\Scripts\FamiliarizationSet.cs" />
     <Compile Include="Assets\Scripts\Grid.cs" />
     <Compile Include="Assets\Scripts\LoggerCSV.cs" />
-    <Compile Include="Assets\Scripts\MainController.cs" />
-    <Compile Include="Assets\Scripts\MasterController.cs" />
+    <Compile Include="Assets\Scripts\MainUIController.cs" />
+    <Compile Include="Assets\Scripts\MenuController.cs" />
     <Compile Include="Assets\Scripts\Set.cs" />
     <Compile Include="Assets\Scripts\Spawn.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />

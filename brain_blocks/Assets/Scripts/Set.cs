@@ -14,11 +14,13 @@ public class Set : MonoBehaviour {
 
     private readonly Vector2 ghostStandByPos = Vector2.down * 10;
 
+    private float runningTimer;
+
     private void Start(){
+        runningTimer = Time.time;
         orientation = true;
         ghost = GameObject.Find(tag + "_ghost");
     }
-
     void Update(){
         if (orientation)
         {
@@ -32,12 +34,7 @@ public class Set : MonoBehaviour {
             CheckMoveRight();
 
             CheckFallDown();
-            // Default position not valid? Then it's game over
-            if (!LegalGridPos())
-            {
-                Debug.Log("GAME OVER");
-                Destroy(gameObject);
-            }
+
         }
         UpdateGhost();
 
@@ -150,6 +147,8 @@ public class Set : MonoBehaviour {
             //Check Game Over
             CheckGameOver();
 
+            LogDrop();
+
 			// Disable script
 			enabled = false;
 		}
@@ -226,8 +225,28 @@ public class Set : MonoBehaviour {
         foreach (Transform child in transform){
             Vector2 v = Grid.ToGrid(child.position);
             if (v.y >= snapPos)
-                Debug.Log("GAME OVER");
+            {
+                
+                LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_GAME_OVER, MainUIController.score);
+                MainUIController.score = 0;
+
+                foreach(Transform c in transform.parent){
+                    Destroy(c.gameObject);
+                }
+
+                FindObjectOfType<Spawn>().CreateFirst();
+				FindObjectOfType<Spawn>().CreateNext();
+
+
+				return;
+
+			}
         }
+    }
+
+    void LogDrop(){
+        LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_DROP, Time.time - runningTimer);
+        runningTimer = Time.time;
     }
 
 }

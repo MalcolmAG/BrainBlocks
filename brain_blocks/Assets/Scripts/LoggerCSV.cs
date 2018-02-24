@@ -12,6 +12,16 @@ public class LoggerCSV : MonoBehaviour
 
 	private List<string[]> rows = new List<string[]>();
 
+    public int gameMode = 0;
+    public int participantID = -1;
+
+    public static readonly int NORMAL_MODE = 0;
+    public static readonly int BCI_MODE = 1;
+
+    public static readonly string EVENT_DROP = "Drop Time";
+    public static readonly string EVENT_GAME_OVER = "Game Over/Score";
+    public static readonly string EVENT_SCORE = "Final Score";
+
 
 	private void Awake()
 	{
@@ -19,6 +29,7 @@ public class LoggerCSV : MonoBehaviour
 		{
 			instance = this;
 			this.CreateTitles();
+			DontDestroyOnLoad(gameObject);
 		}
 		else if (instance != this)
 		{
@@ -35,13 +46,13 @@ public class LoggerCSV : MonoBehaviour
 
 	private void CreateTitles()
 	{
-		string[] titles = {"Control Mode", "Time Stamp", "Event", "Event Value" };
+		string[] titles = { "Time Stamp", "Event", "Event Value" };
 		rows.Add(titles);
 	}
 
-	public void AddEventLog(int mode, float time, string event_log, float event_val)
+	public void AddEvent( string event_log, float event_val)
 	{
-        string[] toAdd = { mode.ToString(), time.ToString(), event_log, event_val.ToString() };
+        string[] toAdd = { DateTime.Now.ToString(), event_log, event_val.ToString() };
 		rows.Add(toAdd);
 	}
 
@@ -80,13 +91,21 @@ public class LoggerCSV : MonoBehaviour
 		StreamWriter outStream = System.IO.File.CreateText(filePath);
 		outStream.WriteLine(sb);
 		outStream.Close();
+
+        rows = new List<string[]>();
+        CreateTitles();
 	}
 
 	// Following method is used to retrive the relative path as device platform
 	private string getPath()
 	{
 #if UNITY_EDITOR
-		return Application.dataPath + "/CSV/" + "event_logger.csv";
+		string mode;
+		if (gameMode == NORMAL_MODE)
+			mode = "_Normal";
+		else
+			mode = "_BCI";
+        return Application.dataPath + "/CSV/" + participantID.ToString()+ mode +".csv";
 #else
                 return Application.dataPath +"/"+"Saved_data.csv";
 #endif

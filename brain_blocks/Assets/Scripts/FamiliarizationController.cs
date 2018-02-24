@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 public class FamiliarizationController : MonoBehaviour {
 
     public Button retrain;
-    public GameObject instructions;
     public GameObject finishedMessage;
 
 	public GameObject[] options;
@@ -19,7 +18,7 @@ public class FamiliarizationController : MonoBehaviour {
 
 	void Start()
     {
-		if (MasterController.gameMode == MasterController.NORMAL_MODE)
+        if (LoggerCSV.GetInstance().gameMode == LoggerCSV.NORMAL_MODE)
 			retrain.gameObject.SetActive(false);
         trialStage = 0;
 		CreateNext();
