@@ -4,7 +4,7 @@
       <File FileName="Assets/Scripts/MainController.cs" Line="51" Column="37" />
       <File FileName="Assets/Scripts/FamiliarizationController.cs" Line="21" Column="6" />
       <File FileName="Assets/Scripts/LoggerCSV.cs" Line="63" Column="27" />
-      <File FileName="Assets/Scripts/MasterController.cs" Line="24" Column="3" />
+      <File FileName="Assets/Scripts/MasterController.cs" Line="30" Column="21" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
