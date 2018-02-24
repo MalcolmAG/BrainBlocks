@@ -18,8 +18,7 @@ public class FamiliarizationController : MonoBehaviour {
     private int trialStage;
 
 	void Start()
-	{
-        finishedMessage.SetActive(false);
+    {
 		if (MasterController.gameMode == MasterController.NORMAL_MODE)
 			retrain.gameObject.SetActive(false);
         trialStage = 0;
@@ -105,13 +104,6 @@ public class FamiliarizationController : MonoBehaviour {
         else
             trialStage++;
     }
-
-
-    public void StartTrials(){
-
-        instructions.SetActive(false);
-
-	}
 
     public void NextScene(){
         SceneManager.LoadScene("main");

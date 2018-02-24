@@ -375,6 +375,11 @@ Prefab:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: EndPause
       objectReference: {fileID: 0}
+    - target: {fileID: 114909341419827162, guid: 4a145e78204a2414c910b9a36ac811ee,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4a145e78204a2414c910b9a36ac811ee, type: 2}
   m_IsPrefabParent: 0
@@ -794,6 +799,10 @@ Prefab:
         type: 2}
       propertyPath: m_SizeDelta.x
       value: 330
+      objectReference: {fileID: 0}
+    - target: {fileID: 1300496094059228, guid: 4a145e78204a2414c910b9a36ac811ee, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4a145e78204a2414c910b9a36ac811ee, type: 2}
