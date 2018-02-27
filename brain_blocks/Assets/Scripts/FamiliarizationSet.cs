@@ -15,8 +15,11 @@ public class FamiliarizationSet : MonoBehaviour
 
     private readonly Vector2 ghostStandByPos = Vector2.down * 10;
 
+    public static float runningTimer;
+
     private void Start()
     {
+        runningTimer = Time.time;
         completed = false;
         orientation = true;
         ghost = GameObject.Find(tag + "_ghost");
@@ -41,23 +44,8 @@ public class FamiliarizationSet : MonoBehaviour
 
     }
 
-    void CheckRotate()
-    {
-        // Rotate
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
 
-            transform.Rotate(0, 0, -90);
-            // See if valid
-            if (LegalGridPos())
-                // It's valid. Update grid.
-                UpdateGrid();
-            else
-                // It's not valid. revert.
-                transform.Rotate(0, 0, 90);
-        }
-    }
-
+    //Positions block at the top of the game field
     void CheckSnap()
     {
         //Snap orientated group to top of play field
@@ -91,7 +79,27 @@ public class FamiliarizationSet : MonoBehaviour
         }
     }
 
-    void CheckMoveLeft()
+    //Listens for and applies rotate action
+	void CheckRotate()
+	{
+		// Rotate
+		if (Input.GetKeyDown(KeyCode.UpArrow))
+		{
+
+			transform.Rotate(0, 0, -90);
+			// See if valid
+			if (LegalGridPos())
+				// It's valid. Update grid.
+				UpdateGrid();
+			else
+				// It's not valid. revert.
+				transform.Rotate(0, 0, 90);
+		}
+	}
+
+
+	//Listens for and applies move left action
+	void CheckMoveLeft()
     {
         // Move Left
         if (Input.GetKeyDown(KeyCode.LeftArrow))
@@ -109,7 +117,8 @@ public class FamiliarizationSet : MonoBehaviour
         }
     }
 
-    void CheckMoveRight()
+	//Listens for and applies move right action
+	void CheckMoveRight()
     {
         // Move Right
         if (Input.GetKeyDown(KeyCode.RightArrow))
@@ -127,6 +136,7 @@ public class FamiliarizationSet : MonoBehaviour
         }
     }
 
+    //Listens for and applies drop action
     void CheckFallDown()
     {
         // Fall
@@ -143,8 +153,12 @@ public class FamiliarizationSet : MonoBehaviour
         }
     }
 
+    //Dropping Coroutine
     IEnumerator GoDown()
     {
+		//Logs drop time in csv file
+		LogDrop();
+
         // Modify position
         transform.position += new Vector3(0, -1, 0);
 
@@ -158,7 +172,7 @@ public class FamiliarizationSet : MonoBehaviour
         // It's not valid. revert.
         transform.position += new Vector3(0, 1, 0);
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.25f);
 
         Grid.grid = new Transform[Grid.w, Grid.h];
 
@@ -167,6 +181,7 @@ public class FamiliarizationSet : MonoBehaviour
 
     }
 
+    //Checks if positioning is allowed based on 2D array data structre
 	bool LegalGridPos()
     {
 		foreach (Transform child in transform)
@@ -185,6 +200,7 @@ public class FamiliarizationSet : MonoBehaviour
 		return true;
 	}
 
+    //Updates 2D array data structure with game object positions
 	void UpdateGrid()
 	{
 		// Remove old children from grid
@@ -202,6 +218,7 @@ public class FamiliarizationSet : MonoBehaviour
 		}
 	}
 
+    //Reorients and repositions ghost based on current block
     void UpdateGhost()
     {
         ghost.transform.position = transform.position;
@@ -227,6 +244,14 @@ public class FamiliarizationSet : MonoBehaviour
                 ghost.transform.position += Vector3.down;
         }
     }
+	
+    //Logs drop time in csv file
+	void LogDrop()
+	{
+        Debug.Log("Familiarization drop logged");
+		LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_FAMI_DROP, Time.time - runningTimer);
+		runningTimer = Time.time;
+	}
 
 }
 

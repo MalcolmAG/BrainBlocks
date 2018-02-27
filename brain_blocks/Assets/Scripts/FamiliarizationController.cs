@@ -1,9 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class FamiliarizationController : MonoBehaviour {
+
+    public TextMeshProUGUI trialText;
+
+    public Button retrain;
+    public GameObject instructionsMessage;
+    public GameObject finishedMessage;
 
 	public GameObject[] options;
     private GameObject group;
@@ -12,11 +20,16 @@ public class FamiliarizationController : MonoBehaviour {
 
     private int trialStage;
 
-	void Start()
-	{
-        trialStage = 0;
+
+    public void CustomStart(){
+        instructionsMessage.gameObject.SetActive(false);
+        if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
+			retrain.gameObject.SetActive(true);
+        trialText.gameObject.SetActive(true);
+		trialStage = 0;
+        FamiliarizationSet.runningTimer = Time.time;
 		CreateNext();
-	}
+    }
 
 	//Spawns "preview" group at top of game area
 	//Randmomly chooses next "preview" group
@@ -88,15 +101,19 @@ public class FamiliarizationController : MonoBehaviour {
         return (t/4) == (g/4);
     }
 
+    //Checks if user is done with trial
     void CheckStage(){
         if (trialStage == 5)
         {
-            Debug.Log("Finished Trial");
-            SceneManager.LoadScene("main");
+            finishedMessage.SetActive(true);
         }
         else
-            trialStage++;
+        {
+            trialText.text = "Trial " + (++trialStage) + " of 5";
+        }
+    }
 
-        
+    public void NextScene(){
+        SceneManager.LoadScene(3);
     }
 }

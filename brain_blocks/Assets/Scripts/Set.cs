@@ -14,7 +14,10 @@ public class Set : MonoBehaviour {
 
     private readonly Vector2 ghostStandByPos = Vector2.down * 10;
 
+    private float runningTimer;
+
     private void Start(){
+        runningTimer = Time.time;
         orientation = true;
         ghost = GameObject.Find(tag + "_ghost");
     }
@@ -32,34 +35,14 @@ public class Set : MonoBehaviour {
             CheckMoveRight();
 
             CheckFallDown();
-            // Default position not valid? Then it's game over
-            if (!LegalGridPos())
-            {
-                Debug.Log("GAME OVER");
-                Destroy(gameObject);
-            }
+
         }
         UpdateGhost();
 
   	}
 
-	void CheckRotate(){
-		// Rotate
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-		{
-            
-            transform.Rotate(0, 0, -90);
-			// See if valid
-			if (LegalGridPos())
-				// It's valid. Update grid.
-				UpdateGrid();
-			else
-				// It's not valid. revert.
-				transform.Rotate(0, 0, 90);
-		}
-	}
-
-    void CheckSnap(){
+	//Positions block at the top of the game field
+	void CheckSnap(){
         //Snap orientated group to top of play field
         if (Input.GetKeyDown(KeyCode.DownArrow)){
             orientation = false;
@@ -84,14 +67,16 @@ public class Set : MonoBehaviour {
         }
     }
 
-    void CheckUnSnap(){
+	//Positions block at the reorientation position
+	void CheckUnSnap(){
         if(Input.GetKeyDown(KeyCode.UpArrow)){
             transform.position = new Vector2(transform.position.x, unSnapPos);
             orientation = true;
         }
     }
 
-    void CheckMoveLeft(){
+	//Listens for and applies drop action
+	void CheckMoveLeft(){
 		// Move Left
 		if (Input.GetKeyDown(KeyCode.LeftArrow))
 		{
@@ -108,7 +93,27 @@ public class Set : MonoBehaviour {
 		}
     }
 
-    void CheckMoveRight(){
+    //Listens for and applies rotate action
+	void CheckRotate()
+	{
+		// Rotate
+		if (Input.GetKeyDown(KeyCode.UpArrow))
+		{
+
+			transform.Rotate(0, 0, -90);
+			// See if valid
+			if (LegalGridPos())
+				// It's valid. Update grid.
+				UpdateGrid();
+			else
+				// It's not valid. revert.
+				transform.Rotate(0, 0, 90);
+		}
+	}
+
+
+	//Listens for and applies move right action
+	void CheckMoveRight(){
        // Move Right
         if (Input.GetKeyDown(KeyCode.RightArrow))
 		{
@@ -125,9 +130,14 @@ public class Set : MonoBehaviour {
 		} 
     }
 
-    void CheckFallDown(){
+	//Listens for and applies drop action
+	void CheckFallDown(){
 		// Fall
         if (Input.GetKeyDown(KeyCode.DownArrow)){
+
+            //Log Drop time in CSV file
+            LogDrop();
+
 			// Modify position
 			transform.position += new Vector3(0, -1, 0);
 
@@ -155,6 +165,7 @@ public class Set : MonoBehaviour {
 		}
     }
 
+	//Checks if positioning is allowed based on 2D array data structre
 	bool LegalGridPos()
 	{
 		foreach (Transform child in transform)
@@ -173,7 +184,8 @@ public class Set : MonoBehaviour {
 		return true;
 	}
 
-	void UpdateGrid()
+	//Updates 2D array data structure with game object positions
+    void UpdateGrid()
 	{
 		// Remove old children from grid
 		for (int y = 0; y < Grid.h; ++y)
@@ -189,8 +201,9 @@ public class Set : MonoBehaviour {
 			Grid.grid[(int)v.x, (int)v.y] = child;
 		}
 	}
-
-    void UpdateGhost()
+	
+    //Reorients and repositions ghost based on current block
+	void UpdateGhost()
     {
         if (!enabled)
         {
@@ -222,12 +235,38 @@ public class Set : MonoBehaviour {
         }
     }
 
+    //Checks if block is above game area
     void CheckGameOver(){
         foreach (Transform child in transform){
             Vector2 v = Grid.ToGrid(child.position);
             if (v.y >= snapPos)
-                Debug.Log("GAME OVER");
+            {
+                //Log Game over
+                Debug.Log("Game Over Logged");
+				LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_GAME_OVER, MainUIController.score);
+
+                MainUIController.score = 0;
+
+                foreach(Transform c in transform.parent){
+                    Destroy(c.gameObject);
+                }
+
+                //Restart Game
+                FindObjectOfType<Spawn>().CreateFirst();
+				FindObjectOfType<Spawn>().CreateNext();
+
+
+				return;
+
+			}
         }
+    }
+
+    //Logs drop time in csv file
+    void LogDrop(){
+		Debug.Log("Game drop logged");
+		LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_GAME_DROP, Time.time - runningTimer);
+        runningTimer = Time.time;
     }
 
 }
