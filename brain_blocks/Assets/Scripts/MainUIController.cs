@@ -48,7 +48,11 @@ public class MainUIController : MonoBehaviour {
 				pauseMessage.SetActive(true);
             }
             else{
+                checking = false;
                 finishedMessage.SetActive(true);
+				Debug.Log("Final Score logged");
+				LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_SCORE, score);
+                LoggerCSV.GetInstance().SaveCSV();
             }
         }
     }
@@ -58,8 +62,7 @@ public class MainUIController : MonoBehaviour {
     }
 
     public void FinishGame(){
-        LoggerCSV.GetInstance().SaveCSV();
-        SceneManager.LoadScene("menu");
+        SceneManager.LoadScene(0);
     }
 
     public void EndPause(){

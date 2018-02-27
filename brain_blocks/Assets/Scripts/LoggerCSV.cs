@@ -10,7 +10,7 @@ public class LoggerCSV : MonoBehaviour
 
 	public static LoggerCSV instance = null;
 
-	private List<string[]> rows = new List<string[]>();
+    public List<string[]> rows = new List<string[]>();
 
     public int gameMode = 0;
     public int participantID = -1;
@@ -18,7 +18,8 @@ public class LoggerCSV : MonoBehaviour
     public static readonly int NORMAL_MODE = 0;
     public static readonly int BCI_MODE = 1;
 
-    public static readonly string EVENT_DROP = "Drop Time";
+    public static readonly string EVENT_FAMI_DROP = "Familiarization Drop Time";
+    public static readonly string EVENT_GAME_DROP = "Game Drop Time";
     public static readonly string EVENT_GAME_OVER = "Game Over/Score";
     public static readonly string EVENT_SCORE = "Final Score";
 

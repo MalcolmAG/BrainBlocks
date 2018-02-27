@@ -3,10 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using TMPro;
 using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour {
 
+    public GameObject messagePanel;
+    public TextMeshProUGUI messageText;
+	
+
+    IEnumerator ShowMessage(string message, float delay)
+	{
+        messageText.text = message;
+        messagePanel.SetActive(true);
+		yield return new WaitForSeconds(delay);
+        messagePanel.SetActive(false);
+	}
 
     //Activated when slider in menu is used
 	public void SetGameMode(float val)
@@ -24,11 +36,11 @@ public class MenuController : MonoBehaviour {
     //Activated by start button in menu
     public void StartGame(){
         if (LoggerCSV.GetInstance().participantID < 1){
-            Debug.Log("Enter Valid Participant ID");
+            StartCoroutine(ShowMessage("Please Enter a Valid ID", 1.5f));
             return;
         }
         if (LoggerCSV.GetInstance().gameMode == LoggerCSV.NORMAL_MODE){
-            SceneManager.LoadScene("familiarization");
+            SceneManager.LoadScene(2);
         }
         else
             Debug.Log("training not set up yet");
