@@ -43,6 +43,6 @@ public class MenuController : MonoBehaviour {
             SceneManager.LoadScene(2);
         }
         else
-            Debug.Log("training not set up yet");
+            SceneManager.LoadScene(1);    
     }
 }

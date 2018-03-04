@@ -27,23 +27,39 @@ public class FamiliarizationSet : MonoBehaviour
 
     void Update()
     {
-        if (orientation)
+        if (!FamiliarizationController.paused)
         {
-            CheckRotate();
-            CheckSnap();
-        }
-        else
-        {
-            CheckMoveLeft();
-            CheckMoveRight();
+            if (orientation)
+            {
+                CheckRotate();
+                CheckSnap();
+            }
+            else
+            {
+                CheckMoveLeft();
+                CheckMoveRight();
 
-            CheckFallDown();
+                CheckFallDown();
+            }
+            if (!completed)
+                UpdateGhost();
         }
-        if(!completed)
-            UpdateGhost();
 
     }
 
+	private void SwapGhosts()
+	{
+		ghost.transform.position = ghostStandByPos;
+		if (orientation)
+		{
+			ghost = GameObject.Find(tag + "_ghost");
+		}
+		else
+		{
+			ghost = GameObject.Find(tag + "_ghost_light");
+		}
+		UpdateGhost();
+	}
 
     //Positions block at the top of the game field
     void CheckSnap()
@@ -75,6 +91,7 @@ public class FamiliarizationSet : MonoBehaviour
                     UpdateGrid();
                 }
             }
+            SwapGhosts();
 
         }
     }
@@ -83,7 +100,7 @@ public class FamiliarizationSet : MonoBehaviour
 	void CheckRotate()
 	{
 		// Rotate
-		if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.Space))
 		{
 
 			transform.Rotate(0, 0, -90);
@@ -156,9 +173,6 @@ public class FamiliarizationSet : MonoBehaviour
     //Dropping Coroutine
     IEnumerator GoDown()
     {
-		//Logs drop time in csv file
-		LogDrop();
-
         // Modify position
         transform.position += new Vector3(0, -1, 0);
 
@@ -244,14 +258,6 @@ public class FamiliarizationSet : MonoBehaviour
                 ghost.transform.position += Vector3.down;
         }
     }
-	
-    //Logs drop time in csv file
-	void LogDrop()
-	{
-        Debug.Log("Familiarization drop logged");
-		LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_FAMI_DROP, Time.time - runningTimer);
-		runningTimer = Time.time;
-	}
 
 }
 

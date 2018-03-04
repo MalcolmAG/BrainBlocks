@@ -9,9 +9,11 @@ public class FamiliarizationController : MonoBehaviour {
 
     public TextMeshProUGUI trialText;
 
-    public Button retrain;
+    public Button retrainButton;
+    public Button pauseButton;
     public GameObject instructionsMessage;
     public GameObject finishedMessage;
+    public GameObject pausedMessage;
 
 	public GameObject[] options;
     private GameObject group;
@@ -20,13 +22,16 @@ public class FamiliarizationController : MonoBehaviour {
 
     private int trialStage;
 
+    public static bool paused = true;
 
     public void CustomStart(){
         instructionsMessage.gameObject.SetActive(false);
         if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
-			retrain.gameObject.SetActive(true);
+			retrainButton.gameObject.SetActive(true);
         trialText.gameObject.SetActive(true);
+        pauseButton.gameObject.SetActive(true);
 		trialStage = 0;
+        paused = false;
         FamiliarizationSet.runningTimer = Time.time;
 		CreateNext();
     }
@@ -105,7 +110,11 @@ public class FamiliarizationController : MonoBehaviour {
     void CheckStage(){
         if (trialStage == 5)
         {
+            trialText.gameObject.SetActive(false);
+            pauseButton.gameObject.SetActive(false);
             finishedMessage.SetActive(true);
+			if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
+				retrainButton.gameObject.SetActive(false);
         }
         else
         {
@@ -113,7 +122,28 @@ public class FamiliarizationController : MonoBehaviour {
         }
     }
 
+    public void StartPause(){
+        paused = true;
+		if(LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
+			retrainButton.gameObject.SetActive(false);
+        pauseButton.gameObject.SetActive(false);
+        trialText.gameObject.SetActive(false);
+        pausedMessage.SetActive(true);
+    }
+
+    public void EndPause(){
+        paused = false;
+        pausedMessage.SetActive(false);
+        trialText.gameObject.SetActive(false);
+        pauseButton.gameObject.SetActive(true);
+		if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
+			retrainButton.gameObject.SetActive(true);
+    }
+
     public void NextScene(){
         SceneManager.LoadScene(3);
+    }
+    public void PreviousScene(){
+        SceneManager.LoadScene(1);
     }
 }

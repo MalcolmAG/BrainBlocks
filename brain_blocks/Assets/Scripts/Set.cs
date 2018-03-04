@@ -14,7 +14,7 @@ public class Set : MonoBehaviour {
 
     private readonly Vector2 ghostStandByPos = Vector2.down * 10;
 
-    private float runningTimer;
+    public float runningTimer;
 
     private void Start(){
         runningTimer = Time.time;
@@ -22,22 +22,36 @@ public class Set : MonoBehaviour {
         ghost = GameObject.Find(tag + "_ghost");
     }
 
-    void Update(){
-        if (orientation)
-        {
-            CheckRotate();
-            CheckSnap();
+    private void SwapGhosts(){
+        ghost.transform.position = ghostStandByPos;
+        if(orientation){
+            ghost = GameObject.Find(tag + "_ghost");
         }
-        else
-        {
-            CheckUnSnap();
-            CheckMoveLeft();
-            CheckMoveRight();
-
-            CheckFallDown();
-
+        else{
+            ghost = GameObject.Find(tag + "_ghost_light");
         }
         UpdateGhost();
+    }
+
+    void Update(){
+        if (!MainUIController.paused)
+        {
+            if (orientation)
+            {
+                CheckRotate();
+                CheckSnap();
+            }
+            else
+            {
+                CheckUnSnap();
+                CheckMoveLeft();
+                CheckMoveRight();
+
+                CheckFallDown();
+
+            }
+            UpdateGhost();
+        }
 
   	}
 
@@ -63,6 +77,7 @@ public class Set : MonoBehaviour {
                     UpdateGrid();
                 }
             }
+            SwapGhosts();
             
         }
     }
@@ -72,6 +87,7 @@ public class Set : MonoBehaviour {
         if(Input.GetKeyDown(KeyCode.UpArrow)){
             transform.position = new Vector2(transform.position.x, unSnapPos);
             orientation = true;
+            SwapGhosts();
         }
     }
 
@@ -97,7 +113,7 @@ public class Set : MonoBehaviour {
 	void CheckRotate()
 	{
 		// Rotate
-		if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.Space))
 		{
 
 			transform.Rotate(0, 0, -90);
@@ -242,7 +258,6 @@ public class Set : MonoBehaviour {
             if (v.y >= snapPos)
             {
                 //Log Game over
-                Debug.Log("Game Over Logged");
 				LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_GAME_OVER, MainUIController.score);
 
                 MainUIController.score = 0;
@@ -264,7 +279,6 @@ public class Set : MonoBehaviour {
 
     //Logs drop time in csv file
     void LogDrop(){
-		Debug.Log("Game drop logged");
 		LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_GAME_DROP, Time.time - runningTimer);
         runningTimer = Time.time;
     }

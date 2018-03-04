@@ -18,7 +18,7 @@ public class LoggerCSV : MonoBehaviour
     public static readonly int NORMAL_MODE = 0;
     public static readonly int BCI_MODE = 1;
 
-    public static readonly string EVENT_FAMI_DROP = "Familiarization Drop Time";
+    public static readonly string EVENT_RETRAIN = "Retrain Occured";
     public static readonly string EVENT_GAME_DROP = "Game Drop Time";
     public static readonly string EVENT_GAME_OVER = "Game Over/Score";
     public static readonly string EVENT_SCORE = "Final Score";
@@ -100,16 +100,13 @@ public class LoggerCSV : MonoBehaviour
 	// Following method is used to retrive the relative path as device platform
 	private string getPath()
 	{
-#if UNITY_EDITOR
 		string mode;
 		if (gameMode == NORMAL_MODE)
 			mode = "_Normal";
 		else
 			mode = "_BCI";
-        return Application.dataPath + "/CSV/" + participantID.ToString()+ mode +".csv";
-#else
-                return Application.dataPath +"/"+"Saved_data.csv";
-#endif
+        Debug.Log(Application.persistentDataPath);
+        return Application.persistentDataPath + "_"+ participantID.ToString() + mode + ".csv";
 	}
 	// Update is called once per frame
 	void Update()
