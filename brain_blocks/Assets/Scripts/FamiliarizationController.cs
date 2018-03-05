@@ -9,27 +9,25 @@ public class FamiliarizationController : MonoBehaviour {
 
     public TextMeshProUGUI trialText;
 
-    public Button retrain;
+    public Button retrainButton;
+    public Button pauseButton;
     public GameObject instructionsMessage;
     public GameObject finishedMessage;
+    public GameObject pausedMessage;
+    public GameObject epoc;
 
 	public GameObject[] options;
+    public int maxStage=5;
     private GameObject group;
     private GameObject target;
     private float[] rotationOptions = { 0f, -90f, -180f, 90f };
 
     private int trialStage;
+    private float startTime;
 
+    public static bool paused = true;
 
-    public void CustomStart(){
-        instructionsMessage.gameObject.SetActive(false);
-        if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
-			retrain.gameObject.SetActive(true);
-        trialText.gameObject.SetActive(true);
-		trialStage = 0;
-        FamiliarizationSet.runningTimer = Time.time;
-		CreateNext();
-    }
+//------------------------------Familiarization Scene Control Functions------------------------------//
 
 	//Spawns "preview" group at top of game area
 	//Randmomly chooses next "preview" group
@@ -41,7 +39,7 @@ public class FamiliarizationController : MonoBehaviour {
         Destroy(group);
         Destroy(target);
 
-        //Choose random pos and rotation
+        //Choose random position and rotation of prompt
         int i = Random.Range(0, options.Length);
         Vector2 targetPos = new Vector2(Random.Range(0, 9), 0);
         Quaternion targetRot = new Quaternion(0, 0, Random.Range(0, rotationOptions.Length), 0);
@@ -53,6 +51,7 @@ public class FamiliarizationController : MonoBehaviour {
         group.AddComponent<FamiliarizationSet>();
 	}
 
+    //Snaps target so it is within game area
     private void SnapTarget(){
         int below = 0; //lowest possible grid pos
         int left = 0; //leftmost possible grid pos
@@ -73,6 +72,7 @@ public class FamiliarizationController : MonoBehaviour {
         target.transform.Translate(Vector3.left * (right - 9));
     }
 
+    //Compares orientation of player's block to target
     public bool CorrectOrientation(){
 		//conditions are more complex for s and z groups
         float angle = Quaternion.Angle(target.transform.rotation, group.transform.rotation);
@@ -83,7 +83,8 @@ public class FamiliarizationController : MonoBehaviour {
         return angle == 0;
     }
 
-    public bool CorrectPosition(){
+	//Compares position of player's block to target
+	public bool CorrectPosition(){
         float t = 0;
         float g = 0;
 		//Must find and compare avg block position
@@ -101,19 +102,81 @@ public class FamiliarizationController : MonoBehaviour {
         return (t/4) == (g/4);
     }
 
-    //Checks if user is done with trial
+    //Checks if user is done with familiarization trials
     void CheckStage(){
-        if (trialStage == 5)
+        if (trialStage == maxStage)
         {
-            finishedMessage.SetActive(true);
+            LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_FAMI, Time.time - startTime);
+            ToggleUI(true, "finished");
         }
         else
-        {
             trialText.text = "Trial " + (++trialStage) + " of 5";
-        }
     }
 
-    public void NextScene(){
+//------------------------------UI OnClick Functions------------------------------//
+    //Called by Start_Trials_Buttom
+	public void CustomStart()
+	{
+		InitUI();
+		startTime = Time.time;
+		trialStage = 0;
+		paused = false;
+		ToggleUI(paused, "none");
+		FamiliarizationSet.runningTimer = Time.time;
+		CreateNext();
+	}
+
+    //Called by Pause_Button
+    public void StartPause(){
+        paused = true;
+        ToggleUI(paused, "pause");
+    }
+
+	//Called by End_Pause_Button
+	public void EndPause(){
+        paused = false;
+        ToggleUI(paused, "pause");
+    }
+
+	//Called by Next_Scene_Button
+	public void NextScene(){
         SceneManager.LoadScene(3);
+    }
+
+    //Called by Retrain_Button
+    public void PreviousScene(){
+        LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_RETRAIN, 1f);
+        SceneManager.LoadScene(1);
+    }
+
+//------------------------------UI Helper Functions------------------------------//
+
+    //Set Up UI Objects after instructions are read
+    private void InitUI(){
+        instructionsMessage.gameObject.SetActive(false);
+		if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
+		{
+            epoc.SetActive(true);
+		}
+    }
+
+    //Modifies UI element view
+    private void ToggleUI(bool pause, string type){
+		if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
+		{
+            retrainButton.gameObject.SetActive(!pause);
+		}
+		pauseButton.gameObject.SetActive(!paused);
+		trialText.gameObject.SetActive(!pause);
+        switch(type){
+            case "pause":
+                pausedMessage.SetActive(pause);
+                return;
+            case "finished":
+                finishedMessage.SetActive(pause);
+                return;
+            default:
+                return;
+        }
     }
 }

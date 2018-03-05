@@ -7,6 +7,7 @@ public class Set : MonoBehaviour {
     public GameObject ghost;
 
     private bool orientation;
+    private bool bci;
 
     private readonly float snapPos = 16f;
 
@@ -14,37 +15,74 @@ public class Set : MonoBehaviour {
 
     private readonly Vector2 ghostStandByPos = Vector2.down * 10;
 
-    private float runningTimer;
+    public float runningTimer;
 
-    private void Start(){
-        runningTimer = Time.time;
+    private EmoEngine engine;
+    public float emotivLag;
+    public float processInterval = .5f;
+
+//------------------------------Unity Functions------------------------------//
+
+	private void Start(){
+		bci = LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE;
+        if (bci){
+            emotivLag = 0f;
+            engine = EmoEngine.Instance;
+        }
+		runningTimer = Time.time;
         orientation = true;
         ghost = GameObject.Find(tag + "_ghost");
     }
 
     void Update(){
-        if (orientation)
-        {
-            CheckRotate();
-            CheckSnap();
-        }
-        else
-        {
-            CheckUnSnap();
-            CheckMoveLeft();
-            CheckMoveRight();
 
-            CheckFallDown();
+        emotivLag += Time.deltaTime;
 
+        if (!MainUIController.paused)
+        {
+            if (orientation)
+            {
+				CheckRotate();
+                CheckSnap();
+            }
+            else
+            {
+                CheckUnSnap();
+                CheckMoveLeft();
+                CheckMoveRight();
+
+                CheckFallDown();
+
+            }
+            UpdateGhost();
         }
-        UpdateGhost();
 
   	}
+
+//------------------------------User Input Listener Functions------------------------------//
+
+	//Listens for and applies rotate action
+	void CheckRotate()
+	{
+		// Rotate
+		if (CustomInput("rotate"))
+		{
+
+			transform.Rotate(0, 0, -90);
+			// See if valid
+			if (LegalGridPos())
+				// It's valid. Update grid.
+				UpdateGrid();
+			else
+				// It's not valid. revert.
+				transform.Rotate(0, 0, 90);
+		}
+	}
 
 	//Positions block at the top of the game field
 	void CheckSnap(){
         //Snap orientated group to top of play field
-        if (Input.GetKeyDown(KeyCode.DownArrow)){
+        if (CustomInput("down")){
             orientation = false;
             bool snap = true;
             while (snap){
@@ -63,22 +101,24 @@ public class Set : MonoBehaviour {
                     UpdateGrid();
                 }
             }
+            SwapGhosts();
             
         }
     }
 
 	//Positions block at the reorientation position
 	void CheckUnSnap(){
-        if(Input.GetKeyDown(KeyCode.UpArrow)){
+        if(CustomInput("up")){
             transform.position = new Vector2(transform.position.x, unSnapPos);
             orientation = true;
+            SwapGhosts();
         }
     }
 
 	//Listens for and applies drop action
 	void CheckMoveLeft(){
 		// Move Left
-		if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (CustomInput("left"))
 		{
 			// Modify position
 			transform.position += new Vector3(-1, 0, 0);
@@ -93,29 +133,10 @@ public class Set : MonoBehaviour {
 		}
     }
 
-    //Listens for and applies rotate action
-	void CheckRotate()
-	{
-		// Rotate
-		if (Input.GetKeyDown(KeyCode.UpArrow))
-		{
-
-			transform.Rotate(0, 0, -90);
-			// See if valid
-			if (LegalGridPos())
-				// It's valid. Update grid.
-				UpdateGrid();
-			else
-				// It's not valid. revert.
-				transform.Rotate(0, 0, 90);
-		}
-	}
-
-
 	//Listens for and applies move right action
 	void CheckMoveRight(){
        // Move Right
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (CustomInput("right"))
 		{
 			// Modify position
 			transform.position += new Vector3(1, 0, 0);
@@ -133,7 +154,7 @@ public class Set : MonoBehaviour {
 	//Listens for and applies drop action
 	void CheckFallDown(){
 		// Fall
-        if (Input.GetKeyDown(KeyCode.DownArrow)){
+        if (CustomInput("down")){
 
             //Log Drop time in CSV file
             LogDrop();
@@ -164,6 +185,37 @@ public class Set : MonoBehaviour {
 			enabled = false;
 		}
     }
+
+//------------------------------Grid Helper Functions------------------------------//
+
+	//Checks if block is above game area
+	void CheckGameOver()
+	{
+		foreach (Transform child in transform)
+		{
+			Vector2 v = Grid.ToGrid(child.position);
+			if (v.y >= snapPos)
+			{
+				//Log Game over
+				LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_GAME_OVER, MainUIController.score);
+
+				MainUIController.score = 0;
+
+				foreach (Transform c in transform.parent)
+				{
+					Destroy(c.gameObject);
+				}
+
+				//Restart Game
+				FindObjectOfType<Spawn>().CreateFirst();
+				FindObjectOfType<Spawn>().CreateNext();
+
+
+				return;
+
+			}
+		}
+	}
 
 	//Checks if positioning is allowed based on 2D array data structre
 	bool LegalGridPos()
@@ -201,72 +253,112 @@ public class Set : MonoBehaviour {
 			Grid.grid[(int)v.x, (int)v.y] = child;
 		}
 	}
-	
-    //Reorients and repositions ghost based on current block
+
+//------------------------------Ghost Helper Functions------------------------------//
+
+	//Reorients and repositions ghost based on current block
 	void UpdateGhost()
-    {
-        if (!enabled)
-        {
-            //Remove ghost
-            ghost.transform.position = ghostStandByPos;
-            return;
-        }
-        ghost.transform.position = transform.position;
-        ghost.transform.rotation = transform.rotation;
+	{
+		if (!enabled)
+		{
+			//Remove ghost
+			ghost.transform.position = ghostStandByPos;
+			return;
+		}
+		ghost.transform.position = transform.position;
+		ghost.transform.rotation = transform.rotation;
 
-        bool dropping = true;
-        while (dropping)
-        {
-            foreach (Transform child in ghost.transform)
-            {
-                Vector2 v = Grid.ToGrid(child.position);
-                if (Grid.grid[(int)v.x, (int)v.y] != null &&
-                    Grid.grid[(int)v.x, (int)v.y].parent != transform)
-                {
-                    dropping = false;
-                    //Revert
-                    ghost.transform.position += Vector3.up;
-                }
-                else if ((int)v.y == 0) dropping = false;
-            }
-            if (dropping)
-                //Continue Dropping
-                ghost.transform.position += Vector3.down;
-        }
-    }
-
-    //Checks if block is above game area
-    void CheckGameOver(){
-        foreach (Transform child in transform){
-            Vector2 v = Grid.ToGrid(child.position);
-            if (v.y >= snapPos)
-            {
-                //Log Game over
-                Debug.Log("Game Over Logged");
-				LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_GAME_OVER, MainUIController.score);
-
-                MainUIController.score = 0;
-
-                foreach(Transform c in transform.parent){
-                    Destroy(c.gameObject);
-                }
-
-                //Restart Game
-                FindObjectOfType<Spawn>().CreateFirst();
-				FindObjectOfType<Spawn>().CreateNext();
-
-
-				return;
-
+		bool dropping = true;
+		while (dropping)
+		{
+			foreach (Transform child in ghost.transform)
+			{
+				Vector2 v = Grid.ToGrid(child.position);
+				if (Grid.grid[(int)v.x, (int)v.y] != null &&
+					Grid.grid[(int)v.x, (int)v.y].parent != transform)
+				{
+					dropping = false;
+					//Revert
+					ghost.transform.position += Vector3.up;
+				}
+				else if ((int)v.y == 0) dropping = false;
 			}
-        }
-    }
+			if (dropping)
+				//Continue Dropping
+				ghost.transform.position += Vector3.down;
+		}
+	}
 
-    //Logs drop time in csv file
-    void LogDrop(){
-		Debug.Log("Game drop logged");
+    //Changes associated ghost object
+	private void SwapGhosts()
+	{
+		ghost.transform.position = ghostStandByPos;
+		if (orientation)
+		{
+			ghost = GameObject.Find(tag + "_ghost");
+		}
+		else
+		{
+			ghost = GameObject.Find(tag + "_ghost_light");
+		}
+		UpdateGhost();
+	}
+
+//------------------------------CSV helper Functions------------------------------//
+
+
+	//Logs drop time in csv file
+	void LogDrop(){
 		LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_GAME_DROP, Time.time - runningTimer);
         runningTimer = Time.time;
     }
 
+	//------------------------------Input helper Functions------------------------------//
+
+	private bool CustomInput(string type)
+	{
+		if (bci)
+		{
+			switch (type)
+			{
+				case "rotate":
+					if ((Input.GetKeyDown(KeyCode.Space) || EmoFacialExpression.isBlink)
+						&& emotivLag > processInterval)
+					{
+						emotivLag = 0f;
+						return true;
+					}
+					break;
+				//To be switched with BCI control
+				case "left":
+					return Input.GetKeyDown(KeyCode.LeftArrow);
+				case "right":
+					return Input.GetKeyDown(KeyCode.RightArrow);
+				case "down":
+					return Input.GetKeyDown(KeyCode.DownArrow);
+				default:
+                    //Debug.Log("CustomInput() used incorrectly with: " + type);
+					break;
+			}
+			return false;
+		}
+		else
+		{
+			switch (type)
+			{
+				case "rotate":
+					return Input.GetKeyDown(KeyCode.Space);
+				case "left":
+					return Input.GetKeyDown(KeyCode.LeftArrow);
+				case "right":
+					return Input.GetKeyDown(KeyCode.RightArrow);
+				case "down":
+					return Input.GetKeyDown(KeyCode.DownArrow);
+				default:
+                    Debug.Log("CustomInput() used incorrectly with: " + type);
+					return false;
+			}
+		}
+
+	}
 }

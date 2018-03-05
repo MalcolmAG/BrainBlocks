@@ -110,6 +110,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Emotiv\Contact Quality\ContactQualityUIControl.cs" />
+    <Compile Include="Assets\Scripts\Emotiv\EmotivControl.cs" />
+    <Compile Include="Assets\Scripts\Emotiv\Plugins\CognitivActionSmooth.cs" />
+    <Compile Include="Assets\Scripts\Emotiv\Plugins\EdkDll.cs" />
+    <Compile Include="Assets\Scripts\Emotiv\Plugins\EmoEngine.cs" />
+    <Compile Include="Assets\Scripts\Emotiv\Plugins\EmoFacialExpression.cs" />
+    <Compile Include="Assets\Scripts\Emotiv\Plugins\EmoGyroData.cs" />
+    <Compile Include="Assets\Scripts\Emotiv\Plugins\EmoMentalCommand.cs" />
+    <Compile Include="Assets\Scripts\Emotiv\Plugins\EmoState.cs" />
+    <Compile Include="Assets\Scripts\Emotiv\Plugins\EmotivCloudClient.cs" />
+    <Compile Include="Assets\Scripts\Emotiv\Plugins\EmoUserManagement.cs" />
+    <Compile Include="Assets\Scripts\Emotiv\Plugins\LabelDraw.cs" />
     <Compile Include="Assets\Scripts\FamiliarizationController.cs" />
     <Compile Include="Assets\Scripts\FamiliarizationSet.cs" />
     <Compile Include="Assets\Scripts\Grid.cs" />
@@ -118,6 +130,7 @@
     <Compile Include="Assets\Scripts\MenuController.cs" />
     <Compile Include="Assets\Scripts\Set.cs" />
     <Compile Include="Assets\Scripts\Spawn.cs" />
+    <Compile Include="Assets\Scripts\TrainingUIController.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />

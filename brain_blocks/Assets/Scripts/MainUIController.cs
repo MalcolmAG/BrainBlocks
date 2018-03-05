@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using TMPro;
 
 public class MainUIController : MonoBehaviour {
@@ -9,29 +10,38 @@ public class MainUIController : MonoBehaviour {
     public static int score;
 
     public TextMeshProUGUI scoreText;
+    public Button pauseButton;
+    public GameObject epoc;
 
 	public GameObject finishedMessage;
+    public GameObject midwayMessage;
     public GameObject pauseMessage;
 
-    private bool checking;
+    private bool checkingTime;
     private bool midWayReached;
 	private float  startingTime;
+    public float allotedTime;
     public float halfAllottedTime;
 
+    public static bool paused = false;
+    private float timeOffset;
+    private Set pausedSet;
 
-	// Use this for initialization
+//------------------------------Unity & Main Scene Control Functions------------------------------//
+
+
 	void Start () {
-        pauseMessage.SetActive(false);
-        finishedMessage.SetActive(false);
+        paused = false;
+        halfAllottedTime = allotedTime / 2;
         midWayReached = false;
-        checking = true;
+        checkingTime = true;
         startingTime = Time.time; 
         score = 0;
+        UI_Game();
 	}
 	
-	// Update is called once per frame
 	void Update () {
-        if(checking)
+        if(checkingTime)
             CheckTime();
         if(Input.GetKeyDown(KeyCode.X)){
             Debug.Log(score);
@@ -40,34 +50,99 @@ public class MainUIController : MonoBehaviour {
 		
 	}
 
+    //Check if halfway or end has been reached
     void CheckTime(){
-        if(Time.time - startingTime > halfAllottedTime){
+        halfAllottedTime -= Time.deltaTime;
+        if(halfAllottedTime<0){
+            paused = true;
+            checkingTime = false;
             if(!midWayReached){
 				midWayReached = true;
-                checking = false;
-				pauseMessage.SetActive(true);
+                halfAllottedTime = allotedTime / 2;
+                UI_Pause("midway");
             }
             else{
-                checking = false;
-                finishedMessage.SetActive(true);
-				Debug.Log("Final Score logged");
+                UI_Pause("finished");
 				LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_SCORE, score);
                 LoggerCSV.GetInstance().SaveCSV();
             }
         }
     }
 
-    public void UpdateScore(){
-        scoreText.text = "Score: " + score.ToString();
-    }
+//------------------------------UI OnClick Functions------------------------------//
 
-    public void FinishGame(){
+
+	//Called by Done_Button
+	public void FinishGame(){
+        LoggerCSV logger = LoggerCSV.GetInstance();
+        logger.gameMode = LoggerCSV.NORMAL_MODE;
+        logger.participantID = -1;
         SceneManager.LoadScene(0);
     }
 
-    public void EndPause(){
-        pauseMessage.SetActive(false);
+	//Called by End_Midway_Button
+	public void EndMidwayMessage(){
+        UI_Game();
         startingTime = Time.time;
-        checking = true;
+        checkingTime = true;
+        paused = false;
     }
+
+	//Called by Pause_Button
+	public void StartPause(){
+        checkingTime = false;
+        pausedSet = FindObjectOfType<Set>();
+        timeOffset = Time.time - pausedSet.runningTimer;
+        paused = true;
+        UI_Pause("pause");
+	}
+
+	//Called by End_Pause_Button
+	public void EndPause(){
+        checkingTime = true;
+        pausedSet.runningTimer = Time.time - timeOffset;
+        paused = false;
+        UI_Game();
+	}
+
+//------------------------------UI Helper Functions------------------------------//
+
+    //Sets UI elements for in-game view
+	private void UI_Game()
+	{
+		if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
+			epoc.SetActive(true);
+		midwayMessage.SetActive(false);
+		finishedMessage.SetActive(false);
+		pauseMessage.SetActive(false);
+		pauseButton.gameObject.SetActive(true);
+		scoreText.gameObject.SetActive(true);
+	}
+
+	//Sets UI elements for paused-game view
+    private void UI_Pause(string type)
+	{
+		scoreText.gameObject.SetActive(false);
+		pauseButton.gameObject.SetActive(false);
+		switch (type)
+		{
+			case "midway":
+				midwayMessage.SetActive(true);
+				return;
+			case "pause":
+				pauseMessage.SetActive(true);
+				return;
+			case "finished":
+				if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
+					epoc.SetActive(false);
+				finishedMessage.SetActive(true);
+				return;
+		}
+	}
+
+	//Updates score UI element
+	public void UpdateScore()
+	{
+		scoreText.text = "Score: " + score.ToString();
+	}
 }

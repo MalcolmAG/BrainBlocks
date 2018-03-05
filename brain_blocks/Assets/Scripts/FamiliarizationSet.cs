@@ -8,8 +8,8 @@ public class FamiliarizationSet : MonoBehaviour
     public GameObject ghost;
 
     private bool orientation;
-
     private bool completed;
+    private bool bci;
 
     private readonly float snapPos = 16f;
 
@@ -17,9 +17,20 @@ public class FamiliarizationSet : MonoBehaviour
 
     public static float runningTimer;
 
-    private void Start()
+    private EmoEngine engine;
+    public float emotivLag;
+    public float processInterval = .5f;
+
+//------------------------------Unity Functions------------------------------//
+
+	private void Start()
     {
-        runningTimer = Time.time;
+		bci = LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE;
+        if(bci){
+			emotivLag = 0f;
+			engine = EmoEngine.Instance;
+        }
+		runningTimer = Time.time;
         completed = false;
         orientation = true;
         ghost = GameObject.Find(tag + "_ghost");
@@ -27,29 +38,55 @@ public class FamiliarizationSet : MonoBehaviour
 
     void Update()
     {
-        if (orientation)
-        {
-            CheckRotate();
-            CheckSnap();
-        }
-        else
-        {
-            CheckMoveLeft();
-            CheckMoveRight();
+        if(bci)
+            emotivLag += Time.deltaTime;
 
-            CheckFallDown();
+        if (!FamiliarizationController.paused)
+        {
+            if (orientation)
+            {
+                CheckRotate();
+                CheckSnap();
+            }
+            else
+            {
+                CheckMoveLeft();
+                CheckMoveRight();
+
+                CheckFallDown();
+            }
+            if (!completed)
+                UpdateGhost();
         }
-        if(!completed)
-            UpdateGhost();
 
     }
 
+//------------------------------User Input Listener Functions------------------------------//
+
+
+	//Listens for and applies rotate action
+	void CheckRotate()
+	{
+		// Rotate
+        if (CustomInput("rotate"))
+		{
+
+			transform.Rotate(0, 0, -90);
+			// See if valid
+			if (LegalGridPos())
+				// It's valid. Update grid.
+				UpdateGrid();
+			else
+				// It's not valid. revert.
+				transform.Rotate(0, 0, 90);
+		}
+	}
 
     //Positions block at the top of the game field
     void CheckSnap()
     {
         //Snap orientated group to top of play field
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (CustomInput("down"))
         {
             //Don't allow snap if orientation is wrong
             if (!FindObjectOfType<FamiliarizationController>().CorrectOrientation()){
@@ -75,34 +112,16 @@ public class FamiliarizationSet : MonoBehaviour
                     UpdateGrid();
                 }
             }
+            SwapGhosts();
 
         }
     }
-
-    //Listens for and applies rotate action
-	void CheckRotate()
-	{
-		// Rotate
-		if (Input.GetKeyDown(KeyCode.UpArrow))
-		{
-
-			transform.Rotate(0, 0, -90);
-			// See if valid
-			if (LegalGridPos())
-				// It's valid. Update grid.
-				UpdateGrid();
-			else
-				// It's not valid. revert.
-				transform.Rotate(0, 0, 90);
-		}
-	}
-
 
 	//Listens for and applies move left action
 	void CheckMoveLeft()
     {
         // Move Left
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (CustomInput("left"))
         {
             // Modify position
             transform.position += new Vector3(-1, 0, 0);
@@ -121,7 +140,7 @@ public class FamiliarizationSet : MonoBehaviour
 	void CheckMoveRight()
     {
         // Move Right
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (CustomInput("right"))
         {
             // Modify position
             transform.position += new Vector3(1, 0, 0);
@@ -140,7 +159,7 @@ public class FamiliarizationSet : MonoBehaviour
     void CheckFallDown()
     {
         // Fall
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (CustomInput("down"))
         {
             if (!FindObjectOfType<FamiliarizationController>().CorrectPosition())
                 return;
@@ -156,9 +175,6 @@ public class FamiliarizationSet : MonoBehaviour
     //Dropping Coroutine
     IEnumerator GoDown()
     {
-		//Logs drop time in csv file
-		LogDrop();
-
         // Modify position
         transform.position += new Vector3(0, -1, 0);
 
@@ -172,7 +188,7 @@ public class FamiliarizationSet : MonoBehaviour
         // It's not valid. revert.
         transform.position += new Vector3(0, 1, 0);
 
-        yield return new WaitForSeconds(1.25f);
+        yield return new WaitForSeconds(.75f);
 
         Grid.grid = new Transform[Grid.w, Grid.h];
 
@@ -181,7 +197,10 @@ public class FamiliarizationSet : MonoBehaviour
 
     }
 
-    //Checks if positioning is allowed based on 2D array data structre
+//------------------------------Grid Helper Functions------------------------------//
+
+
+	//Checks if positioning is allowed based on 2D array data structre
 	bool LegalGridPos()
     {
 		foreach (Transform child in transform)
@@ -218,8 +237,10 @@ public class FamiliarizationSet : MonoBehaviour
 		}
 	}
 
-    //Reorients and repositions ghost based on current block
-    void UpdateGhost()
+//------------------------------Ghost Helper Functions------------------------------//
+
+	//Reorients and repositions ghost based on current block
+	void UpdateGhost()
     {
         ghost.transform.position = transform.position;
         ghost.transform.rotation = transform.rotation;
@@ -244,14 +265,70 @@ public class FamiliarizationSet : MonoBehaviour
                 ghost.transform.position += Vector3.down;
         }
     }
-	
-    //Logs drop time in csv file
-	void LogDrop()
+
+	//Changes associated ghost object
+	private void SwapGhosts()
 	{
-        Debug.Log("Familiarization drop logged");
-		LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_FAMI_DROP, Time.time - runningTimer);
-		runningTimer = Time.time;
+		ghost.transform.position = ghostStandByPos;
+		if (orientation)
+		{
+			ghost = GameObject.Find(tag + "_ghost");
+		}
+		else
+		{
+			ghost = GameObject.Find(tag + "_ghost_light");
+		}
+		UpdateGhost();
 	}
+
+//------------------------------Input helper Functions------------------------------//
+
+	private bool CustomInput(string type)
+	{
+		if (bci)
+		{
+            switch (type){
+                case "rotate":
+                    if ((Input.GetKeyDown(KeyCode.Space) || EmoFacialExpression.isBlink) 
+                        && emotivLag > processInterval)
+                    {
+                        emotivLag = 0f;
+                        return true;
+                    }
+                    break;
+                //To be switched with BCI control
+				case "left":
+					return Input.GetKeyDown(KeyCode.LeftArrow);
+				case "right":
+					return Input.GetKeyDown(KeyCode.RightArrow);
+				case "down":
+					return Input.GetKeyDown(KeyCode.DownArrow);
+                default:
+                    //Debug.Log("CustomInput() used incorrectly with: " + type);
+                    break;
+            }
+            return false;
+		}
+		else
+		{
+			switch (type)
+			{
+				case "rotate":
+					return Input.GetKeyDown(KeyCode.Space);
+				case "left":
+					return Input.GetKeyDown(KeyCode.LeftArrow);
+				case "right":
+					return Input.GetKeyDown(KeyCode.RightArrow);
+				case "down":
+					return Input.GetKeyDown(KeyCode.DownArrow);
+				default:
+                    Debug.Log("CustomInput() used incorrectly with: " + type);
+					return false;
+			}
+		}
+
+	}
+
 
 }
 

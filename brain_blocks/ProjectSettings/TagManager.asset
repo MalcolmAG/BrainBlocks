@@ -20,7 +20,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Ghosts
   - 
   - 
   - 
@@ -47,4 +47,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Ghosts
+    uniqueID: 3388866403
     locked: 0
