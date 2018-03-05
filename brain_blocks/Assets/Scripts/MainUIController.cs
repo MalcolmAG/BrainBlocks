@@ -27,21 +27,19 @@ public class MainUIController : MonoBehaviour {
     private float timeOffset;
     private Set pausedSet;
 
-	// Use this for initialization
+//------------------------------Unity & Main Scene Control Functions------------------------------//
+
+
 	void Start () {
         paused = false;
         halfAllottedTime = allotedTime / 2;
-        if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
-            epoc.SetActive(true);
-        midwayMessage.SetActive(false);
-        finishedMessage.SetActive(false);
         midWayReached = false;
         checkingTime = true;
         startingTime = Time.time; 
         score = 0;
+        UI_Game();
 	}
 	
-	// Update is called once per frame
 	void Update () {
         if(checkingTime)
             CheckTime();
@@ -57,65 +55,94 @@ public class MainUIController : MonoBehaviour {
         halfAllottedTime -= Time.deltaTime;
         if(halfAllottedTime<0){
             paused = true;
-            scoreText.gameObject.SetActive(false);
-            pauseButton.gameObject.SetActive(false);
             checkingTime = false;
             if(!midWayReached){
 				midWayReached = true;
-                midwayMessage.SetActive(true);
                 halfAllottedTime = allotedTime / 2;
+                UI_Pause("midway");
             }
             else{
-				if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
-					epoc.SetActive(false);
-                finishedMessage.SetActive(true);
+                UI_Pause("finished");
 				LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_SCORE, score);
                 LoggerCSV.GetInstance().SaveCSV();
             }
         }
     }
 
-    //Updates score UI element
-    public void UpdateScore(){
-        scoreText.text = "Score: " + score.ToString();
-    }
+//------------------------------UI OnClick Functions------------------------------//
 
-    //OnClick for Done_Button
-    public void FinishGame(){
+
+	//Called by Done_Button
+	public void FinishGame(){
         LoggerCSV logger = LoggerCSV.GetInstance();
         logger.gameMode = LoggerCSV.NORMAL_MODE;
         logger.participantID = -1;
         SceneManager.LoadScene(0);
     }
 
-    //OnClick for End_Midway_Button
-    public void EndMidwayMessage(){
-		scoreText.gameObject.SetActive(true);
-        pauseButton.gameObject.SetActive(true);
-        midwayMessage.SetActive(false);
+	//Called by End_Midway_Button
+	public void EndMidwayMessage(){
+        UI_Game();
         startingTime = Time.time;
         checkingTime = true;
         paused = false;
     }
 
-    //OnClick for Pause_Button
-    public void StartPause(){
+	//Called by Pause_Button
+	public void StartPause(){
         checkingTime = false;
         pausedSet = FindObjectOfType<Set>();
         timeOffset = Time.time - pausedSet.runningTimer;
         paused = true;
-        pauseMessage.SetActive(true);
-		scoreText.gameObject.SetActive(false);
-        pauseButton.gameObject.SetActive(false);
+        UI_Pause("pause");
 	}
 
-    //OnClick for End_Pause_Button
-    public void EndPause(){
+	//Called by End_Pause_Button
+	public void EndPause(){
         checkingTime = true;
         pausedSet.runningTimer = Time.time - timeOffset;
         paused = false;
+        UI_Game();
+	}
+
+//------------------------------UI Helper Functions------------------------------//
+
+    //Sets UI elements for in-game view
+	private void UI_Game()
+	{
+		if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
+			epoc.SetActive(true);
+		midwayMessage.SetActive(false);
+		finishedMessage.SetActive(false);
 		pauseMessage.SetActive(false);
+		pauseButton.gameObject.SetActive(true);
 		scoreText.gameObject.SetActive(true);
-        pauseButton.gameObject.SetActive(true);
+	}
+
+	//Sets UI elements for paused-game view
+    private void UI_Pause(string type)
+	{
+		scoreText.gameObject.SetActive(false);
+		pauseButton.gameObject.SetActive(false);
+		switch (type)
+		{
+			case "midway":
+				midwayMessage.SetActive(true);
+				return;
+			case "pause":
+				pauseMessage.SetActive(true);
+				return;
+			case "finished":
+				if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
+					epoc.SetActive(false);
+				finishedMessage.SetActive(true);
+				return;
+		}
+	}
+
+	//Updates score UI element
+	public void UpdateScore()
+	{
+		scoreText.text = "Score: " + score.ToString();
 	}
 }

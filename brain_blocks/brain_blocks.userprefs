@@ -1,12 +1,10 @@
 ﻿<Properties StartupConfiguration="{1CE5CE23-5434-AF8A-9ABD-DC12C5007FFD}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/MainUIController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Emotiv/EmotivControl.cs">
     <Files>
-      <File FileName="Assets/Scripts/FamiliarizationController.cs" Line="117" Column="28" />
-      <File FileName="Assets/Scripts/LoggerCSV.cs" Line="38" Column="38" />
-      <File FileName="Assets/Scripts/MainUIController.cs" Line="32" Column="24" />
-      <File FileName="Assets/Scripts/MenuController.cs" Line="48" Column="47" />
-      <File FileName="Assets/Scripts/Emotiv/Contact Quality/ContactQualityUIControl.cs" Line="52" Column="9" />
-      <File FileName="Assets/Scripts/Set.cs" Line="63" Column="73" />
+      <File FileName="Assets/Scripts/Set.cs" Line="10" Column="22" />
+      <File FileName="Assets/Scripts/FamiliarizationSet.cs" Line="286" Column="45" />
+      <File FileName="Assets/Scripts/LoggerCSV.cs" Line="80" Column="1" />
+      <File FileName="Assets/Scripts/Emotiv/EmotivControl.cs" Line="36" Column="47" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />

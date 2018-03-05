@@ -11,7 +11,7 @@ public class MenuController : MonoBehaviour {
     public GameObject messagePanel;
     public TextMeshProUGUI messageText;
 	
-
+    //Coroutine function to display message to user
     IEnumerator ShowMessage(string message, float delay)
 	{
         messageText.text = message;
@@ -20,20 +20,22 @@ public class MenuController : MonoBehaviour {
         messagePanel.SetActive(false);
 	}
 
-    //Activated when slider in menu is used
+	//------------------------------UI OnClick Functions------------------------------//
+
+	//Called by Game_Mode_Slider
 	public void SetGameMode(float val)
 	{
         LoggerCSV.GetInstance().gameMode = (int)val;
 
 	}
-    //Activated when input val is changed
+    //Called by Participant_ID_InputField
     public void SetParticipantID(string val){
         int id;
         Int32.TryParse(val, out id);
         LoggerCSV.GetInstance().participantID = id;
     }
 
-    //Activated by start button in menu
+    //Called by Start_Button
     public void StartGame(){
         if (LoggerCSV.GetInstance().participantID < 1){
             StartCoroutine(ShowMessage("Please Enter a Valid ID", 1.5f));
@@ -45,7 +47,9 @@ public class MenuController : MonoBehaviour {
         }
         else
         {
-            GameObject.Find("Persistent_Master").AddComponent<EmotivControl>();
+            GameObject master = GameObject.Find("Persistent_Master");
+            master.AddComponent<EmotivControl>();
+            master.AddComponent<EmoFacialExpression>();
             SceneManager.LoadScene(1);
         }
     }

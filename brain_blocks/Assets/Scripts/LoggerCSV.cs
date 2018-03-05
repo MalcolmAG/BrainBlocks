@@ -24,6 +24,7 @@ public class LoggerCSV : MonoBehaviour
     public static readonly string EVENT_GAME_OVER = "Game Over/Score";
     public static readonly string EVENT_SCORE = "Final Score";
 
+//------------------------------Singleton Control Functions------------------------------//
 
 	private void Awake()
 	{
@@ -40,11 +41,12 @@ public class LoggerCSV : MonoBehaviour
 
 	}
 
-
 	public static LoggerCSV GetInstance()
 	{
 		return instance;
 	}
+
+//------------------------------CSV Functions------------------------------//
 
 	private void CreateTitles()
 	{
@@ -71,9 +73,10 @@ public class LoggerCSV : MonoBehaviour
 			Debug.Log("Row " + i.ToString() + ": " + toPrint);
 		}
 	}
+
+    //Saves List<string> rows as a .csv file
 	public void SaveCSV()
 	{
-		Debug.Log("Saving CSV");
 		string[][] output = new string[rows.Count][];
 		for (int i = 0; i < output.Length; i++)
 		{
@@ -106,7 +109,6 @@ public class LoggerCSV : MonoBehaviour
 			mode = "_Normal";
 		else
 			mode = "_BCI";
-        Debug.Log(Application.persistentDataPath);
         return Application.persistentDataPath + "_"+ participantID.ToString() + mode + ".csv";
 	}
 	

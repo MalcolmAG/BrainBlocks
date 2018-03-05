@@ -8,8 +8,8 @@ public class FamiliarizationSet : MonoBehaviour
     public GameObject ghost;
 
     private bool orientation;
-
     private bool completed;
+    private bool bci;
 
     private readonly float snapPos = 16f;
 
@@ -17,9 +17,12 @@ public class FamiliarizationSet : MonoBehaviour
 
     public static float runningTimer;
 
-    private void Start()
+//------------------------------Unity Functions------------------------------//
+
+	private void Start()
     {
-        runningTimer = Time.time;
+		bci = LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE;
+		runningTimer = Time.time;
         completed = false;
         orientation = true;
         ghost = GameObject.Find(tag + "_ghost");
@@ -47,25 +50,32 @@ public class FamiliarizationSet : MonoBehaviour
 
     }
 
-	private void SwapGhosts()
+//------------------------------User Input Listener Functions------------------------------//
+
+
+	//Listens for and applies rotate action
+	void CheckRotate()
 	{
-		ghost.transform.position = ghostStandByPos;
-		if (orientation)
+		// Rotate
+        if (CustomInput("rotate"))
 		{
-			ghost = GameObject.Find(tag + "_ghost");
+
+			transform.Rotate(0, 0, -90);
+			// See if valid
+			if (LegalGridPos())
+				// It's valid. Update grid.
+				UpdateGrid();
+			else
+				// It's not valid. revert.
+				transform.Rotate(0, 0, 90);
 		}
-		else
-		{
-			ghost = GameObject.Find(tag + "_ghost_light");
-		}
-		UpdateGhost();
 	}
 
     //Positions block at the top of the game field
     void CheckSnap()
     {
         //Snap orientated group to top of play field
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (CustomInput("down"))
         {
             //Don't allow snap if orientation is wrong
             if (!FindObjectOfType<FamiliarizationController>().CorrectOrientation()){
@@ -96,30 +106,11 @@ public class FamiliarizationSet : MonoBehaviour
         }
     }
 
-    //Listens for and applies rotate action
-	void CheckRotate()
-	{
-		// Rotate
-        if (Input.GetKeyDown(KeyCode.Space))
-		{
-
-			transform.Rotate(0, 0, -90);
-			// See if valid
-			if (LegalGridPos())
-				// It's valid. Update grid.
-				UpdateGrid();
-			else
-				// It's not valid. revert.
-				transform.Rotate(0, 0, 90);
-		}
-	}
-
-
 	//Listens for and applies move left action
 	void CheckMoveLeft()
     {
         // Move Left
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (CustomInput("left"))
         {
             // Modify position
             transform.position += new Vector3(-1, 0, 0);
@@ -138,7 +129,7 @@ public class FamiliarizationSet : MonoBehaviour
 	void CheckMoveRight()
     {
         // Move Right
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (CustomInput("right"))
         {
             // Modify position
             transform.position += new Vector3(1, 0, 0);
@@ -157,7 +148,7 @@ public class FamiliarizationSet : MonoBehaviour
     void CheckFallDown()
     {
         // Fall
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (CustomInput("down"))
         {
             if (!FindObjectOfType<FamiliarizationController>().CorrectPosition())
                 return;
@@ -186,7 +177,7 @@ public class FamiliarizationSet : MonoBehaviour
         // It's not valid. revert.
         transform.position += new Vector3(0, 1, 0);
 
-        yield return new WaitForSeconds(1.25f);
+        yield return new WaitForSeconds(.75f);
 
         Grid.grid = new Transform[Grid.w, Grid.h];
 
@@ -195,7 +186,10 @@ public class FamiliarizationSet : MonoBehaviour
 
     }
 
-    //Checks if positioning is allowed based on 2D array data structre
+//------------------------------Grid Helper Functions------------------------------//
+
+
+	//Checks if positioning is allowed based on 2D array data structre
 	bool LegalGridPos()
     {
 		foreach (Transform child in transform)
@@ -232,8 +226,10 @@ public class FamiliarizationSet : MonoBehaviour
 		}
 	}
 
-    //Reorients and repositions ghost based on current block
-    void UpdateGhost()
+//------------------------------Ghost Helper Functions------------------------------//
+
+	//Reorients and repositions ghost based on current block
+	void UpdateGhost()
     {
         ghost.transform.position = transform.position;
         ghost.transform.rotation = transform.rotation;
@@ -258,6 +254,49 @@ public class FamiliarizationSet : MonoBehaviour
                 ghost.transform.position += Vector3.down;
         }
     }
+
+	//Changes associated ghost object
+	private void SwapGhosts()
+	{
+		ghost.transform.position = ghostStandByPos;
+		if (orientation)
+		{
+			ghost = GameObject.Find(tag + "_ghost");
+		}
+		else
+		{
+			ghost = GameObject.Find(tag + "_ghost_light");
+		}
+		UpdateGhost();
+	}
+
+//------------------------------Input helper Functions------------------------------//
+
+	private bool CustomInput(string type)
+	{
+		if (bci)
+		{
+			return false;
+		}
+		else
+		{
+			switch (type)
+			{
+				case "rotate":
+					return Input.GetKeyDown(KeyCode.Space);
+				case "left":
+					return Input.GetKeyDown(KeyCode.LeftArrow);
+				case "right":
+					return Input.GetKeyDown(KeyCode.RightArrow);
+				case "down":
+					return Input.GetKeyDown(KeyCode.DownArrow);
+				default:
+					Debug.Log("CustomInput used incorrectly with: " + type);
+					return false;
+			}
+		}
+	}
+
 
 }
 

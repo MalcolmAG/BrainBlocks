@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class EmotivControl : MonoBehaviour {
 	EmoEngine engine;
-	public float processInterval = 0.1f;
+	public static float processInterval = 0.1f;
 	bool lock_device = false;
     public static uint userId;
 	void Start()
