@@ -530,13 +530,15 @@ GameObject:
   m_Component:
   - component: {fileID: 350533909}
   - component: {fileID: 350533908}
+  - component: {fileID: 350533910}
+  - component: {fileID: 350533911}
   m_Layer: 5
   m_Name: TempLog
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &350533908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -548,7 +550,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c4274698c5f34019a39e58c84ab1e80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameMode: 0
+  gameMode: 1
   participantID: -1
 --- !u!224 &350533909
 RectTransform:
@@ -568,6 +570,28 @@ RectTransform:
   m_AnchoredPosition: {x: 77.350006, y: 319}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &350533910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 350533907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ed734f556c62b74a810054e4e77f936, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &350533911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 350533907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b472bf3ddeb8f464ca967d1fb832c835, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &441013272 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4456318077019646, guid: 8ed1c530466c449feadee962359b7244,

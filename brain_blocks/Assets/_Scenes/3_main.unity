@@ -2349,6 +2349,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1561725039}
   - component: {fileID: 1561725038}
+  - component: {fileID: 1561725041}
+  - component: {fileID: 1561725040}
   m_Layer: 0
   m_Name: temp_log
   m_TagString: Untagged
@@ -2367,7 +2369,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c4274698c5f34019a39e58c84ab1e80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameMode: 0
+  gameMode: 1
   participantID: 890
 --- !u!4 &1561725039
 Transform:
@@ -2382,6 +2384,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1561725040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1561725037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ed734f556c62b74a810054e4e77f936, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1561725041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1561725037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b472bf3ddeb8f464ca967d1fb832c835, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1590994473
 GameObject:
   m_ObjectHideFlags: 0

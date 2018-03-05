@@ -17,16 +17,27 @@ public class Set : MonoBehaviour {
 
     public float runningTimer;
 
+    private EmoEngine engine;
+    public float emotivLag;
+    public float processInterval = .5f;
+
 //------------------------------Unity Functions------------------------------//
 
 	private void Start(){
 		bci = LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE;
+        if (bci){
+            emotivLag = 0f;
+            engine = EmoEngine.Instance;
+        }
 		runningTimer = Time.time;
         orientation = true;
         ghost = GameObject.Find(tag + "_ghost");
     }
 
     void Update(){
+
+        emotivLag += Time.deltaTime;
+
         if (!MainUIController.paused)
         {
             if (orientation)
@@ -302,28 +313,52 @@ public class Set : MonoBehaviour {
         runningTimer = Time.time;
     }
 
-//------------------------------Input helper Functions------------------------------//
+	//------------------------------Input helper Functions------------------------------//
 
-    private bool CustomInput(string type){
-        if(bci){
-            return false;
-        }
-        else{
-            switch(type){
-                case "rotate":
-                    return Input.GetKeyDown(KeyCode.Space);
-                case "up":
-                    return Input.GetKeyDown(KeyCode.UpArrow);
-                case "left":
-                    return Input.GetKeyDown(KeyCode.LeftArrow);
-                case "right":
-                    return Input.GetKeyDown(KeyCode.RightArrow);
-                case "down":
-                    return Input.GetKeyDown(KeyCode.DownArrow);
-                default:
-                    Debug.Log("CustomInput used incorrectly with: " + type);
-                    return false;
-            }
-        }
-    }
+	private bool CustomInput(string type)
+	{
+		if (bci)
+		{
+			switch (type)
+			{
+				case "rotate":
+					if ((Input.GetKeyDown(KeyCode.Space) || EmoFacialExpression.isBlink)
+						&& emotivLag > processInterval)
+					{
+						emotivLag = 0f;
+						return true;
+					}
+					break;
+				//To be switched with BCI control
+				case "left":
+					return Input.GetKeyDown(KeyCode.LeftArrow);
+				case "right":
+					return Input.GetKeyDown(KeyCode.RightArrow);
+				case "down":
+					return Input.GetKeyDown(KeyCode.DownArrow);
+				default:
+                    //Debug.Log("CustomInput() used incorrectly with: " + type);
+					break;
+			}
+			return false;
+		}
+		else
+		{
+			switch (type)
+			{
+				case "rotate":
+					return Input.GetKeyDown(KeyCode.Space);
+				case "left":
+					return Input.GetKeyDown(KeyCode.LeftArrow);
+				case "right":
+					return Input.GetKeyDown(KeyCode.RightArrow);
+				case "down":
+					return Input.GetKeyDown(KeyCode.DownArrow);
+				default:
+                    Debug.Log("CustomInput() used incorrectly with: " + type);
+					return false;
+			}
+		}
+
+	}
 }

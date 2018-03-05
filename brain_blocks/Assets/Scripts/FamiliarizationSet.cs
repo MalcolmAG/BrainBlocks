@@ -17,11 +17,19 @@ public class FamiliarizationSet : MonoBehaviour
 
     public static float runningTimer;
 
+    private EmoEngine engine;
+    public float emotivLag;
+    public float processInterval = .5f;
+
 //------------------------------Unity Functions------------------------------//
 
 	private void Start()
     {
 		bci = LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE;
+        if(bci){
+			emotivLag = 0f;
+			engine = EmoEngine.Instance;
+        }
 		runningTimer = Time.time;
         completed = false;
         orientation = true;
@@ -30,6 +38,9 @@ public class FamiliarizationSet : MonoBehaviour
 
     void Update()
     {
+        if(bci)
+            emotivLag += Time.deltaTime;
+
         if (!FamiliarizationController.paused)
         {
             if (orientation)
@@ -276,7 +287,27 @@ public class FamiliarizationSet : MonoBehaviour
 	{
 		if (bci)
 		{
-			return false;
+            switch (type){
+                case "rotate":
+                    if ((Input.GetKeyDown(KeyCode.Space) || EmoFacialExpression.isBlink) 
+                        && emotivLag > processInterval)
+                    {
+                        emotivLag = 0f;
+                        return true;
+                    }
+                    break;
+                //To be switched with BCI control
+				case "left":
+					return Input.GetKeyDown(KeyCode.LeftArrow);
+				case "right":
+					return Input.GetKeyDown(KeyCode.RightArrow);
+				case "down":
+					return Input.GetKeyDown(KeyCode.DownArrow);
+                default:
+                    //Debug.Log("CustomInput() used incorrectly with: " + type);
+                    break;
+            }
+            return false;
 		}
 		else
 		{
@@ -291,10 +322,11 @@ public class FamiliarizationSet : MonoBehaviour
 				case "down":
 					return Input.GetKeyDown(KeyCode.DownArrow);
 				default:
-					Debug.Log("CustomInput used incorrectly with: " + type);
+                    Debug.Log("CustomInput() used incorrectly with: " + type);
 					return false;
 			}
 		}
+
 	}
 
 
