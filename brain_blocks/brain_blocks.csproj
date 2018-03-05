@@ -111,6 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Emotiv\Contact Quality\ContactQualityUIControl.cs" />
+    <Compile Include="Assets\Scripts\Emotiv\EmotivControl.cs" />
     <Compile Include="Assets\Scripts\Emotiv\Plugins\CognitivActionSmooth.cs" />
     <Compile Include="Assets\Scripts\Emotiv\Plugins\EdkDll.cs" />
     <Compile Include="Assets\Scripts\Emotiv\Plugins\EmoEngine.cs" />
@@ -121,7 +122,6 @@
     <Compile Include="Assets\Scripts\Emotiv\Plugins\EmotivCloudClient.cs" />
     <Compile Include="Assets\Scripts\Emotiv\Plugins\EmoUserManagement.cs" />
     <Compile Include="Assets\Scripts\Emotiv\Plugins\LabelDraw.cs" />
-    <Compile Include="Assets\Scripts\Emotiv\TestControl.cs" />
     <Compile Include="Assets\Scripts\FamiliarizationController.cs" />
     <Compile Include="Assets\Scripts\FamiliarizationSet.cs" />
     <Compile Include="Assets\Scripts\Grid.cs" />
@@ -163,6 +163,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeB.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
+    <Compile Include="Assets\TrainingUIController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Anton OFL.txt" />

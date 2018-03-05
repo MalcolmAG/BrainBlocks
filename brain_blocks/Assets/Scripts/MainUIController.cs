@@ -11,6 +11,7 @@ public class MainUIController : MonoBehaviour {
 
     public TextMeshProUGUI scoreText;
     public Button pauseButton;
+    public GameObject epoc;
 
 	public GameObject finishedMessage;
     public GameObject midwayMessage;
@@ -20,7 +21,7 @@ public class MainUIController : MonoBehaviour {
     private bool midWayReached;
 	private float  startingTime;
     public float allotedTime;
-    private float halfAllottedTime;
+    public float halfAllottedTime;
 
     public static bool paused = false;
     private float timeOffset;
@@ -28,7 +29,10 @@ public class MainUIController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        paused = false;
         halfAllottedTime = allotedTime / 2;
+        if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
+            epoc.SetActive(true);
         midwayMessage.SetActive(false);
         finishedMessage.SetActive(false);
         midWayReached = false;
@@ -62,6 +66,8 @@ public class MainUIController : MonoBehaviour {
                 halfAllottedTime = allotedTime / 2;
             }
             else{
+				if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
+					epoc.SetActive(false);
                 finishedMessage.SetActive(true);
 				LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_SCORE, score);
                 LoggerCSV.GetInstance().SaveCSV();
@@ -76,6 +82,9 @@ public class MainUIController : MonoBehaviour {
 
     //OnClick for Done_Button
     public void FinishGame(){
+        LoggerCSV logger = LoggerCSV.GetInstance();
+        logger.gameMode = LoggerCSV.NORMAL_MODE;
+        logger.participantID = -1;
         SceneManager.LoadScene(0);
     }
 
@@ -92,9 +101,8 @@ public class MainUIController : MonoBehaviour {
     //OnClick for Pause_Button
     public void StartPause(){
         checkingTime = false;
-        pausedSet = GameObject.FindObjectOfType<Set>();
+        pausedSet = FindObjectOfType<Set>();
         timeOffset = Time.time - pausedSet.runningTimer;
-        Debug.Log(timeOffset);
         paused = true;
         pauseMessage.SetActive(true);
 		scoreText.gameObject.SetActive(false);

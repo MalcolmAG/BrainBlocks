@@ -19,6 +19,7 @@ public class LoggerCSV : MonoBehaviour
     public static readonly int BCI_MODE = 1;
 
     public static readonly string EVENT_RETRAIN = "Retrain Occured";
+    public static readonly string EVENT_FAMI = "Familiarization Completion Time";
     public static readonly string EVENT_GAME_DROP = "Game Drop Time";
     public static readonly string EVENT_GAME_OVER = "Game Over/Score";
     public static readonly string EVENT_SCORE = "Final Score";
@@ -34,7 +35,7 @@ public class LoggerCSV : MonoBehaviour
 		}
 		else if (instance != this)
 		{
-			Destroy(this);
+            Destroy(this.gameObject);
 		}
 
 	}
@@ -108,9 +109,5 @@ public class LoggerCSV : MonoBehaviour
         Debug.Log(Application.persistentDataPath);
         return Application.persistentDataPath + "_"+ participantID.ToString() + mode + ".csv";
 	}
-	// Update is called once per frame
-	void Update()
-	{
-
-	}
+	
 }

@@ -34,11 +34,14 @@ public class Set : MonoBehaviour {
     }
 
     void Update(){
+        Debug.Log("in update");
         if (!MainUIController.paused)
         {
             if (orientation)
             {
-                CheckRotate();
+				Debug.Log("checking rotate");
+
+				CheckRotate();
                 CheckSnap();
             }
             else
@@ -57,6 +60,7 @@ public class Set : MonoBehaviour {
 
 	//Positions block at the top of the game field
 	void CheckSnap(){
+        Debug.Log("Down arrow: " + Input.GetKeyDown(KeyCode.DownArrow));
         //Snap orientated group to top of play field
         if (Input.GetKeyDown(KeyCode.DownArrow)){
             orientation = false;

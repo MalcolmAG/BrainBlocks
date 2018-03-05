@@ -14,6 +14,7 @@ public class FamiliarizationController : MonoBehaviour {
     public GameObject instructionsMessage;
     public GameObject finishedMessage;
     public GameObject pausedMessage;
+    public GameObject epoc;
 
 	public GameObject[] options;
     private GameObject group;
@@ -21,13 +22,18 @@ public class FamiliarizationController : MonoBehaviour {
     private float[] rotationOptions = { 0f, -90f, -180f, 90f };
 
     private int trialStage;
+    private float startTime;
 
     public static bool paused = true;
 
     public void CustomStart(){
+        startTime = Time.time;
         instructionsMessage.gameObject.SetActive(false);
         if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
-			retrainButton.gameObject.SetActive(true);
+        {
+            retrainButton.gameObject.SetActive(true);
+            epoc.SetActive(true);
+        }
         trialText.gameObject.SetActive(true);
         pauseButton.gameObject.SetActive(true);
 		trialStage = 0;
@@ -108,13 +114,17 @@ public class FamiliarizationController : MonoBehaviour {
 
     //Checks if user is done with trial
     void CheckStage(){
-        if (trialStage == 5)
+        if (trialStage == 2)
         {
+            LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_FAMI, Time.time - startTime);
             trialText.gameObject.SetActive(false);
             pauseButton.gameObject.SetActive(false);
             finishedMessage.SetActive(true);
-			if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
-				retrainButton.gameObject.SetActive(false);
+            if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
+            {
+                retrainButton.gameObject.SetActive(false);
+                epoc.SetActive(false);
+            }
         }
         else
         {
@@ -124,8 +134,11 @@ public class FamiliarizationController : MonoBehaviour {
 
     public void StartPause(){
         paused = true;
-		if(LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
-			retrainButton.gameObject.SetActive(false);
+        if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
+        {
+            retrainButton.gameObject.SetActive(false);
+            epoc.SetActive(false);
+        }
         pauseButton.gameObject.SetActive(false);
         trialText.gameObject.SetActive(false);
         pausedMessage.SetActive(true);
@@ -136,14 +149,18 @@ public class FamiliarizationController : MonoBehaviour {
         pausedMessage.SetActive(false);
         trialText.gameObject.SetActive(false);
         pauseButton.gameObject.SetActive(true);
-		if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
-			retrainButton.gameObject.SetActive(true);
+        if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
+        {
+            retrainButton.gameObject.SetActive(true);
+            epoc.SetActive(true);
+        }
     }
 
     public void NextScene(){
         SceneManager.LoadScene(3);
     }
     public void PreviousScene(){
+        LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_RETRAIN, 1f);
         SceneManager.LoadScene(1);
     }
 }
