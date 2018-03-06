@@ -109,7 +109,11 @@ public class LoggerCSV : MonoBehaviour
 			mode = "_Normal";
 		else
 			mode = "_BCI";
-        return Application.persistentDataPath + "_"+ participantID.ToString() + mode + ".csv";
+
+        string final = Application.persistentDataPath;
+        if (final.EndsWith("brain_blocks"))
+            final = final.Substring(0, final.Length-12);
+        return final + participantID.ToString() + mode + "_BrainBlocks" + ".csv";
 	}
 	
 }

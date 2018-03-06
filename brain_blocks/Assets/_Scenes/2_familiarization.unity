@@ -533,7 +533,7 @@ GameObject:
   - component: {fileID: 350533910}
   - component: {fileID: 350533911}
   m_Layer: 5
-  m_Name: TempLog
+  m_Name: temp_log
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
