@@ -24,8 +24,6 @@ public class MainUIController : MonoBehaviour {
     public float halfAllottedTime;
 
     public static bool paused = false;
-    private float timeOffset;
-    private Set pausedSet;
 
 //------------------------------Unity & Main Scene Control Functions------------------------------//
 
@@ -57,14 +55,19 @@ public class MainUIController : MonoBehaviour {
             paused = true;
             checkingTime = false;
             if(!midWayReached){
+                LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_PAUSE_START);
 				midWayReached = true;
                 halfAllottedTime = allotedTime / 2;
                 UI_Pause("midway");
             }
             else{
+                LoggerCSV logger = LoggerCSV.GetInstance();
+                if (logger.gameMode == LoggerCSV.BCI_MODE)
+                    LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_END_BCI);
+                else
+                    logger.AddEvent(LoggerCSV.EVENT_END_NORMAL);
                 UI_Pause("finished");
-				LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_SCORE, score);
-                LoggerCSV.GetInstance().SaveCSV();
+                logger.SaveCSV();
             }
         }
     }
@@ -82,6 +85,7 @@ public class MainUIController : MonoBehaviour {
 
 	//Called by End_Midway_Button
 	public void EndMidwayMessage(){
+        LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_PAUSE_END);
         UI_Game();
         startingTime = Time.time;
         checkingTime = true;
@@ -90,17 +94,16 @@ public class MainUIController : MonoBehaviour {
 
 	//Called by Pause_Button
 	public void StartPause(){
-        checkingTime = false;
-        pausedSet = FindObjectOfType<Set>();
-        timeOffset = Time.time - pausedSet.runningTimer;
+        LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_PAUSE_START);
+		checkingTime = false;
         paused = true;
         UI_Pause("pause");
 	}
 
 	//Called by End_Pause_Button
 	public void EndPause(){
-        checkingTime = true;
-        pausedSet.runningTimer = Time.time - timeOffset;
+		LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_PAUSE_END);
+		checkingTime = true;
         paused = false;
         UI_Game();
 	}

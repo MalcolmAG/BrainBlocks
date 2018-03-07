@@ -106,7 +106,7 @@ public class FamiliarizationController : MonoBehaviour {
     void CheckStage(){
         if (trialStage == maxStage)
         {
-            LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_FAMI, Time.time - startTime);
+            LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_FAMI_END);
             ToggleUI(true, "finished");
         }
         else
@@ -117,6 +117,7 @@ public class FamiliarizationController : MonoBehaviour {
     //Called by Start_Trials_Buttom
 	public void CustomStart()
 	{
+        LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_FAMI_START);
 		InitUI();
 		startTime = Time.time;
 		trialStage = 0;
@@ -128,13 +129,15 @@ public class FamiliarizationController : MonoBehaviour {
 
     //Called by Pause_Button
     public void StartPause(){
+        LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_PAUSE_START);
         paused = true;
         ToggleUI(paused, "pause");
     }
 
 	//Called by End_Pause_Button
 	public void EndPause(){
-        paused = false;
+        LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_PAUSE_END);
+		paused = false;
         ToggleUI(paused, "pause");
     }
 
@@ -145,7 +148,7 @@ public class FamiliarizationController : MonoBehaviour {
 
     //Called by Retrain_Button
     public void PreviousScene(){
-        LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_RETRAIN, 1f);
+        LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAIN_START);
         SceneManager.LoadScene(1);
     }
 

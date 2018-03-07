@@ -111,7 +111,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Emotiv\Contact Quality\ContactQualityUIControl.cs" />
+    <Compile Include="Assets\Scripts\Emotiv\Controller.cs" />
     <Compile Include="Assets\Scripts\Emotiv\EmotivControl.cs" />
+    <Compile Include="Assets\Scripts\Emotiv\MentalCommandControl.cs" />
     <Compile Include="Assets\Scripts\Emotiv\Plugins\CognitivActionSmooth.cs" />
     <Compile Include="Assets\Scripts\Emotiv\Plugins\EdkDll.cs" />
     <Compile Include="Assets\Scripts\Emotiv\Plugins\EmoEngine.cs" />

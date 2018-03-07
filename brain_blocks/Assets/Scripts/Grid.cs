@@ -20,6 +20,7 @@ public class Grid : MonoBehaviour {
 	}
 
     public static void DestroyRow(int y){
+        LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_SCORE);
         MainUIController.score++;
         for (int x = 0; x < w; x++){
             Destroy(grid[x,y].gameObject);
