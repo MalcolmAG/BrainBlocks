@@ -52,7 +52,6 @@ public class MenuController : MonoBehaviour {
             master.AddComponent<EmotivControl>();
             master.AddComponent<EmoFacialExpression>();
             LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_START_BCI);
-			LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAIN_START);
             SceneManager.LoadScene(1);
         }
     }

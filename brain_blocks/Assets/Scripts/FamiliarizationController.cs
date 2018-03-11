@@ -141,15 +141,9 @@ public class FamiliarizationController : MonoBehaviour {
         ToggleUI(paused, "pause");
     }
 
-	//Called by Next_Scene_Button
-	public void NextScene(){
-        SceneManager.LoadScene(3);
-    }
-
-    //Called by Retrain_Button
-    public void PreviousScene(){
-        LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAIN_START);
-        SceneManager.LoadScene(1);
+	//Called by Next_Scene_Button and Retrain_Button
+	public void LoadScene(int idx){
+        SceneManager.LoadScene(idx);
     }
 
 //------------------------------UI Helper Functions------------------------------//

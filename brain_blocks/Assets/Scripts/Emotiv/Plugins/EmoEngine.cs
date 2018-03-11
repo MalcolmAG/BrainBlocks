@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
-using UnityEngine;
 
 /// <summary>
 /// Exception class for EmoEngine

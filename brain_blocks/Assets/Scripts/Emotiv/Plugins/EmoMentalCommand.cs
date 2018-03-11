@@ -117,8 +117,6 @@ public class EmoMentalCommand : MonoBehaviour
     /// <param name="MentalCommandAction">MentalCommand Action</param>
     public static void StartTrainingMentalCommand(EdkDll.IEE_MentalCommandAction_t MentalCommandAction)
     {
-        
-        Debug.Log("Action: " + MentalCommandAction);
         if (MentalCommandAction == EdkDll.IEE_MentalCommandAction_t.MC_NEUTRAL)
         {
             EmoEngine.Instance.MentalCommandSetTrainingAction((uint)EmoUserManagement.currentUser, MentalCommandAction);
@@ -130,7 +128,6 @@ public class EmoMentalCommand : MonoBehaviour
                 if (MentalCommandAction == MentalCommandActionList[i])
                 {
                     Debug.Log("Action compare");
-                    Debug.Log("Enable: " + i + "   " + MentalCommandActionsEnabled[i]);
                     if (MentalCommandActionsEnabled[i])
                     {
                         Debug.Log("Action is enabled");
@@ -153,13 +150,10 @@ public class EmoMentalCommand : MonoBehaviour
         {
             if (MentalCommandAction == MentalCommandActionList[i])
             {
-                Debug.Log(MentalCommandActionList[i]);
                 MentalCommandActionsEnabled[i] = iBool;
                 Debug.Log("MentalCommandEnabledList has changed");
-                Debug.Log("INDEX: "+ i + " val: "+ iBool);
             }
         }
-
     }
    
     public static void EnableMentalCommandActionsList()
