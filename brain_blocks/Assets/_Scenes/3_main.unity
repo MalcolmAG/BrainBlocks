@@ -1524,7 +1524,7 @@ MonoBehaviour:
   finishedMessage: {fileID: 1195420862}
   midwayMessage: {fileID: 710415801}
   pauseMessage: {fileID: 1590994473}
-  allotedTime: 12
+  allotedTime: 30
   halfAllottedTime: 0
 --- !u!4 &1134788752 stripped
 Transform:
@@ -2369,8 +2369,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c4274698c5f34019a39e58c84ab1e80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameMode: 1
-  participantID: 890
+  gameMode: 0
+  participantID: 222
 --- !u!4 &1561725039
 Transform:
   m_ObjectHideFlags: 0
@@ -2390,7 +2390,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1561725037}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2ed734f556c62b74a810054e4e77f936, type: 3}
   m_Name: 
@@ -2401,7 +2401,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1561725037}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b472bf3ddeb8f464ca967d1fb832c835, type: 3}
   m_Name: 

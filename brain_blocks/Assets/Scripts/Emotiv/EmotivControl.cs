@@ -95,22 +95,4 @@ public class EmotivControl : MonoBehaviour {
 			Console.WriteLine("{0}", e.ToString());
 		}
 	}
-    public void connectButton(Button btn){
-        Text t = btn.GetComponentInChildren<Text>();
-        ColorBlock cb = btn.colors;
-        if (t.text.Equals("CONNECT")){
-
-            t.text = "DISCONNECT";
-            cb.normalColor = Color.red;
-            cb.highlightedColor = Color.red;
-            btn.colors = cb;
-        }
-        else{
-            engine.Disconnect();
-            t.text = "CONNECT";
-            cb.normalColor = Color.green;
-            cb.highlightedColor = Color.green;
-            btn.colors = cb;
-        }
-    }
 }

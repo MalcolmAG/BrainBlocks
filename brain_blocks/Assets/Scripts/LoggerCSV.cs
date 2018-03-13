@@ -18,11 +18,20 @@ public class LoggerCSV : MonoBehaviour
     public static readonly int NORMAL_MODE = 0;
     public static readonly int BCI_MODE = 1;
 
-    public static readonly string EVENT_RETRAIN = "Retrain Occured";
-    public static readonly string EVENT_FAMI = "Familiarization Completion Time";
-    public static readonly string EVENT_GAME_DROP = "Game Drop Time";
-    public static readonly string EVENT_GAME_OVER = "Game Over/Score";
-    public static readonly string EVENT_SCORE = "Final Score";
+    public static readonly string EVENT_START_NORMAL = "Start Normal Mode";
+    public static readonly string EVENT_END_NORMAL = "End Normal Mode Finished";
+    public static readonly string EVENT_START_BCI = "Start BCI Mode";
+    public static readonly string EVENT_END_BCI = "End BCI Mode";
+    public static readonly string EVENT_PAUSE_START = "Start Pause";
+	public static readonly string EVENT_PAUSE_END = "End Pause";
+    public static readonly string EVENT_TRAIN_START = "Start Training";
+    public static readonly string EVENT_TRAIN_END = "End Training";
+    public static readonly string EVENT_FAMI_START = "Start Familiarization";
+    public static readonly string EVENT_FAMI_END = "Completed Familiarization";
+    public static readonly string EVENT_BLOCK_CREATE = "Game Block Created";
+    public static readonly string EVENT_BLOCK_DROP = "Game Block Dropped";
+    public static readonly string EVENT_SCORE = "Score";
+    public static readonly string EVENT_GAME_OVER = "Game Over";
 
 //------------------------------Singleton Control Functions------------------------------//
 
@@ -50,13 +59,13 @@ public class LoggerCSV : MonoBehaviour
 
 	private void CreateTitles()
 	{
-		string[] titles = { "Time Stamp", "Event", "Event Value" };
+		string[] titles = { "External Time", "Event", "Internal Time" };
 		rows.Add(titles);
 	}
 
-	public void AddEvent( string event_log, float event_val)
+    public void AddEvent(string event_log)
 	{
-        string[] toAdd = { DateTime.Now.ToString(), event_log, event_val.ToString() };
+        string[] toAdd = { DateTime.Now.ToString(), event_log, Time.time.ToString() };
 		rows.Add(toAdd);
 	}
 
@@ -109,7 +118,11 @@ public class LoggerCSV : MonoBehaviour
 			mode = "_Normal";
 		else
 			mode = "_BCI";
-        return Application.persistentDataPath + "_"+ participantID.ToString() + mode + ".csv";
+
+        string final = Application.persistentDataPath;
+        if (final.EndsWith("brain_blocks"))
+            final = final.Substring(0, final.Length-12);
+        return final + participantID.ToString() + mode + "_BrainBlocks" + ".csv";
 	}
 	
 }

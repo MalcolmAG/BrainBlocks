@@ -110,6 +110,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Controller.cs" />
+    <Compile Include="Assets\Scripts\cube.cs" />
     <Compile Include="Assets\Scripts\Emotiv\Contact Quality\ContactQualityUIControl.cs" />
     <Compile Include="Assets\Scripts\Emotiv\EmotivControl.cs" />
     <Compile Include="Assets\Scripts\Emotiv\Plugins\CognitivActionSmooth.cs" />
@@ -127,6 +129,7 @@
     <Compile Include="Assets\Scripts\Grid.cs" />
     <Compile Include="Assets\Scripts\LoggerCSV.cs" />
     <Compile Include="Assets\Scripts\MainUIController.cs" />
+    <Compile Include="Assets\Scripts\MentalCommandControl.cs" />
     <Compile Include="Assets\Scripts\MenuController.cs" />
     <Compile Include="Assets\Scripts\Set.cs" />
     <Compile Include="Assets\Scripts\Spawn.cs" />

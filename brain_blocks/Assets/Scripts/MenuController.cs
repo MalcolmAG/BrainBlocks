@@ -43,6 +43,7 @@ public class MenuController : MonoBehaviour {
         }
         if (LoggerCSV.GetInstance().gameMode == LoggerCSV.NORMAL_MODE)
         {
+            LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_START_NORMAL);
             SceneManager.LoadScene(2);
         }
         else
@@ -50,6 +51,7 @@ public class MenuController : MonoBehaviour {
             GameObject master = GameObject.Find("Persistent_Master");
             master.AddComponent<EmotivControl>();
             master.AddComponent<EmoFacialExpression>();
+            LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_START_BCI);
             SceneManager.LoadScene(1);
         }
     }

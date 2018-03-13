@@ -15,8 +15,6 @@ public class Set : MonoBehaviour {
 
     private readonly Vector2 ghostStandByPos = Vector2.down * 10;
 
-    public float runningTimer;
-
     private EmoEngine engine;
     public float emotivLag;
     public float processInterval = .5f;
@@ -24,12 +22,12 @@ public class Set : MonoBehaviour {
 //------------------------------Unity Functions------------------------------//
 
 	private void Start(){
+        LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_BLOCK_CREATE);
 		bci = LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE;
         if (bci){
             emotivLag = 0f;
             engine = EmoEngine.Instance;
         }
-		runningTimer = Time.time;
         orientation = true;
         ghost = GameObject.Find(tag + "_ghost");
     }
@@ -156,8 +154,9 @@ public class Set : MonoBehaviour {
 		// Fall
         if (CustomInput("down")){
 
-            //Log Drop time in CSV file
-            LogDrop();
+			//Log Drop time in CSV file
+            LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_BLOCK_DROP);
+
 
 			// Modify position
 			transform.position += new Vector3(0, -1, 0);
@@ -197,7 +196,7 @@ public class Set : MonoBehaviour {
 			if (v.y >= snapPos)
 			{
 				//Log Game over
-				LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_GAME_OVER, MainUIController.score);
+				LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_GAME_OVER);
 
 				MainUIController.score = 0;
 
@@ -304,16 +303,7 @@ public class Set : MonoBehaviour {
 		UpdateGhost();
 	}
 
-//------------------------------CSV helper Functions------------------------------//
-
-
-	//Logs drop time in csv file
-	void LogDrop(){
-		LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_GAME_DROP, Time.time - runningTimer);
-        runningTimer = Time.time;
-    }
-
-	//------------------------------Input helper Functions------------------------------//
+//------------------------------Input helper Functions------------------------------//
 
 	private bool CustomInput(string type)
 	{
@@ -354,6 +344,8 @@ public class Set : MonoBehaviour {
 					return Input.GetKeyDown(KeyCode.RightArrow);
 				case "down":
 					return Input.GetKeyDown(KeyCode.DownArrow);
+                case "up":
+                    return Input.GetKeyDown(KeyCode.UpArrow);
 				default:
                     Debug.Log("CustomInput() used incorrectly with: " + type);
 					return false;
