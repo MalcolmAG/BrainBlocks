@@ -5,7 +5,8 @@
       <File FileName="Assets/Scripts/FamiliarizationSet.cs" Line="3" Column="8" />
       <File FileName="Assets/Scripts/FamiliarizationController.cs" Line="149" Column="1" />
       <File FileName="Assets/Scripts/Emotiv/Plugins/EmoMentalCommand.cs" Line="28" Column="51" />
-      <File FileName="Assets/Scripts/MentalCommandControl.cs" Line="22" Column="1" />
+      <File FileName="Assets/Scripts/MentalCommandControl.cs" Line="187" Column="46" />
+      <File FileName="Assets/Scripts/Emotiv/Plugins/EmoEngine.cs" Line="848" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />

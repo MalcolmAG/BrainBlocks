@@ -24,14 +24,6 @@ public class MentalCommandControl : MonoBehaviour {
         bindEvents();
 	}
 
-    private void Update()
-    {
-        if(print){
-            Debug.Log("LEFT:" + EmoMentalCommand.MentalCommandActionPower[5]);
-            Debug.Log("RIGHT:" + EmoMentalCommand.MentalCommandActionPower[6]);
-        }
-    }
-
     //------------------------------Emotiv Event Functions------------------------------//
 
 
@@ -46,6 +38,7 @@ public class MentalCommandControl : MonoBehaviour {
 
 
     void onMentalCommandEmoStateUpdated(object sender, EmoStateUpdatedEventArgs args){
+        Debug.Log("Change State");
         if (training)
         {
             return;
@@ -87,9 +80,6 @@ public class MentalCommandControl : MonoBehaviour {
         status.text = "Success! Training " + trainType +" Concluded";
         //should confirm user that they accept that training, in this case auto accept
         engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_ACCEPT);
-        for (int i = 0; i < EmoMentalCommand.MentalCommandActionsEnabled.Length; i ++){
-            Debug.Log("LIST " + i+ ": " + EmoMentalCommand.MentalCommandActionsEnabled[i]);
-		}
     }
 
     void onTrainingCompleted(object sender, EmoEngineEventArgs args){
@@ -167,13 +157,17 @@ public class MentalCommandControl : MonoBehaviour {
     //Called by Left_Button
 	public void TrainLeft()
 	{
+        uint action1 = (uint)EdkDll.IEE_MentalCommandAction_t.MC_LEFT;
+        uint action2 = (uint)EdkDll.IEE_MentalCommandAction_t.MC_RIGHT;
+		uint listAction = action1 | action2;
+
 		training = true;
         trainType = "Left";
         cube.action = cube.ACTION_LEFT;
 
         StartCoroutine(UpdateSlider());
 
-        engine.MentalCommandSetActiveActions(userId, (uint)EdkDll.IEE_MentalCommandAction_t.MC_LEFT);
+        engine.MentalCommandSetActiveActions(userId, listAction);
 		engine.MentalCommandSetTrainingAction(userId, EdkDll.IEE_MentalCommandAction_t.MC_LEFT);
 		engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_START);
 	}
@@ -185,8 +179,10 @@ public class MentalCommandControl : MonoBehaviour {
         cube.action = cube.ACTION_RIGHT;
 
 		StartCoroutine(UpdateSlider());
-
-		engine.MentalCommandSetActiveActions(userId, (uint)EdkDll.IEE_MentalCommandAction_t.MC_RIGHT);
+        uint action1 = (uint)EdkDll.IEE_MentalCommandAction_t.MC_LEFT;
+        uint action2 = (uint)EdkDll.IEE_MentalCommandAction_t.MC_RIGHT;
+		uint listAction = action1 | action2;
+        engine.MentalCommandSetActiveActions(userId, (uint) EdkDll.IEE_MentalCommandAction_t.MC_RIGHT);
 		engine.MentalCommandSetTrainingAction(userId, EdkDll.IEE_MentalCommandAction_t.MC_RIGHT);
 		engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_START);
 	}
