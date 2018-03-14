@@ -103,7 +103,6 @@
 -define:UNITY_TEAM_LICENSE
 -define:ENABLE_VSTU
 'Assets/Scripts/Controller.cs'
-'Assets/Scripts/cube.cs'
 'Assets/Scripts/Emotiv/Contact Quality/ContactQualityUIControl.cs'
 'Assets/Scripts/Emotiv/EmotivControl.cs'
 'Assets/Scripts/Emotiv/Plugins/CognitivActionSmooth.cs'
@@ -125,6 +124,7 @@
 'Assets/Scripts/MenuController.cs'
 'Assets/Scripts/Set.cs'
 'Assets/Scripts/Spawn.cs'
+'Assets/Scripts/TrainingCube.cs'
 'Assets/Scripts/TrainingUIController.cs'
 'Assets/TextMesh Pro/Examples & Extras/Scripts/Benchmark01.cs'
 'Assets/TextMesh Pro/Examples & Extras/Scripts/Benchmark01_UGUI.cs'

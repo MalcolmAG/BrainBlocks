@@ -111,7 +111,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Controller.cs" />
-    <Compile Include="Assets\Scripts\cube.cs" />
     <Compile Include="Assets\Scripts\Emotiv\Contact Quality\ContactQualityUIControl.cs" />
     <Compile Include="Assets\Scripts\Emotiv\EmotivControl.cs" />
     <Compile Include="Assets\Scripts\Emotiv\Plugins\CognitivActionSmooth.cs" />
@@ -133,6 +132,7 @@
     <Compile Include="Assets\Scripts\MenuController.cs" />
     <Compile Include="Assets\Scripts\Set.cs" />
     <Compile Include="Assets\Scripts\Spawn.cs" />
+    <Compile Include="Assets\Scripts\TrainingCube.cs" />
     <Compile Include="Assets\Scripts\TrainingUIController.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />

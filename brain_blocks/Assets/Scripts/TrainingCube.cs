@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class cube : MonoBehaviour {
+public class TrainingCube : MonoBehaviour {
 
     public static int action = 0;
     public static float speed = .2f;
