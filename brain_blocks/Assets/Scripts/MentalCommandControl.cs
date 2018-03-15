@@ -17,14 +17,6 @@ public class MentalCommandControl : MonoBehaviour {
     string trainType;
 	EmoEngine engine;
 
-
-	void Start () {
-        LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAIN_START);
-        slider.value = 0;
-        engine = EmoEngine.Instance;
-        bindEvents();
-	}
-
     //------------------------------Emotiv Event Functions------------------------------//
 
 
@@ -104,8 +96,9 @@ public class MentalCommandControl : MonoBehaviour {
 		slider.value = 0;
 		trainPercentage.text = "0%";
         //for testing without emotiv
-		//ActivateButtons(true);
-        //UpdateButtons();
+        TrainingCube.action = TrainingCube.ACTION_RESET;
+		ActivateButtons(true);
+        UpdateButtons();
 
 
 	}
@@ -157,10 +150,18 @@ public class MentalCommandControl : MonoBehaviour {
 
 //------------------------------UI OnClick Functions------------------------------//
 
+    //Called by Start_Training_Button
+    public void CustomStart(){
+		LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAIN_START);
+		slider.value = 0;
+		engine = EmoEngine.Instance;
+		bindEvents();
+    }
+
     //Called by Left_Button, Right_Button, and Neutral_Button
 	public void TrainAction(string type)
 	{
-		//ActivateButtons(false);
+		ActivateButtons(false);
 
 		trainType = type;
         EdkDll.IEE_MentalCommandAction_t toTrain = EdkDll.IEE_MentalCommandAction_t.MC_NEUTRAL;
