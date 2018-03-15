@@ -163,7 +163,7 @@ public class FamiliarizationController : MonoBehaviour {
 		{
             retrainButton.gameObject.SetActive(!pause);
 		}
-		pauseButton.gameObject.SetActive(!paused);
+		pauseButton.gameObject.SetActive(!pause);
 		trialText.gameObject.SetActive(!pause);
         switch(type){
             case "pause":

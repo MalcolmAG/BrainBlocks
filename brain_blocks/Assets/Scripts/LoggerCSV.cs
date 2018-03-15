@@ -24,8 +24,8 @@ public class LoggerCSV : MonoBehaviour
     public static readonly string EVENT_END_BCI = "End BCI Mode";
     public static readonly string EVENT_PAUSE_START = "Start Pause";
 	public static readonly string EVENT_PAUSE_END = "End Pause";
-    public static readonly string EVENT_TRAIN_START = "Start Training";
-    public static readonly string EVENT_TRAIN_END = "End Training";
+    public static readonly string EVENT_TRAIN_START = "Start BCI Training";
+    public static readonly string EVENT_TRAIN_END = "End BCI Training";
     public static readonly string EVENT_FAMI_START = "Start Familiarization";
     public static readonly string EVENT_FAMI_END = "Completed Familiarization";
     public static readonly string EVENT_BLOCK_CREATE = "Game Block Created";

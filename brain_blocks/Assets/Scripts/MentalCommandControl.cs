@@ -1,51 +1,36 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 public class MentalCommandControl : MonoBehaviour {
 
     public Button btnNeutral, btnLeft, btnRight,
                   btnNeutralClear, btnLeftClear,
-                  btnRightClear;
+                  btnRightClear, btnNext;
     public Slider slider;
     public TextMeshProUGUI trainPercentage;
     public TextMeshProUGUI curAction;
     public TextMeshProUGUI status;
-    public bool print;
     uint userId;
-    bool training = false;
+    bool training, rightTrained, leftTrained = false;
     string trainType;
 	EmoEngine engine;
-
-
-	void Start () {
-        slider.value = 0;
-        engine = EmoEngine.Instance;
-        bindEvents();
-	}
-
-    private void Update()
-    {
-        if(print){
-            Debug.Log("LEFT:" + EmoMentalCommand.MentalCommandActionPower[5]);
-            Debug.Log("RIGHT:" + EmoMentalCommand.MentalCommandActionPower[6]);
-        }
-    }
 
     //------------------------------Emotiv Event Functions------------------------------//
 
 
     void bindEvents(){
-        engine.UserAdded += onUserAdded;
-        engine.UserRemoved += onUserRemoved;
-        engine.MentalCommandTrainingStarted += onTrainingStarted;
-        engine.MentalCommandTrainingSucceeded += onTrainingSuccessed;
-        engine.MentalCommandTrainingCompleted += onTrainingCompleted;
-        engine.MentalCommandEmoStateUpdated += onMentalCommandEmoStateUpdated;
+        engine.UserAdded += OnUserAdded;
+        engine.MentalCommandTrainingStarted += OnTrainingStarted;
+        engine.MentalCommandTrainingSucceeded += OnTrainingSuccessed;
+        engine.MentalCommandTrainingCompleted += OnTrainingCompleted;
+        engine.MentalCommandEmoStateUpdated += OnMentalCommandEmoStateUpdated;
     }
 
-
-    void onMentalCommandEmoStateUpdated(object sender, EmoStateUpdatedEventArgs args){
+    //Move TrainingCube and update Current Action UI according to new mental action
+    void OnMentalCommandEmoStateUpdated(object sender, EmoStateUpdatedEventArgs args){
+        Debug.Log("Change State");
         if (training)
         {
             return;
@@ -55,48 +40,44 @@ public class MentalCommandControl : MonoBehaviour {
         switch (action)
         {
             case EdkDll.IEE_MentalCommandAction_t.MC_NEUTRAL:
-                cube.action = 0;
-                curAction.text = "CurrentAction: Neutral";
+                TrainingCube.action = 0;
+                curAction.text = "Current Action: Neutral";
                 break;
             case EdkDll.IEE_MentalCommandAction_t.MC_RIGHT:
-                cube.action = 1;
-                curAction.text = "CurrentAction: Right";
+                TrainingCube.action = 1;
+                curAction.text = "Current Action: Right";
                 break;
             case EdkDll.IEE_MentalCommandAction_t.MC_LEFT:
-                cube.action = 2;
-                curAction.text = "CurrentAction: Left";
+                TrainingCube.action = 2;
+                curAction.text = "Current Action: Left";
 				break;
 
         }
     }
-    private void onUserAdded(object sender, EmoEngineEventArgs args){
+    private void OnUserAdded(object sender, EmoEngineEventArgs args){
         userId = args.userId;
-        Debug.Log("Current User: " + userId.ToString());
-    }
-    private void onUserRemoved(object sender, EmoEngineEventArgs args){
-        
     }
 
-    void onTrainingStarted(object sender, EmoEngineEventArgs args)
+    void OnTrainingStarted(object sender, EmoEngineEventArgs args)
     {
         status.text = "Training " + trainType;
         training = true;
+        ActivateButtons(false);
     }
 
-    void onTrainingSuccessed(object sender, EmoEngineEventArgs args){
-        status.text = "Success! Training " + trainType +" Concluded";
+    void OnTrainingSuccessed(object sender, EmoEngineEventArgs args){
+        status.text = "Success! Training " + trainType + " Concluded";
         //should confirm user that they accept that training, in this case auto accept
         engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_ACCEPT);
-        for (int i = 0; i < EmoMentalCommand.MentalCommandActionsEnabled.Length; i ++){
-            Debug.Log("LIST " + i+ ": " + EmoMentalCommand.MentalCommandActionsEnabled[i]);
-		}
     }
 
-    void onTrainingCompleted(object sender, EmoEngineEventArgs args){
+    void OnTrainingCompleted(object sender, EmoEngineEventArgs args){
+        TrainingCube.action = TrainingCube.ACTION_RESET;
+
         training = false;
+        ActivateButtons(true);
         UpdateButtons();
-        cube.action = cube.ACTION_RESET;
-    }
+	}
 
 //------------------------------UI Helper Functions------------------------------//
 	//Coroutine to control Training_Slider
@@ -114,80 +95,101 @@ public class MentalCommandControl : MonoBehaviour {
 		yield return new WaitForSeconds(1f);
 		slider.value = 0;
 		trainPercentage.text = "0%";
+        //for testing without emotiv
+        TrainingCube.action = TrainingCube.ACTION_RESET;
+		ActivateButtons(true);
+        UpdateButtons();
+
 
 	}
 
-    //Activates/Deactivates Buttons depending on user interaction
+    //Shows/Hides Buttons depending on user interaction
     void UpdateButtons () {
+        if (leftTrained && rightTrained)
+            btnNext.gameObject.SetActive(true);
+        else
+            btnNext.gameObject.SetActive(false);
         switch(trainType){
             case "Neutral":
-                btnNeutralClear.interactable = true;
-                btnLeft.interactable = true;
-                btnRight.interactable = true;
+                btnNeutralClear.gameObject.SetActive(true);
+                btnLeft.gameObject.SetActive(true);
+                btnRight.gameObject.SetActive(true);
 				break;
             case "clear neutral":
-                btnNeutralClear.interactable = false;
-                btnRight.interactable = false;
-                btnRightClear.interactable = false;
-                btnLeft.interactable = false;
-                btnLeftClear.interactable = false;
+                btnNeutralClear.gameObject.SetActive(false);
+                btnRight.gameObject.SetActive(false);
+                btnRightClear.gameObject.SetActive(false);
+                btnLeft.gameObject.SetActive(false);
+                btnLeftClear.gameObject.SetActive(false);
                 break;
             case "Right":
-                btnRightClear.interactable = true;
+                btnRightClear.gameObject.SetActive(true);
                 break;
             case "clear right":
-                btnRightClear.interactable = false;
+                btnRightClear.gameObject.SetActive(false);
                 break;
             case "Left":
-                btnLeftClear.interactable = true;
+                btnLeftClear.gameObject.SetActive(true);
                 break;
             case "clear left":
-                btnLeftClear.interactable = false;
+                btnLeftClear.gameObject.SetActive(false);
                 break;
 
 		}
 	}
 
+    //Decativates/Activates buttons depending on training
+    void ActivateButtons(bool yes){
+        btnNeutral.interactable = yes;
+        btnLeft.interactable = yes;
+        btnRight.interactable = yes;
+        btnNeutralClear.interactable = yes;
+        btnLeftClear.interactable = yes;
+        btnRightClear.interactable = yes;
+    }
+
 //------------------------------UI OnClick Functions------------------------------//
 
+    //Called by Start_Training_Button
+    public void CustomStart(){
+		LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAIN_START);
+		slider.value = 0;
+		engine = EmoEngine.Instance;
+		bindEvents();
+    }
 
-    //Called by Neutral_Button
-    public void TrainNeutral(){
-        training = true;
-        trainType = "Neutral";
-        cube.action = cube.ACTION_NEUTRAL;
-
-        StartCoroutine(UpdateSlider());
-
-		//no need to call MentalCommandSetActiveActions with neutral action
-		engine.MentalCommandSetTrainingAction(userId, EdkDll.IEE_MentalCommandAction_t.MC_NEUTRAL);
-		engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_START);
-	}
-
-    //Called by Left_Button
-	public void TrainLeft()
+    //Called by Left_Button, Right_Button, and Neutral_Button
+	public void TrainAction(string type)
 	{
-		training = true;
-        trainType = "Left";
-        cube.action = cube.ACTION_LEFT;
+		ActivateButtons(false);
+
+		trainType = type;
+        EdkDll.IEE_MentalCommandAction_t toTrain = EdkDll.IEE_MentalCommandAction_t.MC_NEUTRAL;
+        switch (type)
+        {
+            case "Left":
+                TrainingCube.action = TrainingCube.ACTION_LEFT;
+                toTrain = EdkDll.IEE_MentalCommandAction_t.MC_LEFT;
+                leftTrained = true;
+                break;
+            case "Right":
+                TrainingCube.action = TrainingCube.ACTION_RIGHT;
+                toTrain = EdkDll.IEE_MentalCommandAction_t.MC_RIGHT;
+                rightTrained = true;
+                break;
+        }
+
+
+        if (type != "Neutral"){
+            uint action1 = (uint)EdkDll.IEE_MentalCommandAction_t.MC_LEFT;
+            uint action2 = (uint)EdkDll.IEE_MentalCommandAction_t.MC_RIGHT;
+            uint listAction = action1 | action2;
+            engine.MentalCommandSetActiveActions(userId, listAction);
+        }
 
         StartCoroutine(UpdateSlider());
 
-        engine.MentalCommandSetActiveActions(userId, (uint)EdkDll.IEE_MentalCommandAction_t.MC_LEFT);
-		engine.MentalCommandSetTrainingAction(userId, EdkDll.IEE_MentalCommandAction_t.MC_LEFT);
-		engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_START);
-	}
-
-    //Called by Right_Button
-    public void TrainRight(){
-        training = true;
-        trainType = "Right";
-        cube.action = cube.ACTION_RIGHT;
-
-		StartCoroutine(UpdateSlider());
-
-		engine.MentalCommandSetActiveActions(userId, (uint)EdkDll.IEE_MentalCommandAction_t.MC_RIGHT);
-		engine.MentalCommandSetTrainingAction(userId, EdkDll.IEE_MentalCommandAction_t.MC_RIGHT);
+        engine.MentalCommandSetTrainingAction(userId, toTrain);
 		engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_START);
 	}
 
@@ -200,10 +202,12 @@ public class MentalCommandControl : MonoBehaviour {
             case "Left":
                 action = EdkDll.IEE_MentalCommandAction_t.MC_LEFT;
                 trainType = "clear left";
+                leftTrained = false;
 				break;
             case "Right":
                 action = EdkDll.IEE_MentalCommandAction_t.MC_RIGHT;
 				trainType = "clear right";
+                rightTrained = false;
 				break;
         }
 
@@ -211,6 +215,12 @@ public class MentalCommandControl : MonoBehaviour {
 		EdkDll.IEE_MentalCommandSetTrainingControl((uint)EmoUserManagement.currentUser, EdkDll.IEE_MentalCommandTrainingControl_t.MC_ERASE);
         UpdateButtons();
         status.text= "Cleared " + type + " Training Data";
+    }
+
+    //Called by Next_Scene_Button
+    public void NextScene(){
+        LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAIN_END);
+        SceneManager.LoadScene(2);
     }
 
 }
