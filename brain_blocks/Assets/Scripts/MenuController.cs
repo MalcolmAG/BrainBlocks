@@ -41,13 +41,11 @@ public class MenuController : MonoBehaviour {
             StartCoroutine(ShowMessage("Please Enter a Valid ID", 1.5f));
             return;
         }
-        if (LoggerCSV.GetInstance().gameMode == LoggerCSV.NORMAL_MODE)
-        {
+        if (LoggerCSV.GetInstance().gameMode == LoggerCSV.NORMAL_MODE){
             LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_START_NORMAL);
             SceneManager.LoadScene(2);
         }
-        else
-        {
+        else{
             GameObject master = GameObject.Find("Persistent_Master");
             master.AddComponent<EmotivControl>();
             master.AddComponent<EmoFacialExpression>();
