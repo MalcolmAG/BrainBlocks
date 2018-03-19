@@ -11,10 +11,11 @@ public class MentalCommandControl : MonoBehaviour {
     public Slider slider;
     public TextMeshProUGUI trainPercentage,curAction,status;
     public GameObject leftPrompt, rightPrompt, leftCheckmark, rightCheckmark,
-                        acceptTrainPanel;
+                       trailInfoPanel, acceptTrainPanel, clearPanel;
     //Control
     public TrainingCube cube;
     uint userId;
+    bool firstTime = true;
     bool training, rightTrained, leftTrained, leftFirst,
          inputRecieved, acceptTraining = false;
     string trainType;
@@ -105,6 +106,13 @@ public class MentalCommandControl : MonoBehaviour {
             status.text = "Success! Training " + trainType + " Concluded";
 			engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_ACCEPT);
             UpdateUI(trainType);
+			//Shows information about training trials after
+			// accepting the first right or left data
+			if (firstTime && trainType != "Neutral")
+			{
+				trailInfoPanel.SetActive(true);
+				firstTime = false;
+			}
 		}
 		else
 		{
@@ -129,7 +137,7 @@ public class MentalCommandControl : MonoBehaviour {
         while (true)
         {
             slider.value += Time.deltaTime;
-            int percent = (int)(100 * (slider.value / 2));
+            int percent = (int)(100 * (slider.value / slider.maxValue));
             trainPercentage.text = percent.ToString() + "%";
             if (percent == 100) break;
             else yield return null;
@@ -212,6 +220,8 @@ public class MentalCommandControl : MonoBehaviour {
                 btnLeft.gameObject.SetActive(true);
                 break;
 		}
+
+        //Checking correct vals
         Debug.Log("Right Trial: " + cube.rightTrail);
         Debug.Log("Left Trial: " + cube.leftTrail);
 
@@ -275,27 +285,49 @@ public class MentalCommandControl : MonoBehaviour {
 		engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_START);
 	}
 
-	//Called by Clear_Neutral_Button, Clear_Right_Button & Clear_Left_Button
-	public void ClearTraining(string type){
-        EdkDll.IEE_MentalCommandAction_t action = EdkDll.IEE_MentalCommandAction_t.MC_NEUTRAL;
-        trainType = "clear neutral";
-        switch(type){
+    //Called by Clear_Neutral_Button, Clear_Right_Button & Clear_Left_Button
+    public void ClearTrainingCheck(string type)
+    {
+        switch (type)
+        {
             case "Left":
-                action = EdkDll.IEE_MentalCommandAction_t.MC_LEFT;
                 trainType = "clear left";
-                leftTrained = false;
-				break;
+                break;
             case "Right":
-                action = EdkDll.IEE_MentalCommandAction_t.MC_RIGHT;
-				trainType = "clear right";
-                rightTrained = false;
-				break;
+                trainType = "clear right";
+                break;
+            default:
+                trainType = "clear neutral";
+                break;
         }
-        EdkDll.IEE_MentalCommandSetTrainingAction((uint)EmoUserManagement.currentUser, action);
-        EdkDll.IEE_MentalCommandSetTrainingControl((uint)EmoUserManagement.currentUser, 
-                                                   EdkDll.IEE_MentalCommandTrainingControl_t.MC_ERASE);
-        UpdateUI(trainType);
-        status.text= "Cleared " + type + " Training Data";
+        clearPanel.SetActive(true);
+
+    }
+
+
+    public void ClearTraining(){
+        string text = "Neutral";
+		EdkDll.IEE_MentalCommandAction_t action = EdkDll.IEE_MentalCommandAction_t.MC_NEUTRAL;
+        switch (trainType)
+		{
+			case "clear left":
+                text = "Left";
+				action = EdkDll.IEE_MentalCommandAction_t.MC_LEFT;
+				trainType = "clear left";
+				leftTrained = false;
+				break;
+			case "clear right":
+                text = "Right";
+				action = EdkDll.IEE_MentalCommandAction_t.MC_RIGHT;
+				trainType = "clear right";
+				rightTrained = false;
+				break;
+		}
+		EdkDll.IEE_MentalCommandSetTrainingAction((uint)EmoUserManagement.currentUser, action);
+		EdkDll.IEE_MentalCommandSetTrainingControl((uint)EmoUserManagement.currentUser,
+												   EdkDll.IEE_MentalCommandTrainingControl_t.MC_ERASE);
+		UpdateUI(trainType);
+		status.text = "Cleared " + text + " Training Data";
     }
 
     //Called by Accept_Training_Button and Reject Training Button
