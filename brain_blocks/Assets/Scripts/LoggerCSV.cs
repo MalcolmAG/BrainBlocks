@@ -20,18 +20,39 @@ public class LoggerCSV : MonoBehaviour
 
     public static readonly string EVENT_START_NORMAL = "Start Normal Mode";
     public static readonly string EVENT_END_NORMAL = "End Normal Mode Finished";
+
     public static readonly string EVENT_START_BCI = "Start BCI Mode";
     public static readonly string EVENT_END_BCI = "End BCI Mode";
+
     public static readonly string EVENT_PAUSE_START = "Start Pause";
 	public static readonly string EVENT_PAUSE_END = "End Pause";
-    public static readonly string EVENT_TRAIN_START = "Start BCI Training";
-    public static readonly string EVENT_TRAIN_END = "End BCI Training";
-    public static readonly string EVENT_FAMI_START = "Start Familiarization";
+
+    public static readonly string EVENT_TRAINSTAGE_START = "Start BCI Training Stage";
+    public static readonly string EVENT_TRAINSTAGE_END = "End BCI Training Stage";
+
+	public static readonly string EVENT_TRAINING_N = "Training Neutral";
+	public static readonly string EVENT_TRAINING_R = "Training Right";
+	public static readonly string EVENT_TRAINING_L = "Training Left";
+
+	public static readonly string EVENT_TRAINING_CLEAR_N = "Neutral Training Data Cleared";
+	public static readonly string EVENT_TRAINING_CLEAR_R = "Right Training Data Cleared";
+	public static readonly string EVENT_TRAINING_CLEAR_L = "Left Training Data Cleared";
+
+	public static readonly string EVENT_TRAINING_ACCEPT = "Training Data Accepted";
+	public static readonly string EVENT_TRAINING_REJECT = "Training Data Rejected";
+
+	public static readonly string EVENT_TRAINING_TRIAL_PASS_R = "Right Training Trial Passed";
+	public static readonly string EVENT_TRAINING_TRIAL_PASS_L = "Left Training Trial Passed";
+
+	public static readonly string EVENT_FAMI_START = "Start Familiarization";
     public static readonly string EVENT_FAMI_END = "Completed Familiarization";
+
     public static readonly string EVENT_BLOCK_CREATE = "Game Block Created";
     public static readonly string EVENT_BLOCK_DROP = "Game Block Dropped";
+
     public static readonly string EVENT_SCORE = "Score";
     public static readonly string EVENT_GAME_OVER = "Game Over";
+
 
 //------------------------------Singleton Control Functions------------------------------//
 

@@ -1,10 +1,5 @@
 ﻿<Properties StartupConfiguration="{1CE5CE23-5434-AF8A-9ABD-DC12C5007FFD}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/MentalCommandControl.cs">
-    <Files>
-      <File FileName="Assets/Scripts/MentalCommandControl.cs" Line="307" Column="5" />
-      <File FileName="Assets/Scripts/TrainingCube.cs" Line="55" Column="65" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>

@@ -42,6 +42,7 @@ public class TrainingCube : MonoBehaviour {
                 transform.Translate(speed * Time.deltaTime * 10, 0, 0);
             }
             if (rightTrail && transform.position.x > startPos + 5){
+                LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINING_TRIAL_PASS_R);
                 rightDone = true;
                 rightTrail = false;
                 control.UpdateUI("done right");
@@ -53,7 +54,8 @@ public class TrainingCube : MonoBehaviour {
 			if (transform.localPosition.x > startPos - offset)
 			    transform.Translate( -speed * Time.deltaTime * 10, 0, 0);
             if (leftTrail && transform.position.x < startPos - 5){
-                leftDone = true;
+				LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINING_TRIAL_PASS_R);
+				leftDone = true;
                 leftTrail = false;
                 control.UpdateUI("done left");
             }

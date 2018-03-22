@@ -16,26 +16,25 @@ public class MentalCommandControl : MonoBehaviour {
     public TrainingCube cube;
     uint userId;
     bool firstTime = true;
-    bool training, rightTrained, leftTrained, leftFirst,
-         inputRecieved, acceptTraining = false;
+    bool training, leftFirst, inputRecieved, acceptTraining = false;
     string trainType;
 	EmoEngine engine;
 
 
     //XX Start For testing without EMOTIV
-    private void Update()
-    {
-        if (Input.GetKey(KeyCode.LeftArrow))
-            cube.action = cube.ACTION_LEFT;
-        else if (Input.GetKey((KeyCode.RightArrow)))
-            cube.action = cube.ACTION_RIGHT;
-        else
-            cube.action = cube.ACTION_NEUTRAL;
-    }
-    private void Start()
-    {
-        CustomStart();
-    }
+    //private void Update()
+    //{
+        //if (Input.GetKey(KeyCode.LeftArrow))
+        //    cube.action = cube.ACTION_LEFT;
+        //else if (Input.GetKey((KeyCode.RightArrow)))
+        //    cube.action = cube.ACTION_RIGHT;
+        //else
+            //cube.action = cube.ACTION_NEUTRAL;
+    //}
+    //private void Start()
+    //{
+    //    CustomStart();
+    //}
     // XX End
 
     //------------------------------Emotiv Event Functions------------------------------//
@@ -50,13 +49,11 @@ public class MentalCommandControl : MonoBehaviour {
 
     //Move cube and update Current Action UI according to new mental action
     void OnMentalCommandEmoStateUpdated(object sender, EmoStateUpdatedEventArgs args){
-        Debug.Log("Change State");
         if (training)
         {
             return;
         }
         EdkDll.IEE_MentalCommandAction_t action = args.emoState.MentalCommandGetCurrentAction();
-        //Debug.Log("current action: " + action.ToString());
         switch (action)
         {
             case EdkDll.IEE_MentalCommandAction_t.MC_NEUTRAL:
@@ -100,9 +97,10 @@ public class MentalCommandControl : MonoBehaviour {
     //Waits on user to commit or reject most recent training data
 	IEnumerator AcceptTraining()
 	{
-		acceptTrainPanel.SetActive(true);
+        acceptTrainPanel.SetActive(true);
 		while (!inputRecieved) yield return null;
 		if (acceptTraining) {
+            LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINING_ACCEPT);
             status.text = "Success! Training " + trainType + " Concluded";
 			engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_ACCEPT);
             UpdateUI(trainType);
@@ -114,8 +112,8 @@ public class MentalCommandControl : MonoBehaviour {
 				firstTime = false;
 			}
 		}
-		else
-		{
+		else{
+            LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINING_REJECT);
             status.text = trainType + " Data Rejected";
             engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_REJECT);
 		}
@@ -129,9 +127,9 @@ public class MentalCommandControl : MonoBehaviour {
     IEnumerator UpdateSlider()
     {
         //XX Start for testing without emotiv
-        object s = null;
-        EmoEngineEventArgs a = null;
-        OnTrainingStarted(s, a);
+        //object s = null;
+        //EmoEngineEventArgs a = null;
+        //OnTrainingStarted(s, a);
         //XX END
 
         while (true)
@@ -147,8 +145,8 @@ public class MentalCommandControl : MonoBehaviour {
         trainPercentage.text = "0%";
 
         //XX Start for testing without emotiv
-        OnTrainingSuccessed(s, a);
-        OnTrainingCompleted(s, a);
+        //OnTrainingSuccessed(s, a);
+        //OnTrainingCompleted(s, a);
         //XX END
 
 
@@ -220,13 +218,6 @@ public class MentalCommandControl : MonoBehaviour {
                 btnLeft.gameObject.SetActive(true);
                 break;
 		}
-
-        //Checking correct vals
-        Debug.Log("Right Trial: " + cube.rightTrail);
-        Debug.Log("Left Trial: " + cube.leftTrail);
-
-        Debug.Log("Right Done: " + cube.rightDone);
-        Debug.Log("Left Done: " + cube.leftDone);
     }
 
     //Decativates/Activates buttons depending on training
@@ -243,7 +234,7 @@ public class MentalCommandControl : MonoBehaviour {
 
     //Called by Start_Training_Button
     public void CustomStart(){
-		LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAIN_START);
+        LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINSTAGE_START);
         cube = GameObject.Find("Block").GetComponent<TrainingCube>();
         leftFirst = Random.Range(0f, 1f) > 0.5f;
 		slider.value = 0;
@@ -255,6 +246,7 @@ public class MentalCommandControl : MonoBehaviour {
     //Called by Left_Button, Right_Button, and Neutral_Button
 	public void TrainAction(string type)
 	{
+        LoggerCSV logger = LoggerCSV.GetInstance();
 		trainType = type;
         EdkDll.IEE_MentalCommandAction_t toTrain = EdkDll.IEE_MentalCommandAction_t.MC_NEUTRAL;
         switch (type)
@@ -262,12 +254,15 @@ public class MentalCommandControl : MonoBehaviour {
             case "Left":
                 cube.action = cube.ACTION_LEFT;
                 toTrain = EdkDll.IEE_MentalCommandAction_t.MC_LEFT;
-                leftTrained = true;
+                logger.AddEvent(LoggerCSV.EVENT_TRAINING_L);
                 break;
             case "Right":
                 cube.action = cube.ACTION_RIGHT;
                 toTrain = EdkDll.IEE_MentalCommandAction_t.MC_RIGHT;
-                rightTrained = true;
+				logger.AddEvent(LoggerCSV.EVENT_TRAINING_R);
+				break;
+            default:
+                logger.AddEvent(LoggerCSV.EVENT_TRAINING_N);
                 break;
         }
 
@@ -304,8 +299,9 @@ public class MentalCommandControl : MonoBehaviour {
 
     }
 
-
-    public void ClearTraining(){
+	//Called by Accept_Clear_Button
+	public void ClearTraining(){
+        LoggerCSV logger = LoggerCSV.GetInstance();
         string text = "Neutral";
 		EdkDll.IEE_MentalCommandAction_t action = EdkDll.IEE_MentalCommandAction_t.MC_NEUTRAL;
         switch (trainType)
@@ -314,14 +310,17 @@ public class MentalCommandControl : MonoBehaviour {
                 text = "Left";
 				action = EdkDll.IEE_MentalCommandAction_t.MC_LEFT;
 				trainType = "clear left";
-				leftTrained = false;
-				break;
+                logger.AddEvent(LoggerCSV.EVENT_TRAINING_CLEAR_L);
+                break;
 			case "clear right":
                 text = "Right";
 				action = EdkDll.IEE_MentalCommandAction_t.MC_RIGHT;
 				trainType = "clear right";
-				rightTrained = false;
+				logger.AddEvent(LoggerCSV.EVENT_TRAINING_CLEAR_R);
 				break;
+            default:
+                logger.AddEvent(LoggerCSV.EVENT_TRAINING_CLEAR_N);
+                break;
 		}
 		EdkDll.IEE_MentalCommandSetTrainingAction((uint)EmoUserManagement.currentUser, action);
 		EdkDll.IEE_MentalCommandSetTrainingControl((uint)EmoUserManagement.currentUser,
@@ -338,7 +337,7 @@ public class MentalCommandControl : MonoBehaviour {
 
     //Called by Next_Scene_Button
     public void NextScene(){
-        LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAIN_END);
+        LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINSTAGE_END);
         SceneManager.LoadScene(2);
     }
 }
