@@ -16,6 +16,7 @@ public class Set : MonoBehaviour {
     private readonly Vector2 ghostStandByPos = Vector2.down * 10;
 
     private EmoEngine engine;
+    private int mentalAction = 0;
     public float emotivLag;
     public float processInterval = .5f;
 
@@ -27,6 +28,7 @@ public class Set : MonoBehaviour {
         if (bci){
             emotivLag = 0f;
             engine = EmoEngine.Instance;
+            BindEvents();
         }
         orientation = true;
         ghost = GameObject.Find(tag + "_ghost");
@@ -303,6 +305,29 @@ public class Set : MonoBehaviour {
 		UpdateGhost();
 	}
 
+//------------------------------Emotiv Functions------------------------------//
+	void BindEvents()
+	{
+		engine.MentalCommandEmoStateUpdated += OnMentalCommandEmoStateUpdated;
+	}
+	//Move cube and update Current Action UI according to new mental action
+	void OnMentalCommandEmoStateUpdated(object sender, EmoStateUpdatedEventArgs args)
+	{
+		EdkDll.IEE_MentalCommandAction_t action = args.emoState.MentalCommandGetCurrentAction();
+		switch (action)
+		{
+			case EdkDll.IEE_MentalCommandAction_t.MC_NEUTRAL:
+				mentalAction = 0;
+				break;
+			case EdkDll.IEE_MentalCommandAction_t.MC_RIGHT:
+				mentalAction = 1;
+				break;
+			case EdkDll.IEE_MentalCommandAction_t.MC_LEFT:
+				mentalAction = 2;
+				break;
+
+		}
+	}
 //------------------------------Input helper Functions------------------------------//
 
 	private bool CustomInput(string type)
@@ -321,9 +346,9 @@ public class Set : MonoBehaviour {
 					break;
 				//To be switched with BCI control
 				case "left":
-					return Input.GetKeyDown(KeyCode.LeftArrow);
+                    return mentalAction == 2;
 				case "right":
-					return Input.GetKeyDown(KeyCode.RightArrow);
+                    return mentalAction == 1;
 				case "down":
 					return Input.GetKeyDown(KeyCode.DownArrow);
 				default:

@@ -19,7 +19,9 @@ public class LoggerCSV : MonoBehaviour
     public static readonly int BCI_MODE = 1;
 
     public static readonly string EVENT_START_NORMAL = "Start Normal Mode";
-    public static readonly string EVENT_END_NORMAL = "End Normal Mode Finished";
+    public static readonly string EVENT_END_NORMAL = "End Normal Mode";
+
+    public static readonly string EVENT_UNABLE = "Unable to Complete Stage";
 
     public static readonly string EVENT_START_BCI = "Start BCI Mode";
     public static readonly string EVENT_END_BCI = "End BCI Mode";
@@ -46,6 +48,8 @@ public class LoggerCSV : MonoBehaviour
 
 	public static readonly string EVENT_FAMI_START = "Start Familiarization";
     public static readonly string EVENT_FAMI_END = "Completed Familiarization";
+
+    public static readonly string EVENT_FAMI_PASS = "Familiarization Trial Passed";
 
     public static readonly string EVENT_BLOCK_CREATE = "Game Block Created";
     public static readonly string EVENT_BLOCK_DROP = "Game Block Dropped";
@@ -80,15 +84,19 @@ public class LoggerCSV : MonoBehaviour
 
 	private void CreateTitles()
 	{
-		string[] titles = { "External Time", "Event", "Internal Time" };
+		string[] titles = { "External Time", "Internal Time", "Event", "AUX" };
 		rows.Add(titles);
 	}
 
     public void AddEvent(string event_log)
 	{
-        string[] toAdd = { DateTime.Now.ToString(), event_log, Time.time.ToString() };
-		rows.Add(toAdd);
+        AddEvent(event_log, null);
 	}
+
+    public void AddEvent(string event_log, string aux){
+        string[] toAdd = { DateTime.Now.ToString(), Time.time.ToString(), event_log, aux };
+		rows.Add(toAdd);
+    }
 
 	public void PrintLogger()
 	{

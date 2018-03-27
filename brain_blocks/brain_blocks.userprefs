@@ -1,5 +1,13 @@
 ﻿<Properties StartupConfiguration="{1CE5CE23-5434-AF8A-9ABD-DC12C5007FFD}|">
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/FamiliarizationController.cs">
+    <Files>
+      <File FileName="Assets/Scripts/MentalCommandControl.cs" Line="299" Column="1" />
+      <File FileName="Assets/Scripts/Set.cs" Line="31" Column="26" />
+      <File FileName="Assets/Scripts/FamiliarizationController.cs" Line="111" Column="13" />
+      <File FileName="Assets/Admin.cs" Line="29" Column="1" />
+      <File FileName="Assets/Scripts/LoggerCSV.cs" Line="52" Column="84" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>

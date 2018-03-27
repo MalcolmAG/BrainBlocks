@@ -41,7 +41,10 @@ public class FamiliarizationController : MonoBehaviour {
 
         //Choose random position and rotation of prompt
         int i = Random.Range(0, options.Length);
-        Vector2 targetPos = new Vector2(Random.Range(0, 9), 0);
+        float x = 4f;
+        //Don't allow central position
+        while (x == 4) x = Random.Range(0, 9);
+        Vector2 targetPos = new Vector2(x, 0);
         Quaternion targetRot = new Quaternion(0, 0, Random.Range(0, rotationOptions.Length), 0);
 
         //Create trial objects
@@ -104,6 +107,8 @@ public class FamiliarizationController : MonoBehaviour {
 
     //Checks if user is done with familiarization trials
     void CheckStage(){
+        if(trialStage != 0)
+            LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_FAMI_PASS);
         if (trialStage == maxStage)
         {
             LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_FAMI_END);

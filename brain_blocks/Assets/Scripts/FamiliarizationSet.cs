@@ -18,6 +18,7 @@ public class FamiliarizationSet : MonoBehaviour
     public static float runningTimer;
 
     private EmoEngine engine;
+    private int mentalAction=0;
     public float emotivLag;
     public float processInterval = .5f;
 
@@ -29,6 +30,7 @@ public class FamiliarizationSet : MonoBehaviour
         if(bci){
 			emotivLag = 0f;
 			engine = EmoEngine.Instance;
+            BindEvents();
         }
 		runningTimer = Time.time;
         completed = false;
@@ -266,19 +268,42 @@ public class FamiliarizationSet : MonoBehaviour
         }
     }
 
-	//Changes associated ghost object
-	private void SwapGhosts()
+    //Changes associated ghost object
+    private void SwapGhosts()
+    {
+        ghost.transform.position = ghostStandByPos;
+        if (orientation)
+        {
+            ghost = GameObject.Find(tag + "_ghost");
+        }
+        else
+        {
+            ghost = GameObject.Find(tag + "_ghost_light");
+        }
+        UpdateGhost();
+    }
+
+//------------------------------Emotiv Functions------------------------------//
+    void BindEvents(){
+        engine.MentalCommandEmoStateUpdated += OnMentalCommandEmoStateUpdated;
+    }
+	//Move cube and update Current Action UI according to new mental action
+	void OnMentalCommandEmoStateUpdated(object sender, EmoStateUpdatedEventArgs args)
 	{
-		ghost.transform.position = ghostStandByPos;
-		if (orientation)
+		EdkDll.IEE_MentalCommandAction_t action = args.emoState.MentalCommandGetCurrentAction();
+		switch (action)
 		{
-			ghost = GameObject.Find(tag + "_ghost");
+			case EdkDll.IEE_MentalCommandAction_t.MC_NEUTRAL:
+                mentalAction = 0;
+				break;
+			case EdkDll.IEE_MentalCommandAction_t.MC_RIGHT:
+                mentalAction = 1;
+                break;
+			case EdkDll.IEE_MentalCommandAction_t.MC_LEFT:
+                mentalAction = 2;
+				break;
+
 		}
-		else
-		{
-			ghost = GameObject.Find(tag + "_ghost_light");
-		}
-		UpdateGhost();
 	}
 
 //------------------------------Input helper Functions------------------------------//
@@ -296,11 +321,10 @@ public class FamiliarizationSet : MonoBehaviour
                         return true;
                     }
                     break;
-                //To be switched with BCI control
 				case "left":
-					return Input.GetKeyDown(KeyCode.LeftArrow);
+                    return mentalAction == 2;
 				case "right":
-					return Input.GetKeyDown(KeyCode.RightArrow);
+                    return mentalAction == 1;
 				case "down":
 					return Input.GetKeyDown(KeyCode.DownArrow);
                 default:

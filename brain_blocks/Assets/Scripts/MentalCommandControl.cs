@@ -16,21 +16,21 @@ public class MentalCommandControl : MonoBehaviour {
     public TrainingCube cube;
     uint userId;
     bool firstTime = true;
-    bool training, leftFirst, inputRecieved, acceptTraining = false;
+    bool training, neutralDone, leftFirst, inputRecieved, acceptTraining = false;
     string trainType;
 	EmoEngine engine;
 
 
     //XX Start For testing without EMOTIV
-    //private void Update()
-    //{
-        //if (Input.GetKey(KeyCode.LeftArrow))
-        //    cube.action = cube.ACTION_LEFT;
-        //else if (Input.GetKey((KeyCode.RightArrow)))
-        //    cube.action = cube.ACTION_RIGHT;
-        //else
-            //cube.action = cube.ACTION_NEUTRAL;
-    //}
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.LeftArrow))
+            cube.action = cube.ACTION_LEFT;
+        else if (Input.GetKey((KeyCode.RightArrow)))
+            cube.action = cube.ACTION_RIGHT;
+        else
+            cube.action = cube.ACTION_NEUTRAL;
+    }
     //private void Start()
     //{
     //    CustomStart();
@@ -39,11 +39,11 @@ public class MentalCommandControl : MonoBehaviour {
 
     //------------------------------Emotiv Event Functions------------------------------//
 
-    void bindEvents(){
+    void BindEvents(){
         engine.UserAdded += OnUserAdded;
         engine.MentalCommandTrainingStarted += OnTrainingStarted;
         engine.MentalCommandTrainingSucceeded += OnTrainingSuccessed;
-        engine.MentalCommandTrainingCompleted += OnTrainingCompleted;
+        //engine.MentalCommandTrainingCompleted += OnTrainingCompleted;
         engine.MentalCommandEmoStateUpdated += OnMentalCommandEmoStateUpdated;
     }
 
@@ -86,7 +86,7 @@ public class MentalCommandControl : MonoBehaviour {
         StartCoroutine(AcceptTraining());
     }
 
-    void OnTrainingCompleted(object sender, EmoEngineEventArgs args){
+    void OnTrainingCompleted(){
         
         cube.action = cube.ACTION_RESET;
 
@@ -118,6 +118,7 @@ public class MentalCommandControl : MonoBehaviour {
             engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_REJECT);
 		}
         inputRecieved = false;
+        OnTrainingCompleted();
 
 	}
 
@@ -127,9 +128,9 @@ public class MentalCommandControl : MonoBehaviour {
     IEnumerator UpdateSlider()
     {
         //XX Start for testing without emotiv
-        //object s = null;
-        //EmoEngineEventArgs a = null;
-        //OnTrainingStarted(s, a);
+        object s = null;
+        EmoEngineEventArgs a = null;
+        OnTrainingStarted(s, a);
         //XX END
 
         while (true)
@@ -145,7 +146,7 @@ public class MentalCommandControl : MonoBehaviour {
         trainPercentage.text = "0%";
 
         //XX Start for testing without emotiv
-        //OnTrainingSuccessed(s, a);
+        OnTrainingSuccessed(s, a);
         //OnTrainingCompleted(s, a);
         //XX END
 
@@ -165,6 +166,8 @@ public class MentalCommandControl : MonoBehaviour {
                     btnLeft.gameObject.SetActive(true);
                 else
                     btnRight.gameObject.SetActive(true);
+                neutralDone = true;
+                Debug.Log("Neutral is done");
 				break;
             case "clear neutral":
                 btnNeutralClear.gameObject.SetActive(false);
@@ -174,10 +177,13 @@ public class MentalCommandControl : MonoBehaviour {
                 btnLeftClear.gameObject.SetActive(false);
                 rightCheckmark.gameObject.SetActive(false);
                 leftCheckmark.gameObject.SetActive(false);
+				Debug.Log("Neutral is not done");
+				neutralDone = false;
                 cube.leftTrail = false;
                 cube.rightTrail = false;
                 cube.leftDone = false;
                 cube.rightDone = false;
+                ActivateButtons(true);
                 break;
             case "Right":
                 btnRightClear.gameObject.SetActive(true);
@@ -209,25 +215,39 @@ public class MentalCommandControl : MonoBehaviour {
                 status.text = "Left Command Adequately Trained";
                 leftCheckmark.SetActive(true);
                 leftPrompt.SetActive(false);
-                btnRight.gameObject.SetActive(true);
+                btnLeft.interactable = false;
+                btnLeftClear.interactable = false;
+                if (leftFirst)
+                    btnRight.gameObject.SetActive(true);
                 break;
             case "done right":
                 status.text = "Right Command Adequately Trained";
                 rightCheckmark.SetActive(true);
                 rightPrompt.SetActive(false);
-                btnLeft.gameObject.SetActive(true);
+                btnRight.interactable = false;
+				btnRightClear.interactable = false;
+                if (!leftFirst)
+                    btnLeft.gameObject.SetActive(true);
                 break;
 		}
     }
 
     //Decativates/Activates buttons depending on training
     void ActivateButtons(bool yes){
-        btnNeutral.interactable = yes;
-        btnLeft.interactable = yes;
-        btnRight.interactable = yes;
+        Debug.Log("Activating buttons: " + yes);
+		if(!neutralDone)
+            btnNeutral.interactable = yes;
+        if (!cube.leftDone)
+        {
+            btnLeft.interactable = yes;
+            btnLeftClear.interactable = yes;
+        }
+        if (!cube.rightDone)
+        {
+            btnRight.interactable = yes;
+            btnRightClear.interactable = yes;
+        }
         btnNeutralClear.interactable = yes;
-        btnLeftClear.interactable = yes;
-        btnRightClear.interactable = yes;
     }
 
 //------------------------------UI OnClick Functions------------------------------//
@@ -239,7 +259,7 @@ public class MentalCommandControl : MonoBehaviour {
         leftFirst = Random.Range(0f, 1f) > 0.5f;
 		slider.value = 0;
 		engine = EmoEngine.Instance;
-		bindEvents();
+		BindEvents();
 
     }
 
