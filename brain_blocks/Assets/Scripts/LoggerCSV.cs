@@ -14,6 +14,7 @@ public class LoggerCSV : MonoBehaviour
 
     public int gameMode = 0;
     public int participantID = -1;
+    public int counterBalanceID = -1;
 
     public static readonly int NORMAL_MODE = 0;
     public static readonly int BCI_MODE = 1;
@@ -48,6 +49,7 @@ public class LoggerCSV : MonoBehaviour
 
 	public static readonly string EVENT_FAMI_START = "Start Familiarization";
     public static readonly string EVENT_FAMI_END = "Completed Familiarization";
+    public static readonly string EVENT_FAMI_TIMEOUT = "Trial Timed Out";
     public static readonly string EVENT_FAMI_PROMT = "Trial Prompt Created";
     public static readonly string EVENT_FAMI_BLOCK_POS = "Block Position at Start of Navigation";
     public static readonly string EVENT_FAMI_PASS = "Familiarization Trial Passed";
@@ -148,14 +150,15 @@ public class LoggerCSV : MonoBehaviour
 	{
 		string mode;
 		if (gameMode == NORMAL_MODE)
-			mode = "_Normal";
+			mode = "_Normal_";
 		else
-			mode = "_BCI";
+			mode = "_BCI_";
 
         string final = Application.persistentDataPath;
         if (final.EndsWith("brain_blocks"))
             final = final.Substring(0, final.Length-12);
-        return final + participantID.ToString() + mode + "_BrainBlocks" + ".csv";
+        return final + participantID.ToString() + mode + counterBalanceID.ToString() 
+                                    + "_BrainBlocks" + ".csv";
 	}
 	
 }

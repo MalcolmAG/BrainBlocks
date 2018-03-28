@@ -10,6 +10,8 @@ public class MenuController : MonoBehaviour {
 
     public GameObject messagePanel;
     public TextMeshProUGUI messageText;
+
+    private readonly int[] counterBalnaceOptions = { 1, 2, 3, 4 };
 	
     //Coroutine function to display message to user
     IEnumerator ShowMessage(string message, float delay)
@@ -35,11 +37,24 @@ public class MenuController : MonoBehaviour {
         LoggerCSV.GetInstance().participantID = id;
     }
 
+	//Called by CounterBalance_ID_InputField
+	public void SetCounterBalanceID(string val)
+	{
+		int id;
+		Int32.TryParse(val, out id);
+        LoggerCSV.GetInstance().counterBalanceID = id;
+	}
+
+
     //Called by Start_Button
     public void StartGame(){
         if (LoggerCSV.GetInstance().participantID < 1){
-            StartCoroutine(ShowMessage("Please Enter a Valid ID", 1.5f));
+            StartCoroutine(ShowMessage("Please Enter a Valid Participant ID", 1.5f));
             return;
+        }
+        if(Array.IndexOf(counterBalnaceOptions,LoggerCSV.GetInstance().counterBalanceID)<0){
+			StartCoroutine(ShowMessage("Please Enter a Valid Participant Group", 1.5f));
+			return;
         }
         if (LoggerCSV.GetInstance().gameMode == LoggerCSV.NORMAL_MODE){
             LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_START_NORMAL);

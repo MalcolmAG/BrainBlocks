@@ -9,28 +9,48 @@ public class FamiliarizationController : MonoBehaviour {
 
     public TextMeshProUGUI trialText;
 
-    public Button retrainButton;
     public Button pauseButton;
     public GameObject instructionsMessage;
     public GameObject finishedMessage;
     public GameObject pausedMessage;
     public GameObject epoc;
 
-	public GameObject[] options;
-    public int maxStage=5;
+	public GameObject timeOutPanel;
+
+    public GameObject[] options;
+    public int maxStage = 6;
+    private bool leftFirst;
+    private bool spawnLeft;
     private GameObject group;
     private GameObject target;
     private float[] rotationOptions = { 0f, -90f, -180f, 90f };
-
+    private float timePerTrial = 120.25f;
+    private float runningTimer;
     private int trialStage;
-
+    private bool started = false;
     public static bool paused = true;
 
-//------------------------------Familiarization Scene Control Functions------------------------------//
+    //------------------------------Familiarization Scene Control Functions------------------------------//
 
-	//Spawns "preview" group at top of game area
-	//Randmomly chooses next "preview" group
-	public void CreateNext()
+    //For timing trials
+    private void Update()
+    {
+        if (started && !paused)
+        {
+            runningTimer += Time.deltaTime;
+            if (runningTimer > timePerTrial)
+            {
+                LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_FAMI_TIMEOUT);
+                timeOutPanel.SetActive(true);
+            }
+                
+        }
+        
+    }
+
+    //Spawns "preview" group at top of game area
+    //Randmomly chooses next "preview" group
+    public void CreateNext()
 	{
         //Check if familiarization stage is finished
         CheckStage();
@@ -46,14 +66,22 @@ public class FamiliarizationController : MonoBehaviour {
         //Loop ensures target is not directly below group
         while (true)
         {
-            Vector2 targetPos = new Vector2(Random.Range(0, 9), 0);
+            Vector2 targetPos;
+            if (spawnLeft)
+                targetPos = new Vector2(Random.Range(0, 4), 0);
+            else
+                targetPos = new Vector2(Random.Range(5, 9), 0);
+                
             Quaternion targetRot = new Quaternion(0, 0, Random.Range(0, rotationOptions.Length), 0);
             //Create trial object
             target = Instantiate(options[i], targetPos, targetRot);
             //Check if directly below
             //Average needed because different rotations create different x vals
-            if (PositionAverage(target.transform) != PositionAverage(group.transform))
+            if (PositionAverage(target.transform) != PositionAverage(group.transform)){
+                spawnLeft = !spawnLeft;
                 break;
+            }
+            Destroy(target);
             Debug.Log("rerandomizing");
         }
 		SnapTarget(); //For when the random rotation/postioning put it out of bounds
@@ -122,21 +150,31 @@ public class FamiliarizationController : MonoBehaviour {
         if (trialStage == maxStage)
         {
             LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_FAMI_END);
+            //Stop checking time
+            started = false;
             ToggleUI(true, "finished");
         }
-        else
-            trialText.text = "Trial " + (++trialStage) + " of 5";
+        else{
+            runningTimer = 0f;
+            trialText.text = "Trial " + (++trialStage) + " of " + maxStage;
+        }
     }
 
 //------------------------------UI OnClick Functions------------------------------//
     //Called by Start_Trials_Buttom
 	public void CustomStart()
 	{
-        LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_FAMI_START);
+        LoggerCSV logger = LoggerCSV.GetInstance();
+        logger.AddEvent(LoggerCSV.EVENT_FAMI_START);
+        leftFirst = logger.counterBalanceID == 1
+                          || logger.counterBalanceID == 3;
+        spawnLeft = leftFirst;
 		InitUI();
 		trialStage = 0;
 		paused = false;
 		ToggleUI(paused, "none");
+        runningTimer = 0f;
+        started = true;
 		CreateNext();
 	} 
 
@@ -154,7 +192,7 @@ public class FamiliarizationController : MonoBehaviour {
         ToggleUI(paused, "pause");
     }
 
-	//Called by Next_Scene_Button and Retrain_Button
+	//Called by Next_Scene_Button
 	public void LoadScene(int idx){
         SceneManager.LoadScene(idx);
     }
@@ -172,10 +210,6 @@ public class FamiliarizationController : MonoBehaviour {
 
     //Modifies UI element view
     private void ToggleUI(bool pause, string type){
-		if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
-		{
-            retrainButton.gameObject.SetActive(!pause);
-		}
 		pauseButton.gameObject.SetActive(!pause);
 		trialText.gameObject.SetActive(!pause);
         switch(type){

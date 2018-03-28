@@ -199,7 +199,7 @@ public class FamiliarizationSet : MonoBehaviour
         // It's not valid. revert.
         transform.position += new Vector3(0, 1, 0);
 
-        yield return new WaitForSeconds(.75f);
+        yield return new WaitForSeconds(.25f);
 
         Grid.grid = new Transform[Grid.w, Grid.h];
 

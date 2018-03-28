@@ -75,9 +75,11 @@ public class MainUIController : MonoBehaviour {
 
 	//Called by Done_Button
 	public void FinishGame(){
+        //Reset logger info
         LoggerCSV logger = LoggerCSV.GetInstance();
         logger.gameMode = LoggerCSV.NORMAL_MODE;
         logger.participantID = -1;
+        logger.counterBalanceID = -1;
         SceneManager.LoadScene(0);
     }
 

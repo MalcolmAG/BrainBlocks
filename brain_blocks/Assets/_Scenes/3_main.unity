@@ -1678,7 +1678,7 @@ MonoBehaviour:
   finishedMessage: {fileID: 1195420862}
   midwayMessage: {fileID: 710415801}
   pauseMessage: {fileID: 1590994473}
-  allotedTime: 600
+  allotedTime: 480
   halfAllottedTime: 0
 --- !u!4 &1134788752 stripped
 Transform:
@@ -2511,7 +2511,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1561725038
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2525,6 +2525,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameMode: 0
   participantID: 222
+  counterBalanceID: -1
 --- !u!4 &1561725039
 Transform:
   m_ObjectHideFlags: 0

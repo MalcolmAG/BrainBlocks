@@ -254,9 +254,11 @@ public class MentalCommandControl : MonoBehaviour {
 
     //Called by Start_Training_Button
     public void CustomStart(){
-        LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINSTAGE_START);
+        LoggerCSV logger = LoggerCSV.GetInstance();
+        logger.AddEvent(LoggerCSV.EVENT_TRAINSTAGE_START);
         cube = GameObject.Find("Block").GetComponent<TrainingCube>();
-        leftFirst = Random.Range(0f, 1f) > 0.5f;
+        leftFirst = logger.counterBalanceID == 1 
+                          || logger.counterBalanceID == 2;
 		slider.value = 0;
 		engine = EmoEngine.Instance;
 		BindEvents();
