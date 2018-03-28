@@ -538,7 +538,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &350533908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4518,7 +4518,6 @@ MonoBehaviour:
   - {fileID: 1549846710691204, guid: 9ab2c46d8a2374d4f8d9677bf9fbeeb7, type: 2}
   - {fileID: 1618540434747386, guid: 8b535fcb28e42448ca5f8e72153ef811, type: 2}
   maxStage: 6
-  runningTimer: 0
 --- !u!114 &1993650432
 MonoBehaviour:
   m_ObjectHideFlags: 0

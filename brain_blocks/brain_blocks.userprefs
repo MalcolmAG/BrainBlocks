@@ -1,5 +1,11 @@
 ﻿<Properties StartupConfiguration="{1CE5CE23-5434-AF8A-9ABD-DC12C5007FFD}|">
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/MentalCommandControl.cs">
+    <Files>
+      <File FileName="Assets/Scripts/MenuController.cs" Line="50" Column="28" />
+      <File FileName="Assets/Scripts/FamiliarizationSet.cs" Line="311" Column="49" />
+      <File FileName="Assets/Scripts/MentalCommandControl.cs" Line="24" Column="9" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>

@@ -304,12 +304,15 @@ public class FamiliarizationSet : MonoBehaviour
 		{
 			case EdkDll.IEE_MentalCommandAction_t.MC_NEUTRAL:
                 mentalAction = 0;
+                Debug.Log("Mental Command: Neutral");
 				break;
 			case EdkDll.IEE_MentalCommandAction_t.MC_RIGHT:
                 mentalAction = 1;
+                Debug.Log("Mental Command: right");
                 break;
 			case EdkDll.IEE_MentalCommandAction_t.MC_LEFT:
                 mentalAction = 2;
+                Debug.Log("Mental Command: left");
 				break;
 
 		}

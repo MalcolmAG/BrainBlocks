@@ -45,6 +45,11 @@ public class MenuController : MonoBehaviour {
         LoggerCSV.GetInstance().counterBalanceID = id;
 	}
 
+    //Called by Quit_Button
+    public void Quit(){
+        Application.Quit();
+    }
+
 
     //Called by Start_Button
     public void StartGame(){
