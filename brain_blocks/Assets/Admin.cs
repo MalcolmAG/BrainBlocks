@@ -4,7 +4,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine;
-
+//Controls the Admin button and input field in Trail/Familiarization stage
+//Researcher enters in password to terminate session prior to completion
 public class Admin : MonoBehaviour {
 
     public Button btnAdmin;

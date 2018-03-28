@@ -15,8 +15,6 @@ public class FamiliarizationSet : MonoBehaviour
 
     private readonly Vector2 ghostStandByPos = Vector2.down * 10;
 
-    public static float runningTimer;
-
     private EmoEngine engine;
     private int mentalAction=0;
     public float emotivLag;
@@ -32,7 +30,6 @@ public class FamiliarizationSet : MonoBehaviour
 			engine = EmoEngine.Instance;
             BindEvents();
         }
-		runningTimer = Time.time;
         completed = false;
         orientation = true;
         ghost = GameObject.Find(tag + "_ghost");
@@ -81,6 +78,8 @@ public class FamiliarizationSet : MonoBehaviour
 			else
 				// It's not valid. revert.
 				transform.Rotate(0, 0, 90);
+            
+            LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_BLOCK_ROTATE);
 		}
 	}
 
@@ -114,6 +113,8 @@ public class FamiliarizationSet : MonoBehaviour
                     UpdateGrid();
                 }
             }
+            LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_FAMI_BLOCK_POS,
+                                             FamiliarizationController.PositionAverage(transform).ToString());
             SwapGhosts();
 
         }
@@ -135,6 +136,10 @@ public class FamiliarizationSet : MonoBehaviour
             else
                 // Its not valid. revert.
                 transform.position += new Vector3(1, 0, 0);
+
+            LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_BLOCK_LEFT,
+                                             FamiliarizationController.PositionAverage(transform).ToString());
+            
         }
     }
 
@@ -154,7 +159,11 @@ public class FamiliarizationSet : MonoBehaviour
             else
                 // It's not valid. revert.
                 transform.position += new Vector3(-1, 0, 0);
-        }
+            LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_BLOCK_RIGHT,
+                                             FamiliarizationController.PositionAverage(transform).ToString());
+
+
+		}
     }
 
     //Listens for and applies drop action

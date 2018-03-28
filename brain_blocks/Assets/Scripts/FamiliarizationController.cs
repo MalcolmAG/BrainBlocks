@@ -23,7 +23,6 @@ public class FamiliarizationController : MonoBehaviour {
     private float[] rotationOptions = { 0f, -90f, -180f, 90f };
 
     private int trialStage;
-    private float startTime;
 
     public static bool paused = true;
 
@@ -39,18 +38,28 @@ public class FamiliarizationController : MonoBehaviour {
         Destroy(group);
         Destroy(target);
 
-        //Choose random position and rotation of prompt
-        int i = Random.Range(0, options.Length);
-        float x = 4f;
-        //Don't allow central position
-        while (x == 4) x = Random.Range(0, 9);
-        Vector2 targetPos = new Vector2(x, 0);
-        Quaternion targetRot = new Quaternion(0, 0, Random.Range(0, rotationOptions.Length), 0);
-
-        //Create trial objects
-        target = Instantiate(options[i], targetPos, targetRot);
-        SnapTarget(); //For when the random rotation/postioning put it out of bounds
+        //Create Player Object
+		int i = Random.Range(0, options.Length);
         group = Instantiate(options[i], transform.position, Quaternion.identity);
+
+        //Choose random position and rotation of prompt
+        //Loop ensures target is not directly below group
+        while (true)
+        {
+            Vector2 targetPos = new Vector2(Random.Range(0, 9), 0);
+            Quaternion targetRot = new Quaternion(0, 0, Random.Range(0, rotationOptions.Length), 0);
+            //Create trial object
+            target = Instantiate(options[i], targetPos, targetRot);
+            //Check if directly below
+            //Average needed because different rotations create different x vals
+            if (PositionAverage(target.transform) != PositionAverage(group.transform))
+                break;
+            Debug.Log("rerandomizing");
+        }
+		SnapTarget(); //For when the random rotation/postioning put it out of bounds
+
+		LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_FAMI_PROMT, 
+                                         PositionAverage(target.transform).ToString());
         group.AddComponent<FamiliarizationSet>();
 	}
 
@@ -88,21 +97,22 @@ public class FamiliarizationController : MonoBehaviour {
 
 	//Compares position of player's block to target
 	public bool CorrectPosition(){
-        float t = 0;
-        float g = 0;
-		//Must find and compare avg block position
-		//because parent locations may not add up 
-		//with groups s and z
-		foreach(Transform child in target.transform){
-            t += child.position.x;
-        }
-        foreach (Transform child in group.transform)
-		{
-			g += child.position.x;
-		}
-        //deal with UI element
-
+        float t = PositionAverage(target.transform);
+        float g = PositionAverage(group.transform);
         return (t/4) == (g/4);
+    }
+
+	//Returns average x position of transform
+	//Used to compare prompt to player's block
+	//Must find and compare avg block position
+	//because parent locations may not add up 
+	//with groups s and z
+	public static float PositionAverage(Transform t){
+        float x = 0;
+        foreach(Transform child in t){
+            x += child.position.x;
+        }
+        return x / 4f;
     }
 
     //Checks if user is done with familiarization trials
@@ -124,13 +134,11 @@ public class FamiliarizationController : MonoBehaviour {
 	{
         LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_FAMI_START);
 		InitUI();
-		startTime = Time.time;
 		trialStage = 0;
 		paused = false;
 		ToggleUI(paused, "none");
-		FamiliarizationSet.runningTimer = Time.time;
 		CreateNext();
-	}
+	} 
 
     //Called by Pause_Button
     public void StartPause(){

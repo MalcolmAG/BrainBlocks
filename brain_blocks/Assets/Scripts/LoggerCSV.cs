@@ -48,9 +48,13 @@ public class LoggerCSV : MonoBehaviour
 
 	public static readonly string EVENT_FAMI_START = "Start Familiarization";
     public static readonly string EVENT_FAMI_END = "Completed Familiarization";
-
+    public static readonly string EVENT_FAMI_PROMT = "Trial Prompt Created";
+    public static readonly string EVENT_FAMI_BLOCK_POS = "Block Position at Start of Navigation";
     public static readonly string EVENT_FAMI_PASS = "Familiarization Trial Passed";
 
+	public static readonly string EVENT_BLOCK_ROTATE = "Block Rotated";
+	public static readonly string EVENT_BLOCK_LEFT = "Block Moved Left";
+	public static readonly string EVENT_BLOCK_RIGHT = "Block Moved Right";
     public static readonly string EVENT_BLOCK_CREATE = "Game Block Created";
     public static readonly string EVENT_BLOCK_DROP = "Game Block Dropped";
 

@@ -19,7 +19,6 @@ public class MainUIController : MonoBehaviour {
 
     private bool checkingTime;
     private bool midWayReached;
-	private float  startingTime;
     public float allotedTime;
     public float halfAllottedTime;
 
@@ -33,7 +32,6 @@ public class MainUIController : MonoBehaviour {
         halfAllottedTime = allotedTime / 2;
         midWayReached = false;
         checkingTime = true;
-        startingTime = Time.time; 
         score = 0;
         UI_Game();
 	}
@@ -87,7 +85,6 @@ public class MainUIController : MonoBehaviour {
 	public void EndMidwayMessage(){
         LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_PAUSE_END);
         UI_Game();
-        startingTime = Time.time;
         checkingTime = true;
         paused = false;
     }
