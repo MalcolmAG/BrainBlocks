@@ -84,8 +84,8 @@ public class MentalCommandControl : MonoBehaviour {
     }
 
     void OnTrainingSuccessed(object sender, EmoEngineEventArgs args){
-        //StartCoroutine(AcceptTraining());
-        engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_ACCEPT);
+        StartCoroutine(AcceptTraining());
+        //engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_ACCEPT);
     }
 
     void OnTrainingCompleted(object sender, EmoEngineEventArgs args){
@@ -98,32 +98,32 @@ public class MentalCommandControl : MonoBehaviour {
 	} 
 
     //Waits on user to commit or reject most recent training data
-	//IEnumerator AcceptTraining()
-	//{
- //       acceptTrainPanel.SetActive(true);
-	//	while (!inputRecieved) yield return null;
-	//	if (acceptTraining) {
- //           LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINING_ACCEPT);
- //           status.text = "Success! Training " + trainType + " Concluded";
-	//		engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_ACCEPT);
- //           UpdateUI(trainType);
-	//		//Shows information about training trials after
-	//		// accepting the first right or left data
-	//		if (firstTime && trainType != "Neutral")
-	//		{
-	//			trailInfoPanel.SetActive(true);
-	//			firstTime = false;
-	//		}
-	//	}
-	//	else{
- //           LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINING_REJECT);
- //           status.text = trainType + " Data Rejected";
- //           engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_REJECT);
-	//	}
- //       inputRecieved = false;
- //       OnTrainingCompleted();
+	IEnumerator AcceptTraining()
+	{
+        acceptTrainPanel.SetActive(true);
+		while (!inputRecieved) yield return null;
+		if (acceptTraining) {
+            LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINING_ACCEPT);
+            status.text = "Success! Training " + trainType + " Concluded";
+			engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_ACCEPT);
+            UpdateUI(trainType);
+			//Shows information about training trials after
+			// accepting the first right or left data
+			if (firstTime && trainType != "Neutral")
+			{
+				trailInfoPanel.SetActive(true);
+				firstTime = false;
+			}
+		}
+		else{
+            LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINING_REJECT);
+            status.text = trainType + " Data Rejected";
+            engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_REJECT);
+		}
+        inputRecieved = false;
+        //OnTrainingCompleted();
 
-	//}
+	}
 
     //------------------------------UI Helper Functions------------------------------//
     //Coroutine to control Training_Slider
@@ -288,7 +288,7 @@ public class MentalCommandControl : MonoBehaviour {
                 break;
         }
 
-
+        //THis is not working anymore
         if (type != "Neutral"){
             uint action1 = (uint)EdkDll.IEE_MentalCommandAction_t.MC_LEFT;
             uint action2 = (uint)EdkDll.IEE_MentalCommandAction_t.MC_RIGHT;
@@ -296,6 +296,7 @@ public class MentalCommandControl : MonoBehaviour {
             engine.MentalCommandSetActiveActions(userId, listAction);
             Debug.Log("set active acitons");
         }
+        //engine.MentalCommandSetActiveActions(userId, (uint)EdkDll.IEE_MentalCommandAction_t.MC_LEFT);
 
         StartCoroutine(UpdateSlider());
 
@@ -345,7 +346,7 @@ public class MentalCommandControl : MonoBehaviour {
             default:
                 logger.AddEvent(LoggerCSV.EVENT_TRAINING_CLEAR_N);
                 status.text = "Current Aciton: None";
-                break;
+                break; 
 		}
 		EdkDll.IEE_MentalCommandSetTrainingAction((uint)EmoUserManagement.currentUser, action);
 		EdkDll.IEE_MentalCommandSetTrainingControl((uint)EmoUserManagement.currentUser,

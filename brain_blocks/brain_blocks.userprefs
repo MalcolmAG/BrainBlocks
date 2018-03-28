@@ -3,7 +3,9 @@
     <Files>
       <File FileName="Assets/Scripts/MenuController.cs" Line="50" Column="28" />
       <File FileName="Assets/Scripts/FamiliarizationSet.cs" Line="311" Column="49" />
-      <File FileName="Assets/Scripts/MentalCommandControl.cs" Line="24" Column="9" />
+      <File FileName="Assets/Scripts/MentalCommandControl.cs" Line="299" Column="11" />
+      <File FileName="Assets/Scripts/Emotiv/Plugins/EmoEngine.cs" Line="1039" Column="57" />
+      <File FileName="Assets/Scripts/Emotiv/Plugins/EdkDll.cs" Line="399" Column="67" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
