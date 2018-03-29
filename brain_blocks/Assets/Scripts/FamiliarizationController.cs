@@ -82,7 +82,6 @@ public class FamiliarizationController : MonoBehaviour {
                 break;
             }
             Destroy(target);
-            Debug.Log("rerandomizing");
         }
 		SnapTarget(); //For when the random rotation/postioning put it out of bounds
 

@@ -288,7 +288,7 @@ public class MentalCommandControl : MonoBehaviour {
                 break;
         }
 
-        //THis is not working anymore
+        //This is not working anymore
         if (type != "Neutral"){
             uint action1 = (uint)EdkDll.IEE_MentalCommandAction_t.MC_LEFT;
             uint action2 = (uint)EdkDll.IEE_MentalCommandAction_t.MC_RIGHT;

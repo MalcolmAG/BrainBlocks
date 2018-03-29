@@ -61,6 +61,8 @@ public class MenuController : MonoBehaviour {
 			StartCoroutine(ShowMessage("Please Enter a Valid Participant Group", 1.5f));
 			return;
         }
+        //Start saving data automatically
+        LoggerCSV.GetInstance().inSession = true;
         if (LoggerCSV.GetInstance().gameMode == LoggerCSV.NORMAL_MODE){
             LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_START_NORMAL);
             SceneManager.LoadScene(2);

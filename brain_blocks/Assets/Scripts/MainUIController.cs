@@ -39,9 +39,6 @@ public class MainUIController : MonoBehaviour {
 	void Update () {
         if(checkingTime)
             CheckTime();
-        if(Input.GetKeyDown(KeyCode.X)){
-            Debug.Log(score);
-        }
         UpdateScore();
 		
 	}
@@ -65,7 +62,9 @@ public class MainUIController : MonoBehaviour {
                 else
                     logger.AddEvent(LoggerCSV.EVENT_END_NORMAL);
                 UI_Pause("finished");
+                logger.inSession = false;
                 logger.SaveCSV();
+                logger.ResetCSV();
             }
         }
     }
@@ -75,11 +74,6 @@ public class MainUIController : MonoBehaviour {
 
 	//Called by Done_Button
 	public void FinishGame(){
-        //Reset logger info
-        LoggerCSV logger = LoggerCSV.GetInstance();
-        logger.gameMode = LoggerCSV.NORMAL_MODE;
-        logger.participantID = -1;
-        logger.counterBalanceID = -1;
         SceneManager.LoadScene(0);
     }
 

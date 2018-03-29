@@ -551,7 +551,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameMode: 0
-  participantID: 420
+  participantID: 66
   counterBalanceID: 1
 --- !u!224 &350533909
 RectTransform:
@@ -4526,7 +4526,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1993650429}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45892bb19f9f84a14942562e750db0e1, type: 3}
+  m_Script: {fileID: 11500000, guid: 708928d43f5354a30a5193c60023869e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   btnAdmin: {fileID: 522372274}
