@@ -18,7 +18,8 @@ public class FamiliarizationSet : MonoBehaviour
     private EmoEngine engine;
     private int mentalAction=0;
     public float emotivLag;
-    public float processInterval = .5f;
+    public float blinkProcessInterval = .5f;
+    public float actionProcessInterval = .75f;
 
 //------------------------------Unity Functions------------------------------//
 
@@ -203,6 +204,8 @@ public class FamiliarizationSet : MonoBehaviour
 
         Grid.grid = new Transform[Grid.w, Grid.h];
 
+        UnbindEvents();
+
         // Start next trial
         FindObjectOfType<FamiliarizationController>().CreateNext();
 
@@ -294,11 +297,19 @@ public class FamiliarizationSet : MonoBehaviour
 
 //------------------------------Emotiv Functions------------------------------//
     void BindEvents(){
+        Debug.Log("Bind");
         engine.MentalCommandEmoStateUpdated += OnMentalCommandEmoStateUpdated;
     }
+	void UnbindEvents()
+	{
+		Debug.Log("Unbind");
+		engine.MentalCommandEmoStateUpdated -= OnMentalCommandEmoStateUpdated;
+	}
 	//Move cube and update Current Action UI according to new mental action
 	void OnMentalCommandEmoStateUpdated(object sender, EmoStateUpdatedEventArgs args)
 	{
+		Debug.Log("Familiarization: State Updated");
+
 		EdkDll.IEE_MentalCommandAction_t action = args.emoState.MentalCommandGetCurrentAction();
 		switch (action)
 		{
@@ -324,23 +335,29 @@ public class FamiliarizationSet : MonoBehaviour
 	{
 		if (bci)
 		{
+            if(type == "down") return Input.GetKeyDown(KeyCode.DownArrow);
+
             switch (type){
                 case "rotate":
-                    if ((Input.GetKeyDown(KeyCode.Space) || EmoFacialExpression.isBlink) 
-                        && emotivLag > processInterval)
-                    {
+                    if (EmoFacialExpression.isBlink && emotivLag > blinkProcessInterval){
                         emotivLag = 0f;
                         return true;
                     }
                     break;
 				case "left":
-                    return mentalAction == 2;
+                    if(mentalAction == 2 && emotivLag > actionProcessInterval){
+                        emotivLag = 0f;
+                        return true;
+                    }
+                    break;
 				case "right":
-                    return mentalAction == 1;
-				case "down":
-					return Input.GetKeyDown(KeyCode.DownArrow);
+                    if(mentalAction == 1 && emotivLag > actionProcessInterval){
+                        emotivLag = 0f;
+                        return true;
+                    }
+                    break;
                 default:
-                    //Debug.Log("CustomInput() used incorrectly with: " + type);
+                    Debug.Log("CustomInput() used incorrectly with: " + type);
                     break;
             }
             return false;

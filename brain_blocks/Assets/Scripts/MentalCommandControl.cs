@@ -43,18 +43,27 @@ public class MentalCommandControl : MonoBehaviour {
         engine.UserAdded += OnUserAdded;
         engine.MentalCommandTrainingStarted += OnTrainingStarted;
         engine.MentalCommandTrainingSucceeded += OnTrainingSuccessed;
-        engine.MentalCommandTrainingCompleted += OnTrainingCompleted;
+        //engine.MentalCommandTrainingCompleted += OnTrainingCompleted;
         engine.MentalCommandEmoStateUpdated += OnMentalCommandEmoStateUpdated;
+    }
+
+    void UnbindEvents(){
+		engine.UserAdded -= OnUserAdded;
+		engine.MentalCommandTrainingStarted -= OnTrainingStarted;
+		engine.MentalCommandTrainingSucceeded -= OnTrainingSuccessed;
+		//engine.MentalCommandTrainingCompleted -= OnTrainingCompleted;
+		engine.MentalCommandEmoStateUpdated -= OnMentalCommandEmoStateUpdated;
     }
 
     //Move cube and update Current Action UI according to new mental action
     void OnMentalCommandEmoStateUpdated(object sender, EmoStateUpdatedEventArgs args){
-        Debug.Log("here");
         if (training)
         {
+            Debug.Log("in training mode");
             return;
         }
         EdkDll.IEE_MentalCommandAction_t action = args.emoState.MentalCommandGetCurrentAction();
+        Debug.Log("Training: State Updated " + action);
         switch (action)
         {
             case EdkDll.IEE_MentalCommandAction_t.MC_NEUTRAL:
@@ -88,14 +97,12 @@ public class MentalCommandControl : MonoBehaviour {
         //engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_ACCEPT);
     }
 
-    void OnTrainingCompleted(object sender, EmoEngineEventArgs args){
+ //   void OnTrainingCompleted(object sender, EmoEngineEventArgs args){
         
-        cube.action = cube.ACTION_RESET;
-        status.text = "Success! Training " + trainType + " Concluded";
-        training = false;
-        UpdateUI(trainType);   
-        ActivateButtons(true);
-	} 
+ //       cube.action = cube.ACTION_RESET;
+ //       status.text = "Success! Training " + trainType + " Concluded";
+
+	//} 
 
     //Waits on user to commit or reject most recent training data
 	IEnumerator AcceptTraining()
@@ -106,9 +113,11 @@ public class MentalCommandControl : MonoBehaviour {
             LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINING_ACCEPT);
             status.text = "Success! Training " + trainType + " Concluded";
 			engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_ACCEPT);
-            UpdateUI(trainType);
-			//Shows information about training trials after
-			// accepting the first right or left data
+            if (!firstTime || trainType == "Neutral"){
+                ResetCube();
+            }
+            //Shows information about training trials after
+            // accepting the first right or left data
 			if (firstTime && trainType != "Neutral")
 			{
 				trailInfoPanel.SetActive(true);
@@ -120,7 +129,9 @@ public class MentalCommandControl : MonoBehaviour {
             status.text = trainType + " Data Rejected";
             engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_REJECT);
 		}
+		ActivateButtons(true);
         inputRecieved = false;
+        training = false;
         //OnTrainingCompleted();
 
 	}
@@ -289,19 +300,21 @@ public class MentalCommandControl : MonoBehaviour {
         }
 
         //This is not working anymore
-        if (type != "Neutral"){
-            uint action1 = (uint)EdkDll.IEE_MentalCommandAction_t.MC_LEFT;
-            uint action2 = (uint)EdkDll.IEE_MentalCommandAction_t.MC_RIGHT;
-            uint listAction = action1 | action2;
-            engine.MentalCommandSetActiveActions(userId, listAction);
-            Debug.Log("set active acitons");
-        }
-        //engine.MentalCommandSetActiveActions(userId, (uint)EdkDll.IEE_MentalCommandAction_t.MC_LEFT);
+   //     if (type != "Neutral"){
+   //         uint action1 = (uint)EdkDll.IEE_MentalCommandAction_t.MC_LEFT;
+   //         uint action2 = (uint)EdkDll.IEE_MentalCommandAction_t.MC_RIGHT;
+   //         uint listAction = action1 | action2;
+   //         engine.MentalCommandSetActiveActions(userId, listAction);
+   //         Debug.Log("SET: " + listAction);
+			//Debug.Log("GET: " + engine.MentalCommandGetActiveActions(userId));
+        //}
+        engine.MentalCommandSetActiveActions(userId, (uint)EdkDll.IEE_MentalCommandAction_t.MC_LEFT);
+        Debug.Log("SET: " + (uint)EdkDll.IEE_MentalCommandAction_t.MC_LEFT);
+	    Debug.Log("GET: " + engine.MentalCommandGetActiveActions(userId));
 
-        StartCoroutine(UpdateSlider());
+		StartCoroutine(UpdateSlider());
 
         engine.MentalCommandSetTrainingAction(userId, toTrain);
-        Debug.Log("about to start");
 		engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_START);
 	}
 
@@ -364,6 +377,14 @@ public class MentalCommandControl : MonoBehaviour {
     //Called by Next_Scene_Button
     public void NextScene(){
         LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINSTAGE_END);
+        UnbindEvents();
         SceneManager.LoadScene(2);
+    }
+
+	//Called by Continue_Training_Button
+    //Ensures Cube is reset before starting trials
+	public void ResetCube(){
+        cube.action = cube.ACTION_RESET;
+        UpdateUI(trainType);
     }
 }

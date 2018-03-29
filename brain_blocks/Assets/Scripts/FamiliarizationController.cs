@@ -24,7 +24,7 @@ public class FamiliarizationController : MonoBehaviour {
     private GameObject group;
     private GameObject target;
     private float[] rotationOptions = { 0f, -90f, -180f, 90f };
-    private float timePerTrial = 120.25f;
+    private float timePerTrial = 300.25f;
     private float runningTimer;
     private int trialStage;
     private bool started = false;
