@@ -1,10 +1,8 @@
 ﻿<Properties StartupConfiguration="{1CE5CE23-5434-AF8A-9ABD-DC12C5007FFD}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/FamiliarizationSet.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/MentalCommandControl.cs">
     <Files>
-      <File FileName="Assets/Scripts/Set.cs" Line="203" Column="27" />
-      <File FileName="Assets/Scripts/MentalCommandControl.cs" Line="46" Column="11" />
-      <File FileName="Assets/Scripts/FamiliarizationSet.cs" Line="306" Column="19" />
-      <File FileName="Assets/Scripts/FamiliarizationController.cs" Line="31" Column="11" />
+      <File FileName="Assets/Scripts/MentalCommandControl.cs" Line="125" Column="27" />
+      <File FileName="Assets/Scripts/Emotiv/Plugins/EmoMentalCommand.cs" Line="112" Column="11" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />

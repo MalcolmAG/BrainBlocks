@@ -9,7 +9,7 @@ public class TrainingCube : MonoBehaviour {
     public readonly int ACTION_NEUTRAL = 0;
     public readonly int ACTION_RIGHT = 1;
     public readonly int ACTION_LEFT = 2;
-    public bool leftDone, rightDone, rightTrail, leftTrail = false;
+    public bool leftDone, rightDone, righttrial, lefttrial = false;
     private MentalCommandControl control;
     private float startPos, offset;
     // Use this for initialization
@@ -41,10 +41,10 @@ public class TrainingCube : MonoBehaviour {
             {
                 transform.Translate(speed * Time.deltaTime * 10, 0, 0);
             }
-            if (rightTrail && transform.position.x > startPos + 5){
+            if (righttrial && transform.position.x > startPos + 5){
                 LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINING_TRIAL_PASS_R);
                 rightDone = true;
-                rightTrail = false;
+                righttrial = false;
                 control.UpdateUI("done right");
             }
 
@@ -53,10 +53,10 @@ public class TrainingCube : MonoBehaviour {
         else if(action == ACTION_LEFT){
 			if (transform.localPosition.x > startPos - offset)
 			    transform.Translate( -speed * Time.deltaTime * 10, 0, 0);
-            if (leftTrail && transform.position.x < startPos - 5){
+            if (lefttrial && transform.position.x < startPos - 5){
 				LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINING_TRIAL_PASS_R);
 				leftDone = true;
-                leftTrail = false;
+                lefttrial = false;
                 control.UpdateUI("done left");
             }
         }
