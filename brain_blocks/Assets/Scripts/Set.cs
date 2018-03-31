@@ -309,12 +309,13 @@ public class Set : MonoBehaviour {
 //------------------------------Emotiv Functions------------------------------//
 	void BindEvents()
 	{
+        Debug.Log("Main: Bind");
 		engine.MentalCommandEmoStateUpdated += OnMentalCommandEmoStateUpdated;
 	}
 	//Move cube and update Current Action UI according to new mental action
 	void OnMentalCommandEmoStateUpdated(object sender, EmoStateUpdatedEventArgs args)
-	{
-		Debug.Log("Main: State Updated");
+	{ 
+        Debug.Log("Main " + transform.tag + ": State Updated");
 
 		EdkDll.IEE_MentalCommandAction_t action = args.emoState.MentalCommandGetCurrentAction();
 		switch (action)
@@ -340,26 +341,36 @@ public class Set : MonoBehaviour {
 	{
 		if (bci)
 		{
-			if (type == "down") return Input.GetKeyDown(KeyCode.DownArrow);
+            if (type == "down") return Input.GetKeyDown(KeyCode.DownArrow);
+            else if (type == "up") return Input.GetKeyDown(KeyCode.UpArrow);
 
 			switch (type)
 			{
 				case "rotate":
-					if (EmoFacialExpression.isBlink && emotivLag > blinkProcessInterval)
+                    //XX START
+                    if (Input.GetKey(KeyCode.Space) && emotivLag > blinkProcessInterval)
+                    //XX END
+					//if (EmoFacialExpression.isBlink && emotivLag > blinkProcessInterval)
 					{
 						emotivLag = 0f;
 						return true;
 					}
 					break;
 				case "left":
-					if (mentalAction == 2 && emotivLag > actionProcessInterval)
+                    //XX START
+                    if (Input.GetKey(KeyCode.LeftArrow) && emotivLag > actionProcessInterval)
+                    //XX END
+					//if (mentalAction == 2 && emotivLag > actionProcessInterval)
 					{
 						emotivLag = 0f;
 						return true;
 					}
 					break;
 				case "right":
-					if (mentalAction == 1 && emotivLag > actionProcessInterval)
+					//XX START
+                    if (Input.GetKey(KeyCode.RightArrow) && emotivLag > actionProcessInterval)
+					//XX END
+					//if (mentalAction == 1 && emotivLag > actionProcessInterval)
 					{
 						emotivLag = 0f;
 						return true;

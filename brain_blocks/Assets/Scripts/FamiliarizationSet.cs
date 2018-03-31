@@ -204,8 +204,6 @@ public class FamiliarizationSet : MonoBehaviour
 
         Grid.grid = new Transform[Grid.w, Grid.h];
 
-        UnbindEvents();
-
         // Start next trial
         FindObjectOfType<FamiliarizationController>().CreateNext();
 
@@ -291,20 +289,15 @@ public class FamiliarizationSet : MonoBehaviour
         else
         {
             ghost = GameObject.Find(tag + "_ghost_light");
-        }
+        } 
         UpdateGhost();
     }
 
 //------------------------------Emotiv Functions------------------------------//
     void BindEvents(){
-        Debug.Log("Bind");
+        Debug.Log("Familiarization: Bind");
         engine.MentalCommandEmoStateUpdated += OnMentalCommandEmoStateUpdated;
     }
-	void UnbindEvents()
-	{
-		Debug.Log("Unbind");
-		engine.MentalCommandEmoStateUpdated -= OnMentalCommandEmoStateUpdated;
-	}
 	//Move cube and update Current Action UI according to new mental action
 	void OnMentalCommandEmoStateUpdated(object sender, EmoStateUpdatedEventArgs args)
 	{
@@ -339,20 +332,31 @@ public class FamiliarizationSet : MonoBehaviour
 
             switch (type){
                 case "rotate":
-                    if (EmoFacialExpression.isBlink && emotivLag > blinkProcessInterval){
+                    //XX START
+                    if (Input.GetKey(KeyCode.Space) && emotivLag > blinkProcessInterval){
+                    //XX END
+                    //if (EmoFacialExpression.isBlink && emotivLag > blinkProcessInterval){
                         emotivLag = 0f;
                         return true;
                     }
                     break;
 				case "left":
-                    if(mentalAction == 2 && emotivLag > actionProcessInterval){
-                        emotivLag = 0f;
+					//XX START
+                    if (Input.GetKey(KeyCode.LeftArrow) && emotivLag > actionProcessInterval)
+					{
+					//XX END
+						//if(mentalAction == 2 && emotivLag > actionProcessInterval){
+						emotivLag = 0f;
                         return true;
                     }
                     break;
 				case "right":
-                    if(mentalAction == 1 && emotivLag > actionProcessInterval){
-                        emotivLag = 0f;
+					//XX START
+                    if (Input.GetKey(KeyCode.RightArrow) && emotivLag > actionProcessInterval)
+					{
+						//XX END
+						//if(mentalAction == 1 && emotivLag > actionProcessInterval){
+						emotivLag = 0f;
                         return true;
                     }
                     break;

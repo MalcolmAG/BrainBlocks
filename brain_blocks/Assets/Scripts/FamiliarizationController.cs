@@ -144,7 +144,7 @@ public class FamiliarizationController : MonoBehaviour {
 
     //Checks if user is done with familiarization trials
     void CheckStage(){
-        if(trialStage != 0)
+        if(trialStage != 0) 
             LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_FAMI_PASS);
         if (trialStage == maxStage)
         {
