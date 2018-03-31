@@ -721,7 +721,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 217929215}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 935757482}
+        m_MethodName: StartEndTrial
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &217929215
@@ -2552,12 +2563,13 @@ MonoBehaviour:
   btnLeftClear: {fileID: 1089684455}
   btnRightClear: {fileID: 1674667547}
   btnNext: {fileID: 1726894148}
+  btnRightTrial: {fileID: 217929214}
+  btnLeftTrial: {fileID: 1087152063}
   slider: {fileID: 1465030990}
   trainPercentage: {fileID: 1427865318}
   curAction: {fileID: 1909380019}
   status: {fileID: 174836892}
-  btnRtrialText: {fileID: 0}
-  btnLtrialText: {fileID: 0}
+  trainingCube: {fileID: 1992292286}
   leftPrompt: {fileID: 1445892769}
   rightPrompt: {fileID: 10007331}
   leftCheckmark: {fileID: 1828148858}
@@ -2887,7 +2899,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1087152064}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 935757482}
+        m_MethodName: StartEndTrial
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1087152064
@@ -6928,7 +6951,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d23547270f9efa4d8936a9d2b17c581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  action: 0
   speed: 0.2
   leftDone: 0
   rightDone: 0

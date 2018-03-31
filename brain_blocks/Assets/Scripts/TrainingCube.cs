@@ -2,8 +2,7 @@
 using System.Collections;
 
 public class TrainingCube : MonoBehaviour {
-
-    public int action = 0;
+    
     public float speed = .2f;
     public readonly int ACTION_RESET = -1;
     public readonly int ACTION_NEUTRAL = 0;
@@ -11,6 +10,7 @@ public class TrainingCube : MonoBehaviour {
     public readonly int ACTION_LEFT = 2;
     public bool leftDone, rightDone, righttrial, lefttrial = false;
     private MentalCommandControl control;
+    int action = 0;
     private float startPos, offset;
     // Use this for initialization
     private void Start()
@@ -18,6 +18,10 @@ public class TrainingCube : MonoBehaviour {
         control = GameObject.Find("TrainController").GetComponent<MentalCommandControl>();
         startPos = transform.position.x;
         offset = 11;
+    }
+
+    public void SetAciton(int a){
+        action = a;
     }
     //Controls animation of BCI training Block
     void Update () {
