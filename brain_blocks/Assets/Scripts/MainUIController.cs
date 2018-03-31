@@ -19,7 +19,6 @@ public class MainUIController : MonoBehaviour {
 
     private bool checkingTime;
     private bool midWayReached;
-	private float  startingTime;
     public float allotedTime;
     public float halfAllottedTime;
 
@@ -33,7 +32,6 @@ public class MainUIController : MonoBehaviour {
         halfAllottedTime = allotedTime / 2;
         midWayReached = false;
         checkingTime = true;
-        startingTime = Time.time; 
         score = 0;
         UI_Game();
 	}
@@ -41,9 +39,6 @@ public class MainUIController : MonoBehaviour {
 	void Update () {
         if(checkingTime)
             CheckTime();
-        if(Input.GetKeyDown(KeyCode.X)){
-            Debug.Log(score);
-        }
         UpdateScore();
 		
 	}
@@ -67,7 +62,9 @@ public class MainUIController : MonoBehaviour {
                 else
                     logger.AddEvent(LoggerCSV.EVENT_END_NORMAL);
                 UI_Pause("finished");
+                logger.inSession = false;
                 logger.SaveCSV();
+                logger.ResetCSV();
             }
         }
     }
@@ -77,9 +74,6 @@ public class MainUIController : MonoBehaviour {
 
 	//Called by Done_Button
 	public void FinishGame(){
-        LoggerCSV logger = LoggerCSV.GetInstance();
-        logger.gameMode = LoggerCSV.NORMAL_MODE;
-        logger.participantID = -1;
         SceneManager.LoadScene(0);
     }
 
@@ -87,7 +81,6 @@ public class MainUIController : MonoBehaviour {
 	public void EndMidwayMessage(){
         LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_PAUSE_END);
         UI_Game();
-        startingTime = Time.time;
         checkingTime = true;
         paused = false;
     }

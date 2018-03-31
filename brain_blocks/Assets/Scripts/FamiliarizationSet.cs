@@ -15,11 +15,11 @@ public class FamiliarizationSet : MonoBehaviour
 
     private readonly Vector2 ghostStandByPos = Vector2.down * 10;
 
-    public static float runningTimer;
-
     private EmoEngine engine;
+    private int mentalAction=0;
     public float emotivLag;
-    public float processInterval = .5f;
+    public float blinkProcessInterval = .5f;
+    public float actionProcessInterval = .75f;
 
 //------------------------------Unity Functions------------------------------//
 
@@ -29,8 +29,8 @@ public class FamiliarizationSet : MonoBehaviour
         if(bci){
 			emotivLag = 0f;
 			engine = EmoEngine.Instance;
+            BindEvents();
         }
-		runningTimer = Time.time;
         completed = false;
         orientation = true;
         ghost = GameObject.Find(tag + "_ghost");
@@ -79,6 +79,8 @@ public class FamiliarizationSet : MonoBehaviour
 			else
 				// It's not valid. revert.
 				transform.Rotate(0, 0, 90);
+            
+            LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_BLOCK_ROTATE);
 		}
 	}
 
@@ -112,6 +114,8 @@ public class FamiliarizationSet : MonoBehaviour
                     UpdateGrid();
                 }
             }
+            LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_FAMI_BLOCK_POS,
+                                             FamiliarizationController.PositionAverage(transform).ToString());
             SwapGhosts();
 
         }
@@ -133,6 +137,10 @@ public class FamiliarizationSet : MonoBehaviour
             else
                 // Its not valid. revert.
                 transform.position += new Vector3(1, 0, 0);
+
+            LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_BLOCK_LEFT,
+                                             FamiliarizationController.PositionAverage(transform).ToString());
+            
         }
     }
 
@@ -152,7 +160,11 @@ public class FamiliarizationSet : MonoBehaviour
             else
                 // It's not valid. revert.
                 transform.position += new Vector3(-1, 0, 0);
-        }
+            LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_BLOCK_RIGHT,
+                                             FamiliarizationController.PositionAverage(transform).ToString());
+
+
+		}
     }
 
     //Listens for and applies drop action
@@ -188,9 +200,11 @@ public class FamiliarizationSet : MonoBehaviour
         // It's not valid. revert.
         transform.position += new Vector3(0, 1, 0);
 
-        yield return new WaitForSeconds(.75f);
+        yield return new WaitForSeconds(.25f);
 
         Grid.grid = new Transform[Grid.w, Grid.h];
+
+        UnbindEvents();
 
         // Start next trial
         FindObjectOfType<FamiliarizationController>().CreateNext();
@@ -266,19 +280,53 @@ public class FamiliarizationSet : MonoBehaviour
         }
     }
 
-	//Changes associated ghost object
-	private void SwapGhosts()
+    //Changes associated ghost object
+    private void SwapGhosts()
+    {
+        ghost.transform.position = ghostStandByPos;
+        if (orientation)
+        {
+            ghost = GameObject.Find(tag + "_ghost");
+        }
+        else
+        {
+            ghost = GameObject.Find(tag + "_ghost_light");
+        }
+        UpdateGhost();
+    }
+
+//------------------------------Emotiv Functions------------------------------//
+    void BindEvents(){
+        Debug.Log("Bind");
+        engine.MentalCommandEmoStateUpdated += OnMentalCommandEmoStateUpdated;
+    }
+	void UnbindEvents()
 	{
-		ghost.transform.position = ghostStandByPos;
-		if (orientation)
+		Debug.Log("Unbind");
+		engine.MentalCommandEmoStateUpdated -= OnMentalCommandEmoStateUpdated;
+	}
+	//Move cube and update Current Action UI according to new mental action
+	void OnMentalCommandEmoStateUpdated(object sender, EmoStateUpdatedEventArgs args)
+	{
+		Debug.Log("Familiarization: State Updated");
+
+		EdkDll.IEE_MentalCommandAction_t action = args.emoState.MentalCommandGetCurrentAction();
+		switch (action)
 		{
-			ghost = GameObject.Find(tag + "_ghost");
+			case EdkDll.IEE_MentalCommandAction_t.MC_NEUTRAL:
+                mentalAction = 0;
+                Debug.Log("Mental Command: Neutral");
+				break;
+			case EdkDll.IEE_MentalCommandAction_t.MC_RIGHT:
+                mentalAction = 1;
+                Debug.Log("Mental Command: right");
+                break;
+			case EdkDll.IEE_MentalCommandAction_t.MC_LEFT:
+                mentalAction = 2;
+                Debug.Log("Mental Command: left");
+				break;
+
 		}
-		else
-		{
-			ghost = GameObject.Find(tag + "_ghost_light");
-		}
-		UpdateGhost();
 	}
 
 //------------------------------Input helper Functions------------------------------//
@@ -287,24 +335,29 @@ public class FamiliarizationSet : MonoBehaviour
 	{
 		if (bci)
 		{
+            if(type == "down") return Input.GetKeyDown(KeyCode.DownArrow);
+
             switch (type){
                 case "rotate":
-                    if ((Input.GetKeyDown(KeyCode.Space) || EmoFacialExpression.isBlink) 
-                        && emotivLag > processInterval)
-                    {
+                    if (EmoFacialExpression.isBlink && emotivLag > blinkProcessInterval){
                         emotivLag = 0f;
                         return true;
                     }
                     break;
-                //To be switched with BCI control
 				case "left":
-					return Input.GetKeyDown(KeyCode.LeftArrow);
+                    if(mentalAction == 2 && emotivLag > actionProcessInterval){
+                        emotivLag = 0f;
+                        return true;
+                    }
+                    break;
 				case "right":
-					return Input.GetKeyDown(KeyCode.RightArrow);
-				case "down":
-					return Input.GetKeyDown(KeyCode.DownArrow);
+                    if(mentalAction == 1 && emotivLag > actionProcessInterval){
+                        emotivLag = 0f;
+                        return true;
+                    }
+                    break;
                 default:
-                    //Debug.Log("CustomInput() used incorrectly with: " + type);
+                    Debug.Log("CustomInput() used incorrectly with: " + type);
                     break;
             }
             return false;

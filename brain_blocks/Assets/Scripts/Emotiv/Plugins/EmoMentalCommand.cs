@@ -93,23 +93,23 @@ public class EmoMentalCommand : MonoBehaviour
     }
     static void engine_MentalCommandTrainingStarted(object sender, EmoEngineEventArgs e)
     {
-        Debug.Log("MentalCommand Training Started");
+        //Debug.Log("MentalCommand Training Started");
     }
 
     static void engine_MentalCommandTrainingSucceeded(object sender, EmoEngineEventArgs e)
     {
-        EmoEngine.Instance.MentalCommandSetTrainingControl(0, EdkDll.IEE_MentalCommandTrainingControl_t.MC_ACCEPT);
-        Debug.Log("MentalCommand Training Succeeded");
+        //EmoEngine.Instance.MentalCommandSetTrainingControl(0, EdkDll.IEE_MentalCommandTrainingControl_t.MC_ACCEPT);
+        //Debug.Log("MentalCommand Training Succeeded");
     }
 
     static void engine_MentalCommandTrainingCompleted(object sender, EmoEngineEventArgs e)
     {
-        Debug.Log("MentalCommand Training Completed");
+        //Debug.Log("MentalCommand Training Completed");
     }
 
     static void engine_MentalCommandTrainingRejected(object sender, EmoEngineEventArgs e)
     {
-        Debug.Log("MentalCommand Training Rejected");
+        //Debug.Log("MentalCommand Training Rejected");
     }
     /// <summary>
     /// Start traning MentalCommand action
