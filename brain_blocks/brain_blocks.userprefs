@@ -1,11 +1,9 @@
 ﻿<Properties StartupConfiguration="{1CE5CE23-5434-AF8A-9ABD-DC12C5007FFD}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/TrainingCube.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/FamiliarizationSet.cs">
     <Files>
-      <File FileName="Assets/Scripts/MentalCommandControl.cs" Line="43" Column="6" />
-      <File FileName="Assets/Scripts/TrainingCube.cs" Line="24" Column="13" />
-      <File FileName="Assets/Scripts/FamiliarizationSet.cs" Line="298" Column="37" />
-      <File FileName="Assets/Scripts/Set.cs" Line="309" Column="55" />
-      <File FileName="Assets/Scripts/FamiliarizationController.cs" Line="147" Column="29" />
+      <File FileName="Assets/Scripts/FamiliarizationSet.cs" Line="298" Column="11" />
+      <File FileName="Assets/Scripts/Set.cs" Line="312" Column="11" />
+      <File FileName="Assets/Scripts/MentalCommandControl.cs" Line="143" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />

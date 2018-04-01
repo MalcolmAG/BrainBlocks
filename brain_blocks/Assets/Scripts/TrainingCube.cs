@@ -48,7 +48,7 @@ public class TrainingCube : MonoBehaviour {
 			if (transform.localPosition.x > startPos - offset)
 			    transform.Translate( -speed * Time.deltaTime * 10, 0, 0);
             if (UI.leftTrial && transform.position.x < startPos - 5){
-				LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINING_TRIAL_PASS_R);
+                LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINING_TRIAL_PASS_L);
                 UI.UpdateUI("done left");
             }
         }

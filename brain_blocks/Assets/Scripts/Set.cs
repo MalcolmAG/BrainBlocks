@@ -309,7 +309,7 @@ public class Set : MonoBehaviour {
 //------------------------------Emotiv Functions------------------------------//
 	void BindEvents()
 	{
-        Debug.Log("Main: Bind");
+        //Debug.Log("Main: Bind");
 		engine.MentalCommandEmoStateUpdated += OnMentalCommandEmoStateUpdated;
 	}
 	//Move cube and update Current Action UI according to new mental action
@@ -348,9 +348,9 @@ public class Set : MonoBehaviour {
 			{
 				case "rotate":
                     //XX START
-                    if (Input.GetKey(KeyCode.Space) && emotivLag > blinkProcessInterval)
+                    //if (Input.GetKey(KeyCode.Space) && emotivLag > blinkProcessInterval)
                     //XX END
-					//if (EmoFacialExpression.isBlink && emotivLag > blinkProcessInterval)
+					if (EmoFacialExpression.isBlink && emotivLag > blinkProcessInterval)
 					{
 						emotivLag = 0f;
 						return true;
@@ -358,9 +358,9 @@ public class Set : MonoBehaviour {
 					break;
 				case "left":
                     //XX START
-                    if (Input.GetKey(KeyCode.LeftArrow) && emotivLag > actionProcessInterval)
+                    //if (Input.GetKey(KeyCode.LeftArrow) && emotivLag > actionProcessInterval)
                     //XX END
-					//if (mentalAction == 2 && emotivLag > actionProcessInterval)
+					if (mentalAction == 2 && emotivLag > actionProcessInterval)
 					{
 						emotivLag = 0f;
 						return true;
@@ -368,9 +368,9 @@ public class Set : MonoBehaviour {
 					break;
 				case "right":
 					//XX START
-                    if (Input.GetKey(KeyCode.RightArrow) && emotivLag > actionProcessInterval)
+                    //if (Input.GetKey(KeyCode.RightArrow) && emotivLag > actionProcessInterval)
 					//XX END
-					//if (mentalAction == 1 && emotivLag > actionProcessInterval)
+					if (mentalAction == 1 && emotivLag > actionProcessInterval)
 					{
 						emotivLag = 0f;
 						return true;

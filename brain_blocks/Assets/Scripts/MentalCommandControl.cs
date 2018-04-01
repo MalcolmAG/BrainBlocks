@@ -15,21 +15,21 @@ public class MentalCommandControl : MonoBehaviour {
 
 
     //XX Start For testing without EMOTIV
-    private void Update()
-    {
-        if (!training)
-        {
-            if (Input.GetKey(KeyCode.LeftArrow))
-                cube.SetAciton(cube.ACTION_LEFT);
-            else if (Input.GetKey((KeyCode.RightArrow)))
-                cube.SetAciton(cube.ACTION_RIGHT);
-            else
-                cube.SetAciton(cube.ACTION_NEUTRAL);
-        }
-    }
+    //private void Update()
+    //{
+    //    if (!training)
+    //    {
+    //        if (Input.GetKey(KeyCode.LeftArrow))
+    //            cube.SetAciton(cube.ACTION_LEFT);
+    //        else if (Input.GetKey((KeyCode.RightArrow)))
+    //            cube.SetAciton(cube.ACTION_RIGHT);
+    //        else
+    //            cube.SetAciton(cube.ACTION_NEUTRAL);
+    //    }
+    //}
     // XX End
 
-    //------------------------------Emotiv Event Functions------------------------------//
+//------------------------------Emotiv Event Functions------------------------------//
 
     //Binds following local functions(right side) to EmoEngine functions(left side)
     void BindEvents(){
@@ -74,12 +74,12 @@ public class MentalCommandControl : MonoBehaviour {
     }
 
 	//Event function called by EmoEngine when EPOCH is connected
-	private void OnUserAdded(object sender, EmoEngineEventArgs args){
+	void OnUserAdded(object sender, EmoEngineEventArgs args){
         userId = args.userId;
     }
 
 	//Event function called by EmoEngine before training period starts
-	public void OnTrainingStarted(object sender, EmoEngineEventArgs args)
+	void OnTrainingStarted(object sender, EmoEngineEventArgs args)
     {
         UI.UpdateStatusText( "Training " + trainType);
         training = true;
@@ -87,14 +87,14 @@ public class MentalCommandControl : MonoBehaviour {
     }
 
     //Event function called by EmoEngine when training period ends
-    public void OnTrainingSuccess(object sender, EmoEngineEventArgs args){
-		//Debug.Log("In Success");
+    void OnTrainingSuccess(object sender, EmoEngineEventArgs args){
+		Debug.Log("In Success");
 		StartCoroutine(AcceptTraining());
     }
 
 	//Event function called by EmoEngine when training is accepted
 	void OnTrainingAccepted(object sender, EmoEngineEventArgs args){
-		//Debug.Log("In Accepted");
+		Debug.Log("In Accepted");
         UI.UpdateStatusText( "Success! Training " + trainType + " Concluded");
 		training = false;
 		UI.ActivateButtons(true);
@@ -117,7 +117,7 @@ public class MentalCommandControl : MonoBehaviour {
 
 	//Event function called by EmoEngine when training is rejected
 	void OnTrainingRejected(object sender, EmoEngineEventArgs args){
-		//Debug.Log("In Rejected");
+		Debug.Log("In Rejected");
         UI.UpdateStatusText( trainType + " Data Rejected");
         cube.SetAciton(cube.ACTION_RESET);
         UI.ActivateButtons(true);
@@ -130,22 +130,22 @@ public class MentalCommandControl : MonoBehaviour {
         UI.acceptTrainPanel.SetActive(true);
 		while (!inputRecieved) yield return null;
 		if (acceptTraining) {
-            //Debug.Log("Coroutine: ACCEPTING");
+            Debug.Log("Coroutine: ACCEPTING");
             LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINING_ACCEPT);
             //XX Start
-            object s = null;
-            EmoEngineEventArgs a = null;
-            OnTrainingAccepted(s,a);
+            //object s = null;
+            //EmoEngineEventArgs a = null;
+            //OnTrainingAccepted(s,a);
             //XX end
 			engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_ACCEPT);
 		}
 		else{
-			//Debug.Log("Coroutine: REJECTING");
+			Debug.Log("Coroutine: REJECTING");
 			LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINING_REJECT);
 			//XX Start
-			object s = null;
-			EmoEngineEventArgs a = null;
-            OnTrainingRejected  (s, a);
+			//object s = null;
+			//EmoEngineEventArgs a = null;
+            //OnTrainingRejected  (s, a);
 			//XX end
 			engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_REJECT);
 		}

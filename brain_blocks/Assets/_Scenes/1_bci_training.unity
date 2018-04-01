@@ -629,6 +629,11 @@ Prefab:
       propertyPath: m_MaxValue
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 114025091693303342, guid: 340a89d985c3c4735b22cb6e3b13ec2f,
+        type: 2}
+      propertyPath: m_WholeNumbers
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 340a89d985c3c4735b22cb6e3b13ec2f, type: 2}
   m_IsPrefabParent: 0

@@ -40,9 +40,9 @@ public class TrainingUI : MonoBehaviour {
 	public IEnumerator UpdateSlider()
 	{
 		//XX Start for testing without emotiv
-		object s = null;
-		EmoEngineEventArgs a = null;
-		controller.OnTrainingStarted(s, a);
+		//object s = null;
+		//EmoEngineEventArgs a = null;
+		//controller.OnTrainingStarted(s, a);
 		//XX END
 
 		while (true)
@@ -58,7 +58,7 @@ public class TrainingUI : MonoBehaviour {
 		trainPercentage.text = "0%";
 
 		//XX Start for testing without emotiv
-        controller.OnTrainingSuccess(s, a);
+        //controller.OnTrainingSuccess(s, a);
 		//XX END
 
 
