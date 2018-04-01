@@ -183,6 +183,10 @@ public class Set : MonoBehaviour {
             //Check Game Over
             CheckGameOver();
 
+            //Unbind Emotiv Events
+
+            UnbindEvent();
+
 			// Disable script
 			enabled = false;
 		}
@@ -311,6 +315,11 @@ public class Set : MonoBehaviour {
 	{
         //Debug.Log("Main: Bind");
 		engine.MentalCommandEmoStateUpdated += OnMentalCommandEmoStateUpdated;
+	}
+	void UnbindEvent()
+	{
+		//Debug.Log("Main: Bind");
+		engine.MentalCommandEmoStateUpdated -= OnMentalCommandEmoStateUpdated;
 	}
 	//Move cube and update Current Action UI according to new mental action
 	void OnMentalCommandEmoStateUpdated(object sender, EmoStateUpdatedEventArgs args)

@@ -13,14 +13,16 @@ public class TrainingUI : MonoBehaviour {
 	//UI
 	public Button btnNeutral, btnLeft, btnRight,
 				  btnNeutralClear, btnLeftClear,
-				  btnRightClear, btnNext, btnRightTrial, btnLeftTrial;
+				  btnRightClear, btnNext, btnRightTrial, 
+                  btnLeftTrial, btnResetCube;
 	public Slider slider;
-	public TextMeshProUGUI trainPercentage, curAction, status;
+    public TextMeshProUGUI trainPercentage, curAction, status, leftCount, rightCount;
 	public GameObject leftPrompt, rightPrompt, leftCheckmark, rightCheckmark,
 					   trialInfoPanel, acceptTrainPanel, clearPanel;
 
     //State Control
     public bool neutralDone, leftTrial, rightTrial, rightDone, leftDone = false;
+    private int leftTrainCount, rightTrainCount = 0;
 
 
     public void InitUI(){
@@ -33,6 +35,11 @@ public class TrainingUI : MonoBehaviour {
     }
     public void UpdateCurrentActionText(string text){
         curAction.text = text;
+    }
+
+    void UpdateTrainCounts(){
+        leftCount.text = "Train Count: " + leftTrainCount;
+        rightCount.text = "Train Count; " + rightTrainCount;
     }
 
 	//Coroutine to control Training_Slider
@@ -76,16 +83,25 @@ public class TrainingUI : MonoBehaviour {
 				rightTrial = false;
 				leftDone = false;
 				rightDone = false;
+				leftTrainCount = 0;
+				rightTrainCount = 0;
 				ActivateButtons(true);
 				break;
+            case "Right":
+                rightTrainCount++;
+                break;
+            case "Left":
+                leftTrainCount++;
+                break;
 			case "clear right":
 				rightTrial = false;
 				rightDone = false;
-				btnRight.interactable = true;
+                rightTrainCount = 0;
 				break;
 			case "clear left":
 				leftTrial = false;
 				leftDone = false;
+                leftTrainCount = 0;
 				break;
 			case "left trial start":
 				leftTrial = true;
@@ -110,6 +126,7 @@ public class TrainingUI : MonoBehaviour {
             default:
                 break;
 		}
+        UpdateTrainCounts();
     }
 
 	//Shows/Hides UI objects depending on state
@@ -165,8 +182,16 @@ public class TrainingUI : MonoBehaviour {
 			case "Right":
                 //Activations
 				btnRightClear.gameObject.SetActive(true);
-				btnRightTrial.gameObject.SetActive(true);
 				rightCheckmark.SetActive(false);
+                if (rightTrainCount == 2)
+                {
+                    btnRightTrial.gameObject.SetActive(true);
+                    btnRight.interactable = false;
+                }
+                else{
+                    btnRightTrial.gameObject.SetActive(false);
+					btnRight.interactable = true;
+				}
 				break;
 			case "clear right":
                 //Activations
@@ -185,8 +210,15 @@ public class TrainingUI : MonoBehaviour {
                 //Activations
 				btnLeftClear.gameObject.SetActive(true);
 				leftCheckmark.SetActive(false);
-				btnLeftTrial.gameObject.SetActive(true);
-				break;
+                if (leftTrainCount == 2){
+                    btnLeftTrial.gameObject.SetActive(true);
+                    btnLeft.interactable = false;
+                }
+                else{
+                    btnLeftTrial.gameObject.SetActive(false);
+                    btnLeft.interactable = true;
+                }
+					break;
 			case "clear left":
                 //Activations
 				btnLeftClear.gameObject.SetActive(false);
@@ -286,5 +318,6 @@ public class TrainingUI : MonoBehaviour {
 			btnRightClear.interactable = yes;
 		}
 		btnNeutralClear.interactable = yes;
+        btnResetCube.interactable = yes;
 	}
 }

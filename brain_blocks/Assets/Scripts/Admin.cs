@@ -23,11 +23,20 @@ public class Admin : MonoBehaviour {
             else{
                 logger.AddEvent(LoggerCSV.EVENT_END_NORMAL);
             }
-            logger.inSession = false;
-            logger.SaveCSV();
-            logger.ResetCSV();
 
-            SceneManager.LoadScene(0);
+            //Reset Persistnent master
+            if(logger.gameMode == LoggerCSV.BCI_MODE){
+                Debug.Log("REMOVE");
+                GameObject master = GameObject.Find("Persistent_Master");
+                Destroy(master.GetComponent<EmotivControl>());
+                Destroy(master.GetComponent<EmoFacialExpression>());
+            }
+            //Reset Logger
+			logger.inSession = false;
+			logger.SaveCSV();
+			logger.ResetCSV();
+
+			SceneManager.LoadScene(0);
         }
         else{
             btnAdmin.gameObject.SetActive(true);

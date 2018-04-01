@@ -79,7 +79,7 @@ public class MentalCommandControl : MonoBehaviour {
     }
 
 	//Event function called by EmoEngine before training period starts
-	void OnTrainingStarted(object sender, EmoEngineEventArgs args)
+	public void OnTrainingStarted(object sender, EmoEngineEventArgs args)
     {
         UI.UpdateStatusText( "Training " + trainType);
         training = true;
@@ -87,7 +87,7 @@ public class MentalCommandControl : MonoBehaviour {
     }
 
     //Event function called by EmoEngine when training period ends
-    void OnTrainingSuccess(object sender, EmoEngineEventArgs args){
+    public void OnTrainingSuccess(object sender, EmoEngineEventArgs args){
 		Debug.Log("In Success");
 		StartCoroutine(AcceptTraining());
     }
