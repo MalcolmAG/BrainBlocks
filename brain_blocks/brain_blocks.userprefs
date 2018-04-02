@@ -5,7 +5,8 @@
       <File FileName="Assets/Scripts/MainUIController.cs" Line="73" Column="5" />
       <File FileName="Assets/Scripts/Emotiv/Contact Quality/ContactQualityUIControl.cs" Line="44" Column="53" />
       <File FileName="Assets/Scripts/TrainingUI.cs" Line="68" Column="11" />
-      <File FileName="Assets/Scripts/MentalCommandControl.cs" Line="145" Column="8" />
+      <File FileName="Assets/Scripts/MentalCommandControl.cs" Line="37" Column="44" />
+      <File FileName="Assets/Scripts/Set.cs" Line="188" Column="17" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />

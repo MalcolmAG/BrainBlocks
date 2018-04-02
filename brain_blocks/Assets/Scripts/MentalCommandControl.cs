@@ -36,7 +36,8 @@ public class MentalCommandControl : MonoBehaviour {
         engine.UserAdded += OnUserAdded;
         engine.MentalCommandTrainingStarted += OnTrainingStarted;
         engine.MentalCommandTrainingSucceeded += OnTrainingSuccess;
-        engine.MentalCommandTrainingCompleted += OnTrainingAccepted;
+        engine.MentalCommandTrainingFailed += OnTrainingFailed;
+		engine.MentalCommandTrainingCompleted += OnTrainingAccepted;
         engine.MentalCommandTrainingRejected += OnTrainingRejected;
         engine.MentalCommandEmoStateUpdated += OnMentalCommandEmoStateUpdated;
     }
@@ -44,10 +45,19 @@ public class MentalCommandControl : MonoBehaviour {
 	void UnbindEvents(){
 		engine.UserAdded -= OnUserAdded;
 		engine.MentalCommandTrainingStarted -= OnTrainingStarted;
-		engine.MentalCommandTrainingSucceeded -= OnTrainingSuccess;
+        engine.MentalCommandTrainingSucceeded -= OnTrainingSuccess;
+        engine.MentalCommandTrainingFailed -= OnTrainingFailed;
 		engine.MentalCommandTrainingCompleted -= OnTrainingAccepted;
 		engine.MentalCommandTrainingRejected -= OnTrainingRejected;
 		engine.MentalCommandEmoStateUpdated -= OnMentalCommandEmoStateUpdated;
+    }
+
+    void OnTrainingFailed(object sender, EmoEngineEventArgs args){
+        Debug.Log("In Failed");
+		UI.UpdateStatusText(trainType + " Failed Due to Noisy Signal, Please Try Again");
+		cube.SetAciton(cube.ACTION_RESET);
+		UI.ActivateButtons(true);
+		training = false;
     }
 
     //Move cube and update Current Action UI according to new mental action
@@ -130,13 +140,13 @@ public class MentalCommandControl : MonoBehaviour {
         UI.acceptTrainPanel.SetActive(true);
 		while (!inputRecieved) yield return null;
 		if (acceptTraining) {
-            Debug.Log("Coroutine: ACCEPTING");
             LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINING_ACCEPT);
-            //XX Start
-            //object s = null;
-            //EmoEngineEventArgs a = null;
-            //OnTrainingAccepted(s,a);
-            //XX end
+			//XX Start
+			//object s = null;
+			//EmoEngineEventArgs a = null;
+			//OnTrainingAccepted(s,a);
+			//XX end
+			Debug.Log("Coroutine: ACCEPTING");
 			engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_ACCEPT);
 		}
 		else{
@@ -198,12 +208,12 @@ public class MentalCommandControl : MonoBehaviour {
         switch (type)
         {
             case "Left":
-                cube.SetAciton(cube.ACTION_LEFT);
+                //cube.SetAciton(cube.ACTION_LEFT);
                 toTrain = EdkDll.IEE_MentalCommandAction_t.MC_LEFT;
                 logger.AddEvent(LoggerCSV.EVENT_TRAINING_L);
                 break;
             case "Right":
-                cube.SetAciton(cube.ACTION_RIGHT);
+                //   cube.SetAciton(cube.ACTION_RIGHT);
 				toTrain = EdkDll.IEE_MentalCommandAction_t.MC_RIGHT;
 				logger.AddEvent(LoggerCSV.EVENT_TRAINING_R);
 				break;

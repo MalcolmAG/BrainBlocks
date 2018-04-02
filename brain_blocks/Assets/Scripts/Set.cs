@@ -184,8 +184,8 @@ public class Set : MonoBehaviour {
             CheckGameOver();
 
             //Unbind Emotiv Events
-
-            UnbindEvent();
+            if(bci)
+                UnbindEvent();
 
 			// Disable script
 			enabled = false;
