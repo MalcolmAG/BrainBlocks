@@ -1,23 +1,20 @@
 ﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using TMPro;
 public class MentalCommandControl : MonoBehaviour {
     //Control
     public TrainingCube cube;
     uint userId;
     public bool firstTime = true;
-    public bool training, leftFirst, inputRecieved, acceptTraining = false;
+    public bool training, leftFirst, inputRecieved, acceptTraining, 
+                debug = false;
     public string trainType;
 	EmoEngine engine;
     TrainingUI UI;
 
-
     //XX Start For testing without EMOTIV
     //private void Update()
     //{
-    //    if (!training)
+    //    if (!training && debug)
     //    {
     //        if (Input.GetKey(KeyCode.LeftArrow))
     //            cube.SetAciton(cube.ACTION_LEFT);
@@ -27,9 +24,9 @@ public class MentalCommandControl : MonoBehaviour {
     //            cube.SetAciton(cube.ACTION_NEUTRAL);
     //    }
     //}
-    // XX End
+     //XX End
 
-//------------------------------Emotiv Event Functions------------------------------//
+    //------------------------------Emotiv Event Functions------------------------------//
 
     //Binds following local functions(right side) to EmoEngine functions(left side)
     void BindEvents(){
@@ -99,8 +96,9 @@ public class MentalCommandControl : MonoBehaviour {
     //Event function called by EmoEngine when training period ends
     public void OnTrainingSuccess(object sender, EmoEngineEventArgs args){
 		Debug.Log("In Success");
-		StartCoroutine(AcceptTraining());
-    }
+		engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_ACCEPT);
+		//StartCoroutine(AcceptTraining());
+	}
 
 	//Event function called by EmoEngine when training is accepted
 	void OnTrainingAccepted(object sender, EmoEngineEventArgs args){
@@ -135,32 +133,32 @@ public class MentalCommandControl : MonoBehaviour {
 	} 
 
     //Waits on user to commit or reject most recent training data
-	IEnumerator AcceptTraining()
-	{
-        UI.acceptTrainPanel.SetActive(true);
-		while (!inputRecieved) yield return null;
-		if (acceptTraining) {
-            LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINING_ACCEPT);
-			//XX Start
-			//object s = null;
-			//EmoEngineEventArgs a = null;
-			//OnTrainingAccepted(s,a);
-			//XX end
-			Debug.Log("Coroutine: ACCEPTING");
-			engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_ACCEPT);
-		}
-		else{
-			Debug.Log("Coroutine: REJECTING");
-			LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINING_REJECT);
-			//XX Start
-			//object s = null;
-			//EmoEngineEventArgs a = null;
-            //OnTrainingRejected  (s, a);
-			//XX end
-			engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_REJECT);
-		}
-        inputRecieved = false;
-	}
+	//IEnumerator AcceptTraining()
+	//{
+ //       UI.acceptTrainPanel.SetActive(true);
+	//	while (!inputRecieved) yield return null;
+	//	if (acceptTraining) {
+ //           LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINING_ACCEPT);
+	//		//XX Start
+	//		//object s = null;
+	//		//EmoEngineEventArgs a = null;
+	//		//OnTrainingAccepted(s,a);
+	//		//XX end
+	//		Debug.Log("Coroutine: ACCEPTING");
+	//		engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_ACCEPT);
+	//	}
+	//	else{
+	//		Debug.Log("Coroutine: REJECTING");
+	//		LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINING_REJECT);
+	//		//XX Start
+	//		//object s = null;
+	//		//EmoEngineEventArgs a = null;
+ //           //OnTrainingRejected  (s, a);
+	//		//XX end
+	//		engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_REJECT);
+	//	}
+ //       inputRecieved = false;
+	//}
 
 	//Clear all previous training data
 	void ClearAllTraining()
@@ -171,6 +169,8 @@ public class MentalCommandControl : MonoBehaviour {
 													  EdkDll.IEE_MentalCommandAction_t.MC_LEFT};
 		for (int i = 0; i < 3; i++)
 		{
+			EmoMentalCommand.EnableMentalCommandAction(actions[i], true);
+			EmoMentalCommand.EnableMentalCommandActionsList();
 			EdkDll.IEE_MentalCommandSetTrainingAction((uint)EmoUserManagement.currentUser, actions[i]);
 			EdkDll.IEE_MentalCommandSetTrainingControl((uint)EmoUserManagement.currentUser,
 													   EdkDll.IEE_MentalCommandTrainingControl_t.MC_ERASE);
@@ -189,13 +189,11 @@ public class MentalCommandControl : MonoBehaviour {
         cube = GameObject.Find("Block").GetComponent<TrainingCube>();
         leftFirst = logger.counterBalanceID == 1
                           || logger.counterBalanceID == 2;
-        engine = EmoEngine.Instance;
 
+		engine = EmoEngine.Instance;
+		ClearAllTraining(); //clears any previous training data
         UI.InitUI();
-        //Destroy Previous Training Data
-        ClearAllTraining();
 		BindEvents();
-
     }
 
     //Called by Left_Button, Right_Button, and Neutral_Button
@@ -224,11 +222,8 @@ public class MentalCommandControl : MonoBehaviour {
 
 		StartCoroutine(UI.UpdateSlider());
 
-        if (type != "Neutral")
-        {
-            EmoMentalCommand.EnableMentalCommandAction(toTrain, true);
-            EmoMentalCommand.EnableMentalCommandActionsList();
-        }
+        EmoMentalCommand.EnableMentalCommandAction(toTrain, true);
+        EmoMentalCommand.EnableMentalCommandActionsList();
         EmoMentalCommand.StartTrainingMentalCommand(toTrain);
 	}
 
@@ -326,4 +321,5 @@ public class MentalCommandControl : MonoBehaviour {
 		cube.SetAciton(cube.ACTION_RESET);
 		UI.UpdateUI(trainType);
     }
+
 }

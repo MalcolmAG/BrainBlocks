@@ -42,7 +42,6 @@ public class Admin : MonoBehaviour {
             btnAdmin.gameObject.SetActive(true);
             ifAdmin.text = string.Empty;
             ifAdmin.gameObject.SetActive(false);
-
         }
 
     }

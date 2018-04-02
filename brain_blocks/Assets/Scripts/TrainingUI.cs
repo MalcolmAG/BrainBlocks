@@ -18,18 +18,43 @@ public class TrainingUI : MonoBehaviour {
 	public Slider slider;
     public TextMeshProUGUI trainPercentage, curAction, status, leftCount, rightCount;
 	public GameObject leftPrompt, rightPrompt, leftCheckmark, rightCheckmark,
-					   trialInfoPanel, acceptTrainPanel, clearPanel;
+					   trialInfoPanel, acceptTrainPanel, clearPanel, timeOutPanel;
 
     //State Control
-    public bool neutralDone, leftTrial, rightTrial, rightDone, leftDone = false;
+    public bool neutralDone, leftTrial, rightTrial, rightDone, leftDone, started, paused = false;
     private int leftTrainCount, rightTrainCount = 0;
+    public float runningTimer;
+    private float timeOutTime = 1800f; //30 min given to pass this stage
 
+
+    private void Update()
+    {
+        if (started && !paused){
+            runningTimer += Time.deltaTime;
+            if(runningTimer > timeOutTime){
+                LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TIMEOUT);
+                Debug.Log(timeOutPanel.ToString());
+                timeOutPanel.gameObject.SetActive(true);
+                paused = true;
+            }
+        }
+    }
 
     public void InitUI(){
         controller = GameObject.Find("TrainController").GetComponent<MentalCommandControl>();
         slider.value = 0;
+        runningTimer = 0f;
+        started = true;
+        paused = false;
     }
 
+    public void TogglePause(){
+        paused = !paused;
+        if (!paused)
+            LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_PAUSE_END);
+        else
+            LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_PAUSE_START);
+    }
     public void UpdateStatusText(string text){
         status.text = text;
     }

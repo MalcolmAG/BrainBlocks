@@ -1,12 +1,9 @@
 ﻿<Properties StartupConfiguration="{1CE5CE23-5434-AF8A-9ABD-DC12C5007FFD}|">
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/MentalCommandControl.cs">
     <Files>
-      <File FileName="Assets/Scripts/Admin.cs" Line="34" Column="27" />
-      <File FileName="Assets/Scripts/MainUIController.cs" Line="73" Column="5" />
-      <File FileName="Assets/Scripts/Emotiv/Contact Quality/ContactQualityUIControl.cs" Line="44" Column="53" />
-      <File FileName="Assets/Scripts/TrainingUI.cs" Line="68" Column="11" />
-      <File FileName="Assets/Scripts/MentalCommandControl.cs" Line="37" Column="44" />
-      <File FileName="Assets/Scripts/Set.cs" Line="188" Column="17" />
+      <File FileName="Assets/Scripts/Emotiv/Plugins/EmoEngine.cs" Line="848" Column="1" />
+      <File FileName="Assets/Scripts/MentalCommandControl.cs" Line="2" Column="35" />
+      <File FileName="Assets/Scripts/Emotiv/Plugins/EmoMentalCommand.cs" Line="154" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />

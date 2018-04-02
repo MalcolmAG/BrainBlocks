@@ -10,13 +10,8 @@ public class FamiliarizationController : MonoBehaviour {
     public TextMeshProUGUI trialText;
 
     public Button pauseButton;
-    public GameObject instructionsMessage;
-    public GameObject finishedMessage;
-    public GameObject pausedMessage;
-    public GameObject epoc;
-
-	public GameObject timeOutPanel;
-
+    public GameObject instructionsMessage,finishedMessage, 
+                        pausedMessage,epoc, timeOutPanel;
     public GameObject[] options;
     public int maxStage = 6;
     private bool leftFirst;
@@ -24,7 +19,7 @@ public class FamiliarizationController : MonoBehaviour {
     private GameObject group;
     private GameObject target;
     private float[] rotationOptions = { 0f, -90f, -180f, 90f };
-    private float timePerTrial = 300f;
+    private float timePerTrial = 300.25f; //5 min per trial
     private float runningTimer;
     private int trialStage;
     private bool started = false;
@@ -41,7 +36,7 @@ public class FamiliarizationController : MonoBehaviour {
             //End trial
             if (runningTimer > timePerTrial)
             {
-                LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_FAMI_TIMEOUT);
+                LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TIMEOUT);
                 timeOutPanel.SetActive(true);
                 paused = true;
                 //Admin must be used at this point

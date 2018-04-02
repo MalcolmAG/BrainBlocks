@@ -70,13 +70,15 @@ public class Set : MonoBehaviour {
 		{
 
 			transform.Rotate(0, 0, -90);
-			// See if valid
-			if (LegalGridPos())
-				// It's valid. Update grid.
-				UpdateGrid();
-			else
-				// It's not valid. revert.
-				transform.Rotate(0, 0, 90);
+            // See if valid
+            if (LegalGridPos())
+                // It's valid. Update grid.
+                UpdateGrid();
+            else
+            {
+                // It's not valid. Snap.
+                SnapBounds();
+            }
 		}
 	}
 
@@ -192,7 +194,26 @@ public class Set : MonoBehaviour {
 		}
     }
 
-//------------------------------Grid Helper Functions------------------------------//
+//------------------------------Helper Functions------------------------------//
+
+	//Snaps block into game area if a rotate causes it to go out of bounds
+	private void SnapBounds()
+	{
+		int left = 0; //leftmost possible grid pos
+		int right = 9; //rightmost possible grid pos
+					   //Check if out of bounds
+		foreach (Transform child in transform)
+		{
+			Vector2 v = Grid.ToGrid(child.position);
+			if (v.x < 0 && v.x < left)
+				left = (int)v.x;
+			if (v.x > 9 && v.x > right)
+				right = (int)v.x;
+		}
+		//Snap into bounds
+        transform.Translate(Vector3.right * -left, Space.World);
+        transform.Translate(Vector3.left * (right - 9),Space.World);
+	}
 
 	//Checks if block is above game area
 	void CheckGameOver()
