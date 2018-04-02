@@ -74,6 +74,12 @@ public class MainUIController : MonoBehaviour {
 
 	//Called by Done_Button
 	public void FinishGame(){
+        if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
+		{
+			GameObject master = GameObject.Find("Persistent_Master");
+			Destroy(master.GetComponent<EmotivControl>());
+			Destroy(master.GetComponent<EmoFacialExpression>());
+		}
         SceneManager.LoadScene(0);
     }
 

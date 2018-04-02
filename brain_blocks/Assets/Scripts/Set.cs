@@ -70,13 +70,15 @@ public class Set : MonoBehaviour {
 		{
 
 			transform.Rotate(0, 0, -90);
-			// See if valid
-			if (LegalGridPos())
-				// It's valid. Update grid.
-				UpdateGrid();
-			else
-				// It's not valid. revert.
-				transform.Rotate(0, 0, 90);
+            // See if valid
+            if (LegalGridPos())
+                // It's valid. Update grid.
+                UpdateGrid();
+            else
+            {
+                // It's not valid. Snap.
+                SnapBounds();
+            }
 		}
 	}
 
@@ -183,12 +185,35 @@ public class Set : MonoBehaviour {
             //Check Game Over
             CheckGameOver();
 
+            //Unbind Emotiv Events
+            if(bci)
+                UnbindEvent();
+
 			// Disable script
 			enabled = false;
 		}
     }
 
-//------------------------------Grid Helper Functions------------------------------//
+//------------------------------Helper Functions------------------------------//
+
+	//Snaps block into game area if a rotate causes it to go out of bounds
+	private void SnapBounds()
+	{
+		int left = 0; //leftmost possible grid pos
+		int right = 9; //rightmost possible grid pos
+					   //Check if out of bounds
+		foreach (Transform child in transform)
+		{
+			Vector2 v = Grid.ToGrid(child.position);
+			if (v.x < 0 && v.x < left)
+				left = (int)v.x;
+			if (v.x > 9 && v.x > right)
+				right = (int)v.x;
+		}
+		//Snap into bounds
+        transform.Translate(Vector3.right * -left, Space.World);
+        transform.Translate(Vector3.left * (right - 9),Space.World);
+	}
 
 	//Checks if block is above game area
 	void CheckGameOver()
@@ -309,12 +334,18 @@ public class Set : MonoBehaviour {
 //------------------------------Emotiv Functions------------------------------//
 	void BindEvents()
 	{
+        //Debug.Log("Main: Bind");
 		engine.MentalCommandEmoStateUpdated += OnMentalCommandEmoStateUpdated;
+	}
+	void UnbindEvent()
+	{
+		//Debug.Log("Main: Bind");
+		engine.MentalCommandEmoStateUpdated -= OnMentalCommandEmoStateUpdated;
 	}
 	//Move cube and update Current Action UI according to new mental action
 	void OnMentalCommandEmoStateUpdated(object sender, EmoStateUpdatedEventArgs args)
-	{
-		Debug.Log("Main: State Updated");
+	{ 
+        Debug.Log("Main " + transform.tag + ": State Updated");
 
 		EdkDll.IEE_MentalCommandAction_t action = args.emoState.MentalCommandGetCurrentAction();
 		switch (action)
@@ -340,11 +371,15 @@ public class Set : MonoBehaviour {
 	{
 		if (bci)
 		{
-			if (type == "down") return Input.GetKeyDown(KeyCode.DownArrow);
+            if (type == "down") return Input.GetKeyDown(KeyCode.DownArrow);
+            else if (type == "up") return Input.GetKeyDown(KeyCode.UpArrow);
 
 			switch (type)
 			{
 				case "rotate":
+                    //XX START
+                    //if (Input.GetKey(KeyCode.Space) && emotivLag > blinkProcessInterval)
+                    //XX END
 					if (EmoFacialExpression.isBlink && emotivLag > blinkProcessInterval)
 					{
 						emotivLag = 0f;
@@ -352,6 +387,9 @@ public class Set : MonoBehaviour {
 					}
 					break;
 				case "left":
+                    //XX START
+                    //if (Input.GetKey(KeyCode.LeftArrow) && emotivLag > actionProcessInterval)
+                    //XX END
 					if (mentalAction == 2 && emotivLag > actionProcessInterval)
 					{
 						emotivLag = 0f;
@@ -359,6 +397,9 @@ public class Set : MonoBehaviour {
 					}
 					break;
 				case "right":
+					//XX START
+                    //if (Input.GetKey(KeyCode.RightArrow) && emotivLag > actionProcessInterval)
+					//XX END
 					if (mentalAction == 1 && emotivLag > actionProcessInterval)
 					{
 						emotivLag = 0f;

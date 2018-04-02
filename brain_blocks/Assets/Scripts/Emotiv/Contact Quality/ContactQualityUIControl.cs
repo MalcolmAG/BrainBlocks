@@ -15,7 +15,6 @@ public class ContactQualityUIControl : MonoBehaviour {
 
     GameObject insight, epoc;
     Image[] iChilds, eChilds;
-    public Text txtDevice;
 	private HeadsetType headsetType = HeadsetType.Epoc;
 	private long _currentHeadsetVersion = 0;
 
@@ -43,8 +42,6 @@ public class ContactQualityUIControl : MonoBehaviour {
 
     void bindEvents(){
         engine.EmoStateUpdated += onEmoStateUpdated;
-        engine.UserAdded += onUserAdded;
-        engine.UserRemoved += onUserRemoved;
     }
 
     private void onEmoStateUpdated(object sender, EmoStateUpdatedEventArgs args)
@@ -151,12 +148,6 @@ public class ContactQualityUIControl : MonoBehaviour {
 		}			
     }
 
-    private void onUserAdded(object sender, EmoEngineEventArgs args){
-        txtDevice.text = "User added!";
-    }
-    private void onUserRemoved(object sender, EmoEngineEventArgs args){
-        txtDevice.text = "User removed!";
-    }
     void initHeadset(){
         foreach (Transform t in transform)
         {

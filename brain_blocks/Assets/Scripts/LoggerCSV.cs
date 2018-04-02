@@ -52,9 +52,10 @@ public class LoggerCSV : MonoBehaviour
 	public static readonly string EVENT_TRAINING_TRIAL_PASS_R = "Right Training Trial Passed";
 	public static readonly string EVENT_TRAINING_TRIAL_PASS_L = "Left Training Trial Passed";
 
+	public static readonly string EVENT_TIMEOUT = "Timed Out";
+
 	public static readonly string EVENT_FAMI_START = "Start Familiarization";
     public static readonly string EVENT_FAMI_END = "Completed Familiarization";
-    public static readonly string EVENT_FAMI_TIMEOUT = "Trial Timed Out";
     public static readonly string EVENT_FAMI_PROMT = "Trial Prompt Created";
     public static readonly string EVENT_FAMI_BLOCK_POS = "Block xPos at Start Navigation";
     public static readonly string EVENT_FAMI_PASS = "Familiarization Trial Passed";
