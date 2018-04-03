@@ -51,7 +51,7 @@ public class FamiliarizationController : MonoBehaviour {
     public void CreateNext()
 	{
         //Check if familiarization stage is finished
-        CheckStage();
+        if(CheckStage()) return;
         //Destroy objects from previous trial
         Destroy(group);
         Destroy(target);
@@ -141,7 +141,8 @@ public class FamiliarizationController : MonoBehaviour {
     }
 
     //Checks if user is done with familiarization trials
-    void CheckStage(){
+    //Returns true if max stage is reached
+    bool CheckStage(){
         if(trialStage != 0) 
             LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_FAMI_PASS);
         if (trialStage == maxStage)
@@ -150,10 +151,12 @@ public class FamiliarizationController : MonoBehaviour {
             //Stop checking time
             started = false;
             ToggleUI(true, "finished");
+            return true;
         }
         else{
             runningTimer = 0f;
             trialText.text = "Trial " + (++trialStage) + " of " + maxStage;
+            return false;
         }
     }
 
