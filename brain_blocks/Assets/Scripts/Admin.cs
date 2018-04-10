@@ -14,6 +14,9 @@ public class Admin : MonoBehaviour {
     private string password = "missChib";
 
     public void CheckPassword(string s){
+        Debug.Log("Check");
+        Debug.Log(s);
+        Debug.Log(s==password);
         if(s == password){
             LoggerCSV logger = LoggerCSV.GetInstance();
             logger.AddEvent(LoggerCSV.EVENT_UNABLE);
@@ -35,7 +38,7 @@ public class Admin : MonoBehaviour {
 			logger.inSession = false;
 			logger.SaveCSV();
 			logger.ResetCSV();
-
+            Debug.Log("Load");
 			SceneManager.LoadScene(0);
         }
         else{

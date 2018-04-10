@@ -10,13 +10,10 @@ EditorBuildSettings:
     guid: 1b7e3ef3a1e2d472a92b51bd8149fafb
   - enabled: 1
     path: Assets/_Scenes/1_bci_training.unity
-    guid: b91407be433704c1d852b9df629fc9da
+    guid: 2cb36d8f52cf643dfbc5c7435cb58441
   - enabled: 1
     path: Assets/_Scenes/2_familiarization.unity
     guid: d06ac767084b44d2eae3fb9a5531e9ee
   - enabled: 1
     path: Assets/_Scenes/3_main.unity
     guid: 92b3e178741cc43af88ca36e6ccb4f78
-  - enabled: 0
-    path: Assets/_Scenes/4_bci_training_fail.unity
-    guid: 2cb36d8f52cf643dfbc5c7435cb58441

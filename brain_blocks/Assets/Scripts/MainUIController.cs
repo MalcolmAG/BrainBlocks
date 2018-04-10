@@ -112,8 +112,8 @@ public class MainUIController : MonoBehaviour {
     //Sets UI elements for in-game view
 	private void UI_Game()
 	{
-		if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
-			epoc.SetActive(true);
+		//if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
+			//epoc.SetActive(true);
 		midwayMessage.SetActive(false);
 		finishedMessage.SetActive(false);
 		pauseMessage.SetActive(false);
@@ -135,8 +135,8 @@ public class MainUIController : MonoBehaviour {
 				pauseMessage.SetActive(true);
 				return;
 			case "finished":
-				if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
-					epoc.SetActive(false);
+				//if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
+					//epoc.SetActive(false);
 				finishedMessage.SetActive(true);
 				return;
 		}

@@ -17,8 +17,8 @@ public class TrainingUI : MonoBehaviour {
                   btnLeftTrial, btnResetCube;
 	public Slider slider;
     public TextMeshProUGUI trainPercentage, curAction, status, leftCount, rightCount;
-	public GameObject leftPrompt, rightPrompt, leftCheckmark, rightCheckmark,
-					   trialInfoPanel, acceptTrainPanel, clearPanel, timeOutPanel;
+    public GameObject leftPrompt, rightPrompt, leftCheckmark, rightCheckmark,
+                      trialInfoPanel, acceptTrainPanel, clearPanel, timeOutPanel;
 
     //State Control
     public bool neutralDone, leftTrial, rightTrial, rightDone, leftDone, started, paused = false;

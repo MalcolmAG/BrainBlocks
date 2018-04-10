@@ -844,7 +844,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &229560543
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2170,7 +2170,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &523843885
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3962,8 +3962,6 @@ MonoBehaviour:
   inputRecieved: 0
   acceptTraining: 0
   debug: 0
-  lp: {fileID: 229560544}
-  rp: {fileID: 2084940335}
   trainType: 
 --- !u!114 &935757483
 MonoBehaviour:
@@ -4195,7 +4193,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &974283623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11120,7 +11118,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2084940334
 RectTransform:
   m_ObjectHideFlags: 0
