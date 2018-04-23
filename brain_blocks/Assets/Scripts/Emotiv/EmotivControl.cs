@@ -19,6 +19,10 @@ public class EmotivControl : MonoBehaviour {
 		
 	}
 
+    public void End(){
+        engine.Disconnect();
+    }
+
 	private void onUserAdded(object sender, EmoEngineEventArgs args)
 	{
         userId = args.userId;
@@ -95,4 +99,6 @@ public class EmotivControl : MonoBehaviour {
 			Console.WriteLine("{0}", e.ToString());
 		}
 	}
+
+
 }

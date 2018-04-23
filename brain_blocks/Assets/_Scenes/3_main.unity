@@ -1587,12 +1587,12 @@ GameObject:
   - component: {fileID: 842292761}
   - component: {fileID: 842292760}
   m_Layer: 0
-  m_Name: Epoc_Contact_Quality
+  m_Name: Contact_Quality
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &842292760
 MonoBehaviour:
   m_ObjectHideFlags: 0

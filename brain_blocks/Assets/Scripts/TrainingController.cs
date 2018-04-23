@@ -18,18 +18,18 @@ public class TrainingController : MonoBehaviour {
     TrainingUI UI;
 
     //XX Start For testing without EMOTIV
-    private void Update()
-    {
-        if (!training)
-        {
-            if (Input.GetKey(KeyCode.LeftArrow))
-                cube.SetAciton(cube.ACTION_LEFT);
-            else if (Input.GetKey((KeyCode.RightArrow)))
-                cube.SetAciton(cube.ACTION_RIGHT);
-            else
-                cube.SetAciton(cube.ACTION_NEUTRAL);
-        }
-    }
+    //private void Update()
+    //{
+    //    if (!training)
+    //    {
+    //        if (Input.GetKey(KeyCode.LeftArrow))
+    //            cube.SetAciton(cube.ACTION_LEFT);
+    //        else if (Input.GetKey((KeyCode.RightArrow)))
+    //            cube.SetAciton(cube.ACTION_RIGHT);
+    //        else
+    //            cube.SetAciton(cube.ACTION_NEUTRAL);
+    //    }
+    //}
 	//XX End
 
 	// private void Update()

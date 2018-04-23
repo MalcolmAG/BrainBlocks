@@ -35,10 +35,12 @@ public class ContactQualityUIControl : MonoBehaviour {
     EmoEngine engine;
 
 	void Start () {
+        if (LoggerCSV.GetInstance().gameMode != LoggerCSV.BCI_MODE)
+            Destroy(gameObject);
         initHeadset();
         engine = EmoEngine.Instance;
         bindEvents();
-	}
+    }
 
     void bindEvents(){
         engine.EmoStateUpdated += onEmoStateUpdated;

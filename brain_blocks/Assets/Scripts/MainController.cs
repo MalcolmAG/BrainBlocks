@@ -88,6 +88,8 @@ public class MainController : MonoBehaviour {
         if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
 		{
 			GameObject master = GameObject.Find("Persistent_Master");
+            Destroy(GameObject.Find("Contact_Quality"));
+            master.GetComponent<EmotivControl>().End();
 			Destroy(master.GetComponent<EmotivControl>());
 			Destroy(master.GetComponent<EmoFacialExpression>());
 		}
