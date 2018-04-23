@@ -11,7 +11,6 @@ public class MainUIController : MonoBehaviour {
 
     public TextMeshProUGUI scoreText;
     public Button pauseButton;
-    public GameObject epoc;
 
 	public GameObject finishedMessage;
     public GameObject midwayMessage;
@@ -112,8 +111,6 @@ public class MainUIController : MonoBehaviour {
     //Sets UI elements for in-game view
 	private void UI_Game()
 	{
-		//if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
-			//epoc.SetActive(true);
 		midwayMessage.SetActive(false);
 		finishedMessage.SetActive(false);
 		pauseMessage.SetActive(false);
@@ -135,8 +132,6 @@ public class MainUIController : MonoBehaviour {
 				pauseMessage.SetActive(true);
 				return;
 			case "finished":
-				//if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
-					//epoc.SetActive(false);
 				finishedMessage.SetActive(true);
 				return;
 		}

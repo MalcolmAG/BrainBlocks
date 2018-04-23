@@ -4,8 +4,10 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine;
-//Controls the Admin button and input field in Trail/Familiarization stage
-//Researcher enters in password to terminate session prior to completion
+/// <summary>
+/// Controls the Admin button and input field in Trail/Familiarization stage.
+/// Researcher enters in password to terminate session prior to completion.
+/// </summary>
 public class Admin : MonoBehaviour {
 
     public Button btnAdmin;
@@ -13,10 +15,11 @@ public class Admin : MonoBehaviour {
 
     private string password = "missChib";
 
-    public void CheckPassword(string s){
-        Debug.Log("Check");
-        Debug.Log(s);
-        Debug.Log(s==password);
+	/// <summary>
+	/// Checks the password. Called by Admin_InputField
+	/// </summary>
+	/// <param name="s">String to check against passoword</param>
+	public void CheckPassword(string s){
         if(s == password){
             LoggerCSV logger = LoggerCSV.GetInstance();
             logger.AddEvent(LoggerCSV.EVENT_UNABLE);
@@ -29,7 +32,6 @@ public class Admin : MonoBehaviour {
 
             //Reset Persistnent master
             if(logger.gameMode == LoggerCSV.BCI_MODE){
-                Debug.Log("REMOVE");
                 GameObject master = GameObject.Find("Persistent_Master");
                 Destroy(master.GetComponent<EmotivControl>());
                 Destroy(master.GetComponent<EmoFacialExpression>());
@@ -38,7 +40,6 @@ public class Admin : MonoBehaviour {
 			logger.inSession = false;
 			logger.SaveCSV();
 			logger.ResetCSV();
-            Debug.Log("Load");
 			SceneManager.LoadScene(0);
         }
         else{

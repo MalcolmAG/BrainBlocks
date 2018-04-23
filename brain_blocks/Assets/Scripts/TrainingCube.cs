@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Controls movement and trial completion of training cube
+/// </summary>
 public class TrainingCube : MonoBehaviour {
     
     public float speed = .2f;
@@ -11,15 +14,23 @@ public class TrainingCube : MonoBehaviour {
     private TrainingUI UI;
     int action = 0;
     private float startPos, offset;
-    // Use this for initialization
-    private void Start()
+
+
+	/// <summary>
+	/// Initilizes Training cube variables
+	/// </summary>
+	private void Start()
     {
         UI = GameObject.Find("TrainController").GetComponent<TrainingUI>();
         startPos = transform.position.x;
         offset = 11;
     }
 
-    public void SetAciton(int a){
+	/// <summary>
+	/// Assings current action of TrainingCube
+	/// </summary>
+    /// <param name="a">Action to be set</param>
+	public void SetAciton(int a){
         if( a == ACTION_RESET){
             transform.position = new Vector3(4, 15, 0);
 			action = ACTION_NEUTRAL;
@@ -27,8 +38,10 @@ public class TrainingCube : MonoBehaviour {
         else
             action = a;
     }
-    //Controls animation of BCI training Block
-    void Update () {
+	/// <summary>
+	/// Controls animation of TrainingCube
+	/// </summary>
+	void Update () {
         //Neutral action = dont move
         //Right
         if (action == ACTION_RIGHT)
