@@ -8,7 +8,7 @@ public class MentalCommandControl : MonoBehaviour {
     public bool firstTime = true;
     public bool training, leftFirst, inputRecieved, acceptTraining, 
                 debug = false;
-    public Text lp, rp;
+    //public Text lp, rp;
     public string trainType;
 	EmoEngine engine;
     TrainingUI UI;
@@ -16,7 +16,7 @@ public class MentalCommandControl : MonoBehaviour {
     //XX Start For testing without EMOTIV
     //private void Update()
     //{
-    //    if (!training && debug)
+    //    if (!training)
     //    {
     //        if (Input.GetKey(KeyCode.LeftArrow))
     //            cube.SetAciton(cube.ACTION_LEFT);
@@ -28,18 +28,18 @@ public class MentalCommandControl : MonoBehaviour {
     //}
     //XX End
 
-    private void Update()
-    {
-			lp.text = "Left Power: " + EmoMentalCommand.GetMentalCommandActionPower()[5];
-			rp.text = "Right Power: " + EmoMentalCommand.GetMentalCommandActionPower()[6];
-    }
+   // private void Update()
+   // {
+			//lp.text = "Left Power: " + EmoMentalCommand.GetMentalCommandActionPower()[5];
+			//rp.text = "Right Power: " + EmoMentalCommand.GetMentalCommandActionPower()[6];
+    //}
 
     //------------------------------Emotiv Event Functions------------------------------//
 
     //Binds following local functions(right side) to EmoEngine functions(left side)
     void BindEvents(){
         engine.UserAdded += OnUserAdded;
-        engine.MentalCommandTrainingStarted += OnTrainingStarted;
+		engine.MentalCommandTrainingStarted += OnTrainingStarted;
         engine.MentalCommandTrainingSucceeded += OnTrainingSuccess;
         engine.MentalCommandTrainingFailed += OnTrainingFailed;
 		engine.MentalCommandTrainingCompleted += OnTrainingAccepted;
@@ -67,7 +67,12 @@ public class MentalCommandControl : MonoBehaviour {
 
     //Move cube and update Current Action UI according to new mental action
     void OnMentalCommandEmoStateUpdated(object sender, EmoStateUpdatedEventArgs args){
-        if (training) return; //do not update during training
+        if (training)
+        {
+            cube.SetAciton(cube.ACTION_RESET);
+            return;
+        }
+        //do not update during training
         EdkDll.IEE_MentalCommandAction_t action = args.emoState.MentalCommandGetCurrentAction();
         //Move Block and Update UI text
         switch (action)
@@ -88,7 +93,7 @@ public class MentalCommandControl : MonoBehaviour {
         }
     }
 
-	//Event function called by EmoEngine when EPOCH is connected
+	//Event function called by EmoEngine when EPOC is connected
 	void OnUserAdded(object sender, EmoEngineEventArgs args){
         userId = args.userId;
     }
@@ -312,6 +317,10 @@ public class MentalCommandControl : MonoBehaviour {
 	public void ResetCube(){
 		cube.SetAciton(cube.ACTION_RESET);
 		UI.UpdateUI(trainType);
+    }
+
+    public void Quit(){
+        Application.Quit();
     }
 
 }

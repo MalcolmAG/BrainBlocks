@@ -145,29 +145,32 @@ public class LoggerCSV : MonoBehaviour
     }
 
     //Saves List<string> rows as a .csv file
-	public void SaveCSV()
-	{
-		string[][] output = new string[rows.Count][];
-		for (int i = 0; i < output.Length; i++)
-		{
-			output[i] = rows[i];
-		}
-		int len = output.GetLength(0);
-		string divider = ",";
+    public void SaveCSV()
+    {
+        string[][] output = new string[rows.Count][]; // my data is held in rows (List<string[]>)
+    	//Convert rows into string [][]
+        for (int i = 0; i < output.Length; i++)
+    	{
+    		output[i] = rows[i];
+    	}
+    	int len = output.GetLength(0);
+    	string divider = ",";
 
-		StringBuilder sb = new StringBuilder();
+    	StringBuilder sb = new StringBuilder();
 
-		for (int index = 0; index < len; index++)
-			sb.AppendLine(string.Join(divider, output[index]));
+        //convert output into csv format
+    	for (int index = 0; index < len; index++)
+    		sb.AppendLine(string.Join(divider, output[index]));
 
 
-		string filePath = getPath();
+    	string filePath = getPath(); //Returns Application.persistentDataPath + "gameData.csv"
 
-		StreamWriter outStream = System.IO.File.CreateText(filePath);
-		outStream.WriteLine(sb);
-		outStream.Close();
+        //Save Data
+    	StreamWriter outStream = File.CreateText(filePath);
+    	outStream.WriteLine(sb);
+    	outStream.Close();
 
-	}
+    }
 
 	// Following method is used to retrive the relative path as device platform
 	private string getPath()

@@ -202,10 +202,10 @@ public class FamiliarizationController : MonoBehaviour {
     //Set Up UI Objects after instructions are read
     private void InitUI(){
         instructionsMessage.gameObject.SetActive(false);
-		if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
-		{
-            epoc.SetActive(true);
-		}
+		//if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
+		//{
+  //          epoc.SetActive(true);
+		//}
     }
 
     //Modifies UI element view
