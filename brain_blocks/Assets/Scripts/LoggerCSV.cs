@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System;
-
+/// <summary>
+/// Class to log and save game events to .csv file
+/// </summary>
 public class LoggerCSV : MonoBehaviour
 {
 
@@ -72,6 +74,7 @@ public class LoggerCSV : MonoBehaviour
 
 //------------------------------Singleton Control Functions------------------------------//
 
+    //Occurs at the beginning of the game
 	private void Awake()
 	{
 		if (instance == null)
@@ -87,13 +90,18 @@ public class LoggerCSV : MonoBehaviour
 
 	}
 
+	/// <summary>
+	/// Returns LoggerCSV singleton
+	/// </summary>
 	public static LoggerCSV GetInstance()
 	{
 		return instance;
 	}
 
-    //Save CSV file every saveInterval for safety
-    private void Update()
+	/// <summary>
+	/// Saves CSV file every saveInterval
+	/// </summary>
+	private void Update()
     {
         timer += Time.deltaTime;
         //Only save if in session
@@ -104,24 +112,39 @@ public class LoggerCSV : MonoBehaviour
     }
 
 
-    //------------------------------CSV Functions------------------------------//
+	//------------------------------CSV Functions------------------------------//
 
-    private void CreateTitles()
+	/// <summary>
+	/// Creates Title Row
+	/// </summary>
+	private void CreateTitles()
 	{
 		string[] titles = { "External Time", "Internal Time", "Event", "AUX" };
 		rows.Add(titles);
 	}
 
-    public void AddEvent(string event_log)
+	/// <summary>
+	/// Adds event with no auxiliary information 
+	/// </summary>
+    /// <param name="event_log">Event to be logged</param>
+	public void AddEvent(string event_log)
 	{
         AddEvent(event_log, null);
 	}
 
-    public void AddEvent(string event_log, string aux){
+	/// <summary>
+	/// Adds event with auxiliary information
+	/// </summary>
+	/// <param name="event_log">Event to be logged</param>
+	/// <param name="aux">Axiliary information to be logged with event</param>
+	public void AddEvent(string event_log, string aux){
         string[] toAdd = { DateTime.Now.ToString(), Time.time.ToString(), event_log, aux };
 		rows.Add(toAdd);
     }
 
+	/// <summary>
+	/// Prints current logs in unity console
+	/// </summary>
 	public void PrintLogger()
 	{
 		for (int i = 0; i < rows.Count; i++)
@@ -136,7 +159,10 @@ public class LoggerCSV : MonoBehaviour
 		}
 	}
 
-    public void ResetCSV(){
+	/// <summary>
+	/// Clears all logged information and resets participant IDs and game mode
+	/// </summary>
+	public void ResetCSV(){
         participantID = UNASIGNED;
         counterBalanceID = UNASIGNED;
         gameMode = NORMAL_MODE;
@@ -144,8 +170,11 @@ public class LoggerCSV : MonoBehaviour
 		CreateTitles();
     }
 
-    //Saves List<string> rows as a .csv file
-    public void SaveCSV()
+	/// <summary>
+	/// Saves logged data as a .csv file, location depends on OS.
+	/// See Unity reference for Application.persistentDataPath
+	/// </summary>
+	public void SaveCSV()
     {
         string[][] output = new string[rows.Count][]; // my data is held in rows (List<string[]>)
     	//Convert rows into string [][]
@@ -171,7 +200,10 @@ public class LoggerCSV : MonoBehaviour
     	outStream.Close();
 
     }
-
+	/// <summary>
+    /// Returns path + name of file in format:
+    /// path/participantID_controlMode_groupID_BrainBlocks.csv
+	/// </summary>
 	// Following method is used to retrive the relative path as device platform
 	private string getPath()
 	{

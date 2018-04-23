@@ -4,11 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-//Controls the acitvation, interactibility of all UI obects in bic_training
+/// <summary>
+/// Controls the acitvation, interactibility of all UI obects in BCI training scene
+/// </summary>
 
 public class TrainingUI : MonoBehaviour {
 
-    MentalCommandControl controller;
+    TrainingController controller;
 
 	//UI
 	public Button btnNeutral, btnLeft, btnRight,
@@ -18,7 +20,7 @@ public class TrainingUI : MonoBehaviour {
 	public Slider slider;
     public TextMeshProUGUI trainPercentage, curAction, status, leftCount, rightCount;
     public GameObject leftPrompt, rightPrompt, leftCheckmark, rightCheckmark,
-                      trialInfoPanel, acceptTrainPanel, clearPanel, timeOutPanel;
+                      trialInfoPanel, clearPanel, timeOutPanel;
 
     //State Control
     public bool neutralDone, leftTrial, rightTrial, rightDone, leftDone, started, paused = false;
@@ -26,8 +28,10 @@ public class TrainingUI : MonoBehaviour {
     public float runningTimer;
     private float timeOutTime = 1800f; //30 min given to pass this stage
 
-
-    private void Update()
+	/// <summary>
+	/// Checks if alotted time for training has expired
+	/// </summary>
+	private void Update()
     {
         if (started && !paused){
             runningTimer += Time.deltaTime;
@@ -40,35 +44,53 @@ public class TrainingUI : MonoBehaviour {
         }
     }
 
-    public void InitUI(){
-        controller = GameObject.Find("TrainController").GetComponent<MentalCommandControl>();
+	/// <summary>
+	/// Initilizes initial values for UI objects
+	/// </summary>
+	public void InitUI(){
+        controller = GameObject.Find("TrainController").GetComponent<TrainingController>();
         slider.value = 0;
         runningTimer = 0f;
         started = true;
         paused = false;
     }
 
-    public void TogglePause(){
+	/// <summary>
+	/// Starts/Ends pause periods
+	/// </summary>
+	public void TogglePause(){
         paused = !paused;
         if (!paused)
             LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_PAUSE_END);
         else
             LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_PAUSE_START);
     }
-    public void UpdateStatusText(string text){
+	/// <summary>
+	/// Updates notification text under training slidebar
+	/// </summary>
+    /// <param name="text">Text to be displayed</param>
+	public void UpdateStatusText(string text){
         status.text = text;
     }
-    public void UpdateCurrentActionText(string text){
+	/// <summary>
+	/// Updates current action text above training cube
+	/// </summary>
+	/// <param name="text">Current action</param>
+	public void UpdateCurrentActionText(string text){
         curAction.text = text;
     }
-
-    void UpdateTrainCounts(){
+	/// <summary>
+	/// Updates train count texts below clear buttons
+	/// </summary>
+	void UpdateTrainCounts(){
         leftCount.text = "Train Count: " + leftTrainCount;
         rightCount.text = "Train Count; " + rightTrainCount;
     }
 
-	//Coroutine to control Training_Slider
-	//Takes 8 seconds to get to 100%
+	/// <summary>
+	/// Coroutine to control Training_Slider
+    /// Takes 8 seconds to get to 100%
+	/// </summary>
 	public IEnumerator UpdateSlider()
 	{
 		//XX Start for testing without emotiv
@@ -96,7 +118,11 @@ public class TrainingUI : MonoBehaviour {
 
 	}
 
-    public void UpdateState(string state){
+	/// <summary>
+	/// Updates UI booleans according to user progress
+	/// </summary>
+    /// <param name="state">state according to button click</param>
+	public void UpdateState(string state){
 		switch (state)
 		{
 			case "Neutral":
@@ -153,8 +179,10 @@ public class TrainingUI : MonoBehaviour {
 		}
         UpdateTrainCounts();
     }
-
-	//Shows/Hides UI objects depending on state
+	/// <summary>
+	/// Updates all buttons according to user progress
+	/// </summary>
+    /// <param name="state">state according to button click</param>
 	public void UpdateUI(string state)
 	{
         UpdateState(state);
@@ -324,7 +352,10 @@ public class TrainingUI : MonoBehaviour {
 		}
 	}
 
-	//Decativates/Activates buttons depending on training
+	/// <summary>
+	/// Decativates/Activates buttons depending on training
+	/// </summary>
+    /// <param name="yes">Activate Buttons?</param>
 	public void ActivateButtons(bool yes)
 	{
 		//Debug.Log("ActivateButtons(" + yes + ")");

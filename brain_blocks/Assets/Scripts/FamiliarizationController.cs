@@ -5,13 +5,16 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 
+/// <summary>
+/// Controls user progression through the 6 familiarization trials.
+/// Users must match rotation and position of prompt to pass trial. 
+/// </summary>
 public class FamiliarizationController : MonoBehaviour {
 
     public TextMeshProUGUI trialText;
 
     public Button pauseButton;
-    public GameObject instructionsMessage,finishedMessage, 
-                        pausedMessage,epoc, timeOutPanel;
+    public GameObject finishedMessage,pausedMessage, timeOutPanel;
     public GameObject[] options;
     public int maxStage = 6;
     private bool leftFirst;
@@ -25,10 +28,12 @@ public class FamiliarizationController : MonoBehaviour {
     private bool started = false;
     public static bool paused = true;
 
-    //------------------------------Familiarization Scene Control Functions------------------------------//
+	//------------------------------Familiarization Scene Control Functions------------------------------//
 
-    //For timing trials
-    private void Update()
+	/// <summary>
+	/// Checks if alotted time for trail has expired
+	/// </summary>
+	private void Update()
     {
         if (started && !paused)
         {
@@ -46,8 +51,9 @@ public class FamiliarizationController : MonoBehaviour {
         
     }
 
-    //Spawns "preview" group at top of game area
-    //Randmomly chooses next "preview" group
+    /// <summary>
+    /// Creates the next trial prompt
+    /// </summary>
     public void CreateNext()
 	{
         //Check if familiarization stage is finished
@@ -88,7 +94,9 @@ public class FamiliarizationController : MonoBehaviour {
         group.AddComponent<FamiliarizationSet>();
 	}
 
-    //Snaps target so it is within game area
+    /// <summary>
+    /// Snaps the prompt so it is within the game area
+    /// </summary>
     private void SnapTarget(){
         int below = 0; //lowest possible grid pos
         int left = 0; //leftmost possible grid pos
@@ -109,8 +117,11 @@ public class FamiliarizationController : MonoBehaviour {
         target.transform.Translate(Vector3.left * (right - 9));
     }
 
-    //Compares orientation of player's block to target
-    public bool CorrectOrientation(){
+	/// <summary>
+	/// Compares orientation of player's block to prompt
+	/// </summary>
+	/// <returns><c>true</c>, if orientations match, <c>false</c> otherwise.</returns>
+	public bool CorrectOrientation(){
 		//conditions are more complex for s and z groups
         float angle = Quaternion.Angle(target.transform.rotation, group.transform.rotation);
         //deal with UI element
@@ -120,18 +131,23 @@ public class FamiliarizationController : MonoBehaviour {
         return angle == 0;
     }
 
-	//Compares position of player's block to target
+	/// <summary>
+	/// Compares position of player's block to prompt
+	/// </summary>
+	/// <returns><c>true</c>, if positions match, <c>false</c> otherwise.</returns>
 	public bool CorrectPosition(){
         float t = PositionAverage(target.transform);
         float g = PositionAverage(group.transform);
         return (t/4) == (g/4);
     }
 
-	//Returns average x position of transform
-	//Used to compare prompt to player's block
-	//Must find and compare avg block position
-	//because parent locations may not add up 
-	//with groups s and z
+	/// <summary>
+	/// Calcultates averace postion of block. Used to compare prompt to player's block.
+	/// Must find and compare avg block position because parent locations may not add up 
+    /// with groups s and z
+	/// </summary>
+	/// <returns>The average position of transform</returns>
+	/// <param name="t">Object to find average pos of</param>
 	public static float PositionAverage(Transform t){
         float x = 0;
         foreach(Transform child in t){
@@ -140,9 +156,11 @@ public class FamiliarizationController : MonoBehaviour {
         return x / 4f;
     }
 
-    //Checks if user is done with familiarization trials
-    //Returns true if max stage is reached
-    bool CheckStage(){
+	/// <summary>
+	/// Checks if user is done with familiarization trials.
+	/// </summary>
+	/// <returns><c>true</c>, if max stage is reached, <c>false</c> otherwise.</returns>
+	bool CheckStage(){
         if(trialStage != 0) 
             LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_FAMI_PASS);
         if (trialStage == maxStage)
@@ -160,8 +178,10 @@ public class FamiliarizationController : MonoBehaviour {
         }
     }
 
-//------------------------------UI OnClick Functions------------------------------//
-    //Called by Start_Trials_Buttom
+	//------------------------------UI OnClick Functions------------------------------//
+	/// <summary>
+	/// Customs the start function called by Start_Trials_Buttom.
+	/// </summary>
 	public void CustomStart()
 	{
         LoggerCSV logger = LoggerCSV.GetInstance();
@@ -169,46 +189,48 @@ public class FamiliarizationController : MonoBehaviour {
         leftFirst = logger.counterBalanceID == 1
                           || logger.counterBalanceID == 3;
         spawnLeft = leftFirst;
-		InitUI();
 		trialStage = 0;
 		paused = false;
 		ToggleUI(paused, "none");
         runningTimer = 0f;
         started = true;
 		CreateNext();
-	} 
+	}
 
-    //Called by Pause_Button
-    public void StartPause(){
+	/// <summary>
+	/// Starts the pause. Called by Pause_Button
+	/// </summary>
+	public void StartPause(){
         LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_PAUSE_START);
         paused = true;
         ToggleUI(paused, "pause");
     }
 
-	//Called by End_Pause_Button
+	/// <summary>
+	/// Ends the pause. Called by End_Pause_Button
+	/// </summary>
 	public void EndPause(){
         LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_PAUSE_END);
 		paused = false;
         ToggleUI(paused, "pause");
     }
 
-	//Called by Next_Scene_Button
+	/// <summary>
+	/// Loads scene. Called by Next_Scene_Button
+	/// </summary>
+	/// <param name="idx">Scene number</param>
 	public void LoadScene(int idx){
         SceneManager.LoadScene(idx);
     }
 
 //------------------------------UI Helper Functions------------------------------//
 
-    //Set Up UI Objects after instructions are read
-    private void InitUI(){
-        instructionsMessage.gameObject.SetActive(false);
-		//if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
-		//{
-  //          epoc.SetActive(true);
-		//}
-    }
-
     //Modifies UI element view
+    /// <summary>
+    /// Toggles the user interface (paused and finished messages)
+    /// </summary>
+    /// <param name="pause">Paused?</param>
+    /// <param name="type">Cause of pause</param>
     private void ToggleUI(bool pause, string type){
 		pauseButton.gameObject.SetActive(!pause);
 		trialText.gameObject.SetActive(!pause);

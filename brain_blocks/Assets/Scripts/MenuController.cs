@@ -6,6 +6,9 @@ using System;
 using TMPro;
 using UnityEngine.UI;
 
+/// <summary>
+/// Controls Menu
+/// </summary>
 public class MenuController : MonoBehaviour {
 
     public GameObject messagePanel;
@@ -13,7 +16,11 @@ public class MenuController : MonoBehaviour {
 
     private readonly int[] counterBalnaceOptions = { 1, 2, 3, 4 };
 	
-    //Coroutine function to display message to user
+    /// <summary>
+    /// Coroutine to display message to user
+    /// </summary>
+    /// <param name="message">Message text</param>
+    /// <param name="delay">Duration of message popup</param>
     IEnumerator ShowMessage(string message, float delay)
 	{
         messageText.text = message;
@@ -24,20 +31,29 @@ public class MenuController : MonoBehaviour {
 
 	//------------------------------UI OnClick Functions------------------------------//
 
-	//Called by Game_Mode_Slider
+	/// <summary>
+	/// Sets the game mode. Called by Game_Mode_Slider
+	/// </summary>
+	/// <param name="val">Game mode value</param>
 	public void SetGameMode(float val)
 	{
         LoggerCSV.GetInstance().gameMode = (int)val;
 
 	}
-    //Called by Participant_ID_InputField
-    public void SetParticipantID(string val){
+	/// <summary>
+	/// Sets the participant ID. Called by Participant_ID_InputField
+	/// </summary>
+	/// <param name="val">ID value</param>
+	public void SetParticipantID(string val){
         int id;
         Int32.TryParse(val, out id);
         LoggerCSV.GetInstance().participantID = id;
     }
 
-	//Called by CounterBalance_ID_InputField
+	/// <summary>
+    /// Sets the counter balance ID (1,2,3, or 4). Called by CounterBalance_ID_InputField
+	/// </summary>
+	/// <param name="val">ID value</param>
 	public void SetCounterBalanceID(string val)
 	{
 		int id;
@@ -45,14 +61,10 @@ public class MenuController : MonoBehaviour {
         LoggerCSV.GetInstance().counterBalanceID = id;
 	}
 
-    //Called by Quit_Button
-    public void Quit(){
-        Application.Quit();
-    }
-
-
-    //Called by Start_Button
-    public void StartGame(){
+	/// <summary>
+	/// Starts the game. Called by Start_Button
+	/// </summary>
+	public void StartGame(){
         if (LoggerCSV.GetInstance().participantID < 1){
             StartCoroutine(ShowMessage("Please Enter a Valid Participant ID", 1.5f));
             return;
@@ -75,4 +87,12 @@ public class MenuController : MonoBehaviour {
             SceneManager.LoadScene(1);
         }
     }
+
+	/// <summary>
+	/// Quit the game. Called by Quit_Button
+	/// </summary>
+	public void Quit()
+	{
+		Application.Quit();
+	}
 }
