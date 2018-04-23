@@ -11,7 +11,6 @@ public class FamiliarizationSet : MonoBehaviour
 
     private bool orientation;
     private bool completed;
-    private bool bci;
 
     private readonly float snapPos = 16f;
 
@@ -29,8 +28,7 @@ public class FamiliarizationSet : MonoBehaviour
     /// </summary>
 	private void Start()
     {
-		bci = LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE;
-        if(bci){
+        if(LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE){
 			emotivLag = 0f;
 			engine = EmoEngine.Instance;
             BindEvents();
@@ -45,7 +43,7 @@ public class FamiliarizationSet : MonoBehaviour
     /// </summary>
     void Update()
     {
-        if(bci)
+        if(LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
             emotivLag += Time.deltaTime;
 
         if (!FamiliarizationController.paused)
@@ -329,6 +327,7 @@ public class FamiliarizationSet : MonoBehaviour
 	void BindEvents(){
         engine.MentalCommandEmoStateUpdated += OnMentalCommandEmoStateUpdated;
     }
+
 	/// <summary>
 	/// Event function called when EmoEngine detects new mental command
 	/// Updates current action for UI and moves current block
@@ -365,33 +364,24 @@ public class FamiliarizationSet : MonoBehaviour
     /// <param name="type">Input to check</param>
 	private bool CustomInput(string type)
 	{
-		if (bci)
+		if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
 		{
             if(type == "down") return Input.GetKeyDown(KeyCode.DownArrow);
 
             switch (type){
                 case "rotate":
-                    //XX START
-                    //if (Input.GetKey(KeyCode.Space) && emotivLag > blinkProcessInterval){
-                    //XX END
                     if (EmoFacialExpression.isBlink && emotivLag > blinkProcessInterval){
                         emotivLag = 0f;
                         return true;
                     }
                     break;
 				case "left":
-					//XX START
-                    //if (Input.GetKey(KeyCode.LeftArrow) && emotivLag > actionProcessInterval){
-					//XX END
 				    if(mentalAction == 2 && emotivLag > actionProcessInterval){
 						emotivLag = 0f;
                         return true;
                     }
                     break;
 				case "right":
-					//XX START
-                    //if (Input.GetKey(KeyCode.RightArrow) && emotivLag > actionProcessInterval){
-					//XX END
 					if(mentalAction == 1 && emotivLag > actionProcessInterval){
 						emotivLag = 0f;
                         return true;

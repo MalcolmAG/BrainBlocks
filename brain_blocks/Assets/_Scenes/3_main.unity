@@ -2517,7 +2517,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scoreText: {fileID: 30351782}
   pauseButton: {fileID: 2060920231}
-  epoc: {fileID: 842292759}
   finishedMessage: {fileID: 1195420862}
   midwayMessage: {fileID: 710415801}
   pauseMessage: {fileID: 1590994473}
@@ -3356,11 +3355,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -4330,7 +4329,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1800084733}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bea725256fa86490da1beab302288e53, type: 3}
+  m_Script: {fileID: 11500000, guid: 5f7af7ba94ee34e91bfae13018ccbfe8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   parent: {fileID: 1465573912}
