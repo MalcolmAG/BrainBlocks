@@ -16,7 +16,7 @@ public class MentalCommandControl : MonoBehaviour {
     //XX Start For testing without EMOTIV
     //private void Update()
     //{
-    //    if (!training && debug)
+    //    if (!training)
     //    {
     //        if (Input.GetKey(KeyCode.LeftArrow))
     //            cube.SetAciton(cube.ACTION_LEFT);
