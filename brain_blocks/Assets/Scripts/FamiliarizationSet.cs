@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// Controls block sets for familiarization trials.
+/// </summary>
 public class FamiliarizationSet : MonoBehaviour
 {
 
@@ -22,7 +24,9 @@ public class FamiliarizationSet : MonoBehaviour
     public float actionProcessInterval = .75f;
 
 //------------------------------Unity Functions------------------------------//
-
+    /// <summary>
+    /// Start this instance.
+    /// </summary>
 	private void Start()
     {
 		bci = LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE;
@@ -36,6 +40,9 @@ public class FamiliarizationSet : MonoBehaviour
         ghost = GameObject.Find(tag + "_ghost");
     }
 
+    /// <summary>
+    /// Checks for user input
+    /// </summary>
     void Update()
     {
         if(bci)
@@ -64,7 +71,10 @@ public class FamiliarizationSet : MonoBehaviour
 //------------------------------User Input Listener Functions------------------------------//
 
 
-	//Listens for and applies rotate action
+
+	/// <summary>
+	/// Listens for and applies rotate action
+	/// </summary>
 	void CheckRotate()
 	{
 		// Rotate
@@ -84,7 +94,9 @@ public class FamiliarizationSet : MonoBehaviour
 		}
 	}
 
-    //Positions block at the top of the game field
+	/// <summary>
+    /// Listens for and applies snap action (positions block at the top of the game field)
+	/// </summary>
     void CheckSnap()
     {
         //Snap orientated group to top of play field
@@ -121,7 +133,9 @@ public class FamiliarizationSet : MonoBehaviour
         }
     }
 
-	//Listens for and applies move left action
+	/// <summary>
+	/// Listens for and applies move left action
+	/// </summary>
 	void CheckMoveLeft()
     {
         // Move Left
@@ -144,7 +158,9 @@ public class FamiliarizationSet : MonoBehaviour
         }
     }
 
-	//Listens for and applies move right action
+	/// <summary>
+	/// Listens for and applies move right action
+	/// </summary>
 	void CheckMoveRight()
     {
         // Move Right
@@ -167,8 +183,10 @@ public class FamiliarizationSet : MonoBehaviour
 		}
     }
 
-    //Listens for and applies drop action
-    void CheckFallDown()
+	/// <summary>
+	/// Listens for and applies drop action
+	/// </summary>
+	void CheckFallDown()
     {
         // Fall
         if (CustomInput("down"))
@@ -184,7 +202,9 @@ public class FamiliarizationSet : MonoBehaviour
         }
     }
 
-    //Dropping Coroutine
+    /// <summary>
+    /// Coroutine to drop block
+    /// </summary>
     IEnumerator GoDown()
     {
         // Modify position
@@ -209,10 +229,13 @@ public class FamiliarizationSet : MonoBehaviour
 
     }
 
-//------------------------------Grid Helper Functions------------------------------//
+	//------------------------------Grid Helper Functions------------------------------//
 
 
-	//Checks if positioning is allowed based on 2D array data structre
+	/// <summary>
+	/// Checks if positioning is allowed based on Grid.cs
+	/// </summary>
+	/// <returns><c>true</c>, if grid position was legal, <c>false</c> otherwise.</returns>
 	bool LegalGridPos()
     {
 		foreach (Transform child in transform)
@@ -231,7 +254,9 @@ public class FamiliarizationSet : MonoBehaviour
 		return true;
 	}
 
-    //Updates 2D array data structure with game object positions
+	/// <summary>
+	/// Updates Grid.cs with game object positions
+	/// </summary>
 	void UpdateGrid()
 	{
 		// Remove old children from grid
@@ -249,9 +274,11 @@ public class FamiliarizationSet : MonoBehaviour
 		}
 	}
 
-//------------------------------Ghost Helper Functions------------------------------//
+	//------------------------------Ghost Helper Functions------------------------------//
 
-	//Reorients and repositions ghost based on current block
+	/// <summary>
+	/// Reorients and repositions ghost based on current block.
+	/// </summary>
 	void UpdateGhost()
     {
         ghost.transform.position = transform.position;
@@ -278,7 +305,9 @@ public class FamiliarizationSet : MonoBehaviour
         }
     }
 
-    //Changes associated ghost object
+    /// <summary>
+    /// Swaps the ghosts when switching between navigation and rotation mode
+    /// </summary>
     private void SwapGhosts()
     {
         ghost.transform.position = ghostStandByPos;
@@ -293,12 +322,17 @@ public class FamiliarizationSet : MonoBehaviour
         UpdateGhost();
     }
 
-//------------------------------Emotiv Functions------------------------------//
-    void BindEvents(){
-        //Debug.Log("Familiarization: Bind");
+	//------------------------------Emotiv Functions------------------------------//
+	/// <summary>
+	/// Binds local functions to EmoEngine functions
+	/// </summary>
+	void BindEvents(){
         engine.MentalCommandEmoStateUpdated += OnMentalCommandEmoStateUpdated;
     }
-	//Move cube and update Current Action UI according to new mental action
+	/// <summary>
+	/// Event function called when EmoEngine detects new mental command
+	/// Updates current action for UI and moves current block
+	/// </summary>
 	void OnMentalCommandEmoStateUpdated(object sender, EmoStateUpdatedEventArgs args)
 	{
 		Debug.Log("Familiarization: State Updated");
@@ -324,6 +358,11 @@ public class FamiliarizationSet : MonoBehaviour
 
 //------------------------------Input helper Functions------------------------------//
 
+    /// <summary>
+    /// Custom Input function that works across control modes
+    /// </summary>
+    /// <returns><c>true</c>, if input was occuring, <c>false</c> otherwise.</returns>
+    /// <param name="type">Input to check</param>
 	private bool CustomInput(string type)
 	{
 		if (bci)

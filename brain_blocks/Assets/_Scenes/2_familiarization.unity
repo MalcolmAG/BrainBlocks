@@ -781,11 +781,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -1123,7 +1123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inSession: 0
-  gameMode: 1
+  gameMode: 0
   participantID: 66
   counterBalanceID: 1
 --- !u!224 &350533909
@@ -1590,6 +1590,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 1513744551}
     m_Modifications:
+    - target: {fileID: 114258577734304204, guid: 0c563b65914a84c9c8f3bbd2e135c507,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 224033672296996786, guid: 0c563b65914a84c9c8f3bbd2e135c507,
         type: 2}
       propertyPath: m_LocalPosition.x
@@ -1747,6 +1752,26 @@ Prefab:
         type: 2}
       propertyPath: m_Navigation.m_Mode
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114258577734304204, guid: 0c563b65914a84c9c8f3bbd2e135c507,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1218106200}
+    - target: {fileID: 114258577734304204, guid: 0c563b65914a84c9c8f3bbd2e135c507,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: SetActive
+      objectReference: {fileID: 0}
+    - target: {fileID: 114258577734304204, guid: 0c563b65914a84c9c8f3bbd2e135c507,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 114258577734304204, guid: 0c563b65914a84c9c8f3bbd2e135c507,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0c563b65914a84c9c8f3bbd2e135c507, type: 2}
@@ -5259,6 +5284,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1218106200}
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1685486090
@@ -5431,11 +5467,11 @@ MonoBehaviour:
     lineCount: 5
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -5830,10 +5866,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trialText: {fileID: 1144791072}
   pauseButton: {fileID: 124017085}
-  instructionsMessage: {fileID: 1218106200}
   finishedMessage: {fileID: 834436161}
   pausedMessage: {fileID: 2128886012}
-  epoc: {fileID: 203532765}
   timeOutPanel: {fileID: 685863247}
   options:
   - {fileID: 1189763799748070, guid: c4a5441e5bf514445b4513c447b9eb07, type: 2}

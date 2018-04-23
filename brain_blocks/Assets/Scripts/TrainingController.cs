@@ -177,7 +177,7 @@ public class TrainingController : MonoBehaviour {
 	//------------------------------UI OnClick Functions------------------------------//
 
 	/// <summary>
-	/// Custom Start function called when Start_Training_Button is clicked
+	/// Custom Start function called by Start_Training_Button
 	/// </summary>
 	public void CustomStart()
     {
