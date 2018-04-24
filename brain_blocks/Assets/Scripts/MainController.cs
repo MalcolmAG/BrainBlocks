@@ -13,11 +13,9 @@ public class MainController : MonoBehaviour {
     public static int score;
 
     public TextMeshProUGUI scoreText;
-    public Button pauseButton;
+    public Button pauseButton, retrainButton;
 
-	public GameObject finishedMessage;
-    public GameObject midwayMessage;
-    public GameObject pauseMessage;
+	public GameObject finishedMessage, midwayMessage, pauseMessage;
 
     private bool checkingTime;
     private bool midWayReached;
@@ -32,10 +30,10 @@ public class MainController : MonoBehaviour {
     /// Initializes relevant variables
     /// </summary>
 	void Start () {
+        if(GameObject.Find("Persistent_Master") == null){
+            retrainButton.gameObject.SetActive(false);
+        }
         paused = false;
-        halfAllottedTime = allotedTime / 2;
-        midWayReached = false;
-        checkingTime = true;
         score = 0;
         UI_Game();
 	}
@@ -44,48 +42,19 @@ public class MainController : MonoBehaviour {
     /// Checks if allotted time has been exceeded, updates score
     /// </summary>
 	void Update () {
-        if(checkingTime)
-            CheckTime();
         UpdateScore();
 		
 	}
 
-	/// <summary>
-	/// Check if halfway or end has been reached
-	/// </summary>
-	void CheckTime(){
-        halfAllottedTime -= Time.deltaTime;
-        if(halfAllottedTime<0){
-            paused = true;
-            checkingTime = false;
-            if(!midWayReached){
-                LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_PAUSE_START);
-				midWayReached = true;
-                halfAllottedTime = allotedTime / 2;
-                UI_Pause("midway");
-            }
-            else{
-                LoggerCSV logger = LoggerCSV.GetInstance();
-                if (logger.gameMode == LoggerCSV.BCI_MODE)
-                    LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_END_BCI);
-                else
-                    logger.AddEvent(LoggerCSV.EVENT_END_NORMAL);
-                UI_Pause("finished");
-                logger.inSession = false;
-                logger.SaveCSV();
-                logger.ResetCSV();
-            }
-        }
-    }
 
-	//------------------------------UI OnClick Functions------------------------------//
+    //------------------------------UI OnClick Functions------------------------------//
 
 
 	/// <summary>
 	/// Finishs the game. Called by Done_Button
 	/// </summary>
 	public void FinishGame(){
-        if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
+        if (GameObject.Find("Persistent_Master") != null)
 		{
 			GameObject master = GameObject.Find("Persistent_Master");
             Destroy(GameObject.Find("Contact_Quality"));
@@ -93,24 +62,16 @@ public class MainController : MonoBehaviour {
 			Destroy(master.GetComponent<EmotivControl>());
 			Destroy(master.GetComponent<EmoFacialExpression>());
 		}
-        SceneManager.LoadScene(0);
+        LoadScene(0);
     }
 
 	/// <summary>
-	/// Ends the midway message and continues gameplay. Called by End_Midway_Button
-	/// </summary>
-	public void EndMidwayMessage(){
-        LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_PAUSE_END);
-        UI_Game();
-        checkingTime = true;
-        paused = false;
-    }
+
 
 	/// <summary>
 	/// Starts the pause. Called by Pause_Button
 	/// </summary>
 	public void StartPause(){
-        LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_PAUSE_START);
 		checkingTime = false;
         paused = true;
         UI_Pause("pause");
@@ -120,11 +81,18 @@ public class MainController : MonoBehaviour {
 	/// Ends the pause. Called by End_Pause_Button
 	/// </summary>
 	public void EndPause(){
-		LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_PAUSE_END);
 		checkingTime = true;
         paused = false;
         UI_Game();
 	}
+
+    /// <summary>
+    /// Loads the scene.
+    /// </summary>
+    /// <param name="idx">Index of scene to be loaded</param>
+    public void LoadScene(int idx){
+        SceneManager.LoadScene(idx);
+    }
 
 	//------------------------------UI Helper Functions------------------------------//
 

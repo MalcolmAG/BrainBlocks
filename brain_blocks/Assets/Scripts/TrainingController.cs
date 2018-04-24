@@ -4,7 +4,6 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Controls user progression through the different elements of the Training stage.
-/// Users must train neutral, each action twice, and complete the trial for each action
 /// </summary>
 public class TrainingController : MonoBehaviour {
     //Control
@@ -18,18 +17,18 @@ public class TrainingController : MonoBehaviour {
     TrainingUI UI;
 
     //XX Start For testing without EMOTIV
-    //private void Update()
-    //{
-    //    if (!training)
-    //    {
-    //        if (Input.GetKey(KeyCode.LeftArrow))
-    //            cube.SetAciton(cube.ACTION_LEFT);
-    //        else if (Input.GetKey((KeyCode.RightArrow)))
-    //            cube.SetAciton(cube.ACTION_RIGHT);
-    //        else
-    //            cube.SetAciton(cube.ACTION_NEUTRAL);
-    //    }
-    //}
+    private void Update()
+    {
+        if (!training)
+        {
+            if (Input.GetKey(KeyCode.LeftArrow))
+                cube.SetAciton(cube.ACTION_LEFT);
+            else if (Input.GetKey((KeyCode.RightArrow)))
+                cube.SetAciton(cube.ACTION_RIGHT);
+            else
+                cube.SetAciton(cube.ACTION_NEUTRAL);
+        }
+    }
 	//XX End
 
 	// private void Update()
@@ -126,8 +125,12 @@ public class TrainingController : MonoBehaviour {
 	/// Event function called by EmoEngine after training period ends
 	/// </summary>    
     public void OnTrainingSuccess(object sender, EmoEngineEventArgs args){
-	    Debug.Log("In Success");
+        Debug.Log("In Success");
 		engine.MentalCommandSetTrainingControl(userId, EdkDll.IEE_MentalCommandTrainingControl_t.MC_ACCEPT);
+        object s = null;
+        EmoEngineEventArgs a = null;
+        OnTrainingAccepted(s,a);
+
 	}
 
 	/// <summary>
@@ -145,14 +148,7 @@ public class TrainingController : MonoBehaviour {
         }
         else
             cube.SetAciton(cube.ACTION_RESET);
-		//Shows information about training trials after
-		// accepting the first right or left data
-		if (firstTime && trainType != "Neutral")
-		{
-			firstTime = false;
-			UI.trialInfoPanel.SetActive(true);
-
-		}
+        UI.UpdateUI(trainType);
 	}
 
 	/// <summary>
@@ -181,13 +177,9 @@ public class TrainingController : MonoBehaviour {
 	/// </summary>
 	public void CustomStart()
     {
-        LoggerCSV logger = LoggerCSV.GetInstance();
-        logger.AddEvent(LoggerCSV.EVENT_TRAINSTAGE_START);
 
         UI = GetComponent<TrainingUI>();
         cube = GameObject.Find("Block").GetComponent<TrainingCube>();
-        leftFirst = logger.counterBalanceID == 1
-                          || logger.counterBalanceID == 2;
 
 		engine = EmoEngine.Instance;
         DeactivateRL();
@@ -201,7 +193,6 @@ public class TrainingController : MonoBehaviour {
     /// <param name="type">Command to be trained ("Neutral","Left","Right")</param>
 	public void TrainAction(string type)
 	{
-        LoggerCSV logger = LoggerCSV.GetInstance();
 		trainType = type;
         EdkDll.IEE_MentalCommandAction_t toTrain = EdkDll.IEE_MentalCommandAction_t.MC_NEUTRAL;
         cube.SetAciton(cube.ACTION_RESET);
@@ -209,14 +200,11 @@ public class TrainingController : MonoBehaviour {
         {
             case "Left":
                 toTrain = EdkDll.IEE_MentalCommandAction_t.MC_LEFT;
-                logger.AddEvent(LoggerCSV.EVENT_TRAINING_L);
                 break;
             case "Right":
 				toTrain = EdkDll.IEE_MentalCommandAction_t.MC_RIGHT;
-				logger.AddEvent(LoggerCSV.EVENT_TRAINING_R);
 				break;
             default:
-                logger.AddEvent(LoggerCSV.EVENT_TRAINING_N);
                 break;
         }
 
@@ -256,7 +244,6 @@ public class TrainingController : MonoBehaviour {
 	/// </summary>
 	/// <param name="type">Command to be trained ("Neutral","Left","Right")</param>
 	public void ClearTraining(){
-        LoggerCSV logger = LoggerCSV.GetInstance();
         string statusText = "Neutral";
 		EdkDll.IEE_MentalCommandAction_t action = EdkDll.IEE_MentalCommandAction_t.MC_NEUTRAL;
         switch (trainType)
@@ -265,16 +252,13 @@ public class TrainingController : MonoBehaviour {
                 statusText = "Left";
                 action = EdkDll.IEE_MentalCommandAction_t.MC_LEFT;
                 trainType = "clear left";
-                logger.AddEvent(LoggerCSV.EVENT_TRAINING_CLEAR_L);
                 break;
             case "clear right":
                 statusText = "Right";
                 action = EdkDll.IEE_MentalCommandAction_t.MC_RIGHT;
                 trainType = "clear right";
-                logger.AddEvent(LoggerCSV.EVENT_TRAINING_CLEAR_R);
                 break;
             default:
-                logger.AddEvent(LoggerCSV.EVENT_TRAINING_CLEAR_N);
                 UI.UpdateStatusText("Current Aciton: None");
                 trainType = "clear neutral";
                 Debug.Log(action);
@@ -314,34 +298,10 @@ public class TrainingController : MonoBehaviour {
     /// Loads Next Scene, called by Next_Scene_Button
     /// </summary>
     public void NextScene(){
-        LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_TRAINSTAGE_END);
         UnbindEvents();
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(3);
     }
 
-	/// <summary>
-	/// Starts/Ends training trials, Called by Right_Trial_Button and Left_Trial_Button
-	/// </summary>
-	/// <param name="left">Left command?</param>
-	public void StartEndTrial(bool left){
-        cube.SetAciton(cube.ACTION_RESET);
-        if (left){
-            //Trial is ongoing
-            if (UI.leftTrial)
-                UI.UpdateUI("left trial stop");
-			//Trial hasn't started
-			else
-                UI.UpdateUI("left trial start");
-        }
-        else{
-            //Trial is ongoing
-            if (UI.rightTrial)
-                UI.UpdateUI("right trial stop");
-            //Trial hasn't started
-            else
-                UI.UpdateUI("right trial start");
-        }
-    }
 
     /// <summary>
     /// Resets the training cube to the center position

@@ -34,8 +34,8 @@ public class ContactQualityUIControl : MonoBehaviour {
 		
     EmoEngine engine;
 
-	void Start () {
-        if (LoggerCSV.GetInstance().gameMode != LoggerCSV.BCI_MODE)
+    void Start () {
+      if (GameObject.Find("Persistent_Master") == null)
             Destroy(gameObject);
         initHeadset();
         engine = EmoEngine.Instance;

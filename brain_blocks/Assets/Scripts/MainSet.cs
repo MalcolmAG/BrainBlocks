@@ -29,8 +29,7 @@ public class MainSet : MonoBehaviour {
     /// </summary>
     private void Start()
     {
-        LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_BLOCK_CREATE);
-        if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
+        if (GameObject.Find("Persistent_Master") != null)
         {
             emotivLag = 0f;
             engine = EmoEngine.Instance;
@@ -179,10 +178,6 @@ public class MainSet : MonoBehaviour {
 		// Fall
         if (CustomInput("down")){
 
-			//Log Drop time in CSV file
-            LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_BLOCK_DROP);
-
-
 			// Modify position
 			transform.position += new Vector3(0, -1, 0);
 
@@ -206,7 +201,7 @@ public class MainSet : MonoBehaviour {
             CheckGameOver();
 
             //Unbind Emotiv Events
-            if(LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
+            if(GameObject.Find("Persistent_Master") != null)
                 UnbindEvent();
 
 			// Disable script
@@ -247,8 +242,6 @@ public class MainSet : MonoBehaviour {
 			Vector2 v = Grid.ToGrid(child.position);
 			if (v.y >= snapPos)
 			{
-				//Log Game over
-				LoggerCSV.GetInstance().AddEvent(LoggerCSV.EVENT_GAME_OVER);
 
 				MainController.score = 0;
 
@@ -416,7 +409,7 @@ public class MainSet : MonoBehaviour {
 	/// <param name="type">Input to check</param>
 	private bool CustomInput(string type)
 	{
-		if (LoggerCSV.GetInstance().gameMode == LoggerCSV.BCI_MODE)
+		if (GameObject.Find("Persistent_Master") != null)
 		{
             if (type == "down") return Input.GetKeyDown(KeyCode.DownArrow);
             else if (type == "up") return Input.GetKeyDown(KeyCode.UpArrow);

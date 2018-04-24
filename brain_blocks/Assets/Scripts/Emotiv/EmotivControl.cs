@@ -16,6 +16,7 @@ public class EmotivControl : MonoBehaviour {
 		engine.UserRemoved += onUserRemoved;
         engine.UserAdded += onUserAdded;
 		StartCoroutine(process());
+        DontDestroyOnLoad(gameObject);
 		
 	}
 
