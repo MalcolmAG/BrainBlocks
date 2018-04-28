@@ -295,11 +295,18 @@ public class TrainingController : MonoBehaviour {
 
 
     /// <summary>
-    /// Loads Next Scene, called by Next_Scene_Button
+    /// Loads Scene, called by Next_Scene_Button
     /// </summary>
-    public void NextScene(){
+    public void LoadScene(int idx){
         UnbindEvents();
-        SceneManager.LoadScene(3);
+        if(idx == 0){
+			GameObject master = GameObject.Find("Persistent_Master");
+			Destroy(GameObject.Find("Contact_Quality"));
+			master.GetComponent<EmotivControl>().End();
+			Destroy(master.GetComponent<EmotivControl>());
+			Destroy(master.GetComponent<EmoFacialExpression>());
+        }
+        SceneManager.LoadScene(idx);
     }
 
 

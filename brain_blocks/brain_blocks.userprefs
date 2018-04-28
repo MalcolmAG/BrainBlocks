@@ -1,28 +1,12 @@
 ﻿<Properties StartupConfiguration="{1CE5CE23-5434-AF8A-9ABD-DC12C5007FFD}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/MainController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/TrainingController.cs">
     <Files>
       <File FileName="Assets/Scripts/MainSpawn.cs" Line="19" Column="22" />
-      <File FileName="Assets/Scripts/MainSet.cs" Line="412" Column="51" />
-      <File FileName="Assets/Scripts/MainController.cs" Line="34" Column="1" />
+      <File FileName="Assets/Scripts/MainSet.cs" Line="51" Column="1" />
+      <File FileName="Assets/Scripts/MainController.cs" Line="58" Column="56" />
       <File FileName="Assets/Scripts/TrainingUI.cs" Line="36" Column="5" />
-      <File FileName="Assets/Scripts/TrainingController.cs" Line="150" Column="26" />
+      <File FileName="Assets/Scripts/TrainingController.cs" Line="184" Column="9" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State name="__root__">
-          <Node name="brain_blocks" expanded="True">
-            <Node name="Assets" expanded="True">
-              <Node name="Scripts" expanded="True">
-                <Node name="Emotiv" expanded="True">
-                  <Node name="Contact Quality" expanded="True" />
-                </Node>
-                <Node name="MainController.cs" selected="True" />
-              </Node>
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

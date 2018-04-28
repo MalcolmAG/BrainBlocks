@@ -17,6 +17,7 @@ public class MainSet : MonoBehaviour {
     private readonly Vector2 ghostStandByPos = Vector2.down * 10;
 
     private EmoEngine engine;
+    private MainController controller;
     private int mentalAction = 0;
     public float emotivLag;
     public float blinkProcessInterval = .5f;
@@ -37,6 +38,7 @@ public class MainSet : MonoBehaviour {
         }
         orientation = true;
         ghost = GameObject.Find(tag + "_ghost");
+        controller = GameObject.Find("Main_Canvas").GetComponent<MainController>();
     }
 
     /// <summary>
@@ -46,7 +48,7 @@ public class MainSet : MonoBehaviour {
 
         emotivLag += Time.deltaTime;
 
-        if (!MainController.paused)
+        if (!controller.paused)
         {
             if (orientation)
             {
@@ -243,7 +245,7 @@ public class MainSet : MonoBehaviour {
 			if (v.y >= snapPos)
 			{
 
-				MainController.score = 0;
+                controller.GameOver();
 
 				foreach (Transform c in transform.parent)
 				{

@@ -15,14 +15,9 @@ public class MainController : MonoBehaviour {
     public TextMeshProUGUI scoreText;
     public Button pauseButton, retrainButton;
 
-	public GameObject finishedMessage, midwayMessage, pauseMessage;
+	public GameObject pauseMessage, gameOverMessage;
 
-    private bool checkingTime;
-    private bool midWayReached;
-    public float allotedTime;
-    public float halfAllottedTime;
-
-    public static bool paused = false;
+    public bool paused = false;
 
 //------------------------------Unity & Main Scene Control Functions------------------------------//
 
@@ -72,7 +67,6 @@ public class MainController : MonoBehaviour {
 	/// Starts the pause. Called by Pause_Button
 	/// </summary>
 	public void StartPause(){
-		checkingTime = false;
         paused = true;
         UI_Pause("pause");
 	}
@@ -81,7 +75,6 @@ public class MainController : MonoBehaviour {
 	/// Ends the pause. Called by End_Pause_Button
 	/// </summary>
 	public void EndPause(){
-		checkingTime = true;
         paused = false;
         UI_Game();
 	}
@@ -101,8 +94,6 @@ public class MainController : MonoBehaviour {
 	/// </summary>
 	private void UI_Game()
 	{
-		midwayMessage.SetActive(false);
-		finishedMessage.SetActive(false);
 		pauseMessage.SetActive(false);
 		pauseButton.gameObject.SetActive(true);
 		scoreText.gameObject.SetActive(true);
@@ -118,17 +109,25 @@ public class MainController : MonoBehaviour {
 		pauseButton.gameObject.SetActive(false);
 		switch (type)
 		{
-			case "midway":
-				midwayMessage.SetActive(true);
+			case "gameOver":
+				gameOverMessage.SetActive(true);
 				return;
 			case "pause":
 				pauseMessage.SetActive(true);
 				return;
-			case "finished":
-				finishedMessage.SetActive(true);
-				return;
+			//case "finished":
+				//finishedMessage.SetActive(true);
+				//return;
 		}
 	}
+
+    /// <summary>
+    /// Game is over, Called by MainSet.cs
+    /// </summary>
+    public void GameOver(){
+        score = 0;
+        UI_Pause("gameOver");
+    }
 
 	/// <summary>
     /// Updates the score UI element.
