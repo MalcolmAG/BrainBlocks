@@ -11,31 +11,24 @@ public class TrainingController : MonoBehaviour {
     uint userId;
     public bool firstTime = true;
     public bool training, leftFirst, debug = false;
-    //public Text lp, rp;
     public string trainType;
 	EmoEngine engine;
     TrainingUI UI;
 
     //XX Start For testing without EMOTIV
-    private void Update()
-    {
-        if (!training)
-        {
-            if (Input.GetKey(KeyCode.LeftArrow))
-                cube.SetAciton(cube.ACTION_LEFT);
-            else if (Input.GetKey((KeyCode.RightArrow)))
-                cube.SetAciton(cube.ACTION_RIGHT);
-            else
-                cube.SetAciton(cube.ACTION_NEUTRAL);
-        }
-    }
+    //private void Update()
+    //{
+    //    if (!training)
+    //    {
+    //        if (Input.GetKey(KeyCode.LeftArrow))
+    //            cube.SetAciton(cube.ACTION_LEFT);
+    //        else if (Input.GetKey((KeyCode.RightArrow)))
+    //            cube.SetAciton(cube.ACTION_RIGHT);
+    //        else
+    //            cube.SetAciton(cube.ACTION_NEUTRAL);
+    //    }
+    //}
 	//XX End
-
-	// private void Update()
-	// {
-	//lp.text = "Left Power: " + EmoMentalCommand.GetMentalCommandActionPower()[5];
-	//rp.text = "Right Power: " + EmoMentalCommand.GetMentalCommandActionPower()[6];
-	//}
 
 	//------------------------------Emotiv Event Functions------------------------------//
 
