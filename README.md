@@ -16,7 +16,7 @@ Relevant experimental materials (such as control scheme descriptions, immersion 
 
 ## Builds
 Build used in the running of the experiment is found in \Builds.
-A consumer version was also built which does not include the experimental procedures and allows for more flexibility in BCI training. Consumser version documents found [here](https://github.com/esposen/building_blocks/tree/consumer).
+A consumer version was also built which does not include the experimental procedures and allows for more flexibility in BCI training. Consumser version documents found [here](https://github.com/esposen/BrainBlocks/tree/consumer).
 
 ### License
 
