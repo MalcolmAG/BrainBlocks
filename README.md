@@ -4,8 +4,8 @@
 ## Description
 
 2-D Unity game that with two control schemes: 
-	-Brain Computer Interface (BCI) control using facial expression detection and trained mental command classification with the Emotiv EPOC (https://www.emotiv.com/epoc/)
-	-Traditional control using keyboard inputs
+- Brain Computer Interface (BCI) control using facial expression detection and trained mental command classification with the Emotiv EPOC (https://www.emotiv.com/epoc/)
+- Traditional control using keyboard inputs
 
 An overview of the control schemes can be found at \Documents\controls.pdf
 
