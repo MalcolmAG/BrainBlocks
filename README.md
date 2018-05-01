@@ -23,7 +23,7 @@ Example Game-Play View:
 
 To aquire this branch in addition to the experiment branch complete the following commands:
     
-    $ git clone https://github.com/esposen/building_blocks.git
+    $ git clone https://github.com/esposen/BrainBlocks.git
     $ cd BrainBlocks/
     $ git checkout -t origin/branch-name
 
