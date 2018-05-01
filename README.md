@@ -11,11 +11,16 @@ An overview of the control schemes can be found at \Documents\controls.pdf
 
 These are the files of the consumer version of BrainBlocks. BrainBlocks was originally created to be used in an experiment on user experience, the files of which can be found [here](https://github.com/esposen/BrainBlocks). The consumer version allows for more training of BCI commands and doesn't hold users to the strict training and playing procedures of the experiment.
 
+Example Training Stage View:
+
+Example Game-Play View:
+
 ## Download
 
 To aquire this branch in addition to the experiment branch complete the following commands:
     
     $ git clone https://github.com/esposen/building_blocks.git
+    $ cd BrainBlocks
     $ git checkout -t origin/branch-name
 
 
