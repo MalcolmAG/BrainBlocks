@@ -13,14 +13,18 @@ These are the files of the consumer version of BrainBlocks. BrainBlocks was orig
 
 Example Training Stage View:
 
+<img src="/Documents/example_training.png"/>
+
 Example Game-Play View:
+
+<img src="/Documents/example_game.png"/>
 
 ## Download
 
 To aquire this branch in addition to the experiment branch complete the following commands:
     
     $ git clone https://github.com/esposen/building_blocks.git
-    $ cd BrainBlocks
+    $ cd BrainBlocks/
     $ git checkout -t origin/branch-name
 
 

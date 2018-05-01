@@ -18,7 +18,7 @@ public class TrainingUI : MonoBehaviour {
 				  btnRightClear, btnNext, btnResetCube;
 	public Slider slider;
     public TextMeshProUGUI trainPercentage, curAction, status, leftCount, rightCount;
-    public GameObject clearPanel, timeOutPanel;
+    public GameObject clearPanel, leftClear, rightClear;
 
     //State Control
     public bool neutralDone, rightDone, leftDone, started, paused = false;
@@ -55,7 +55,24 @@ public class TrainingUI : MonoBehaviour {
         leftCount.text = "Train Count: " + leftTrainCount;
         rightCount.text = "Train Count; " + rightTrainCount;
     }
+    /// <summary>
+    /// Increases the train count.
+    /// </summary>
+    /// <param name="type">Type. "Left" or "Right"</param>
+	public void IncreaseTrainCount(string type)
+	{
+		switch (type)
+		{
+			case "Left":
+				leftTrainCount++;
+				break;
+			case "Right":
+				rightTrainCount++;
+				break;
 
+		}
+        UpdateTrainCounts();
+	}
 	/// <summary>
 	/// Coroutine to control Training_Slider
     /// Takes 8 seconds to get to 100%
@@ -63,9 +80,9 @@ public class TrainingUI : MonoBehaviour {
 	public IEnumerator UpdateSlider()
 	{
 		//XX Start for testing without emotiv
-		object s = null;
-		EmoEngineEventArgs a = null;
-		controller.OnTrainingStarted(s, a);
+		//object s = null;
+		//EmoEngineEventArgs a = null;
+		//controller.OnTrainingStarted(s, a);
 		//XX END
 
 		while (true)
@@ -81,7 +98,7 @@ public class TrainingUI : MonoBehaviour {
 		trainPercentage.text = "0%";
 
 		//XX Start for testing without emotiv
-        controller.OnTrainingSuccess(s, a);
+        //controller.OnTrainingSuccess(s, a);
 		//XX END
 
 
@@ -106,16 +123,13 @@ public class TrainingUI : MonoBehaviour {
 				ActivateButtons(true);
 				break;
             case "Right":
-                rightTrainCount++;
                 rightDone = true;
                 break;
             case "Left":
-                leftTrainCount++;
                 leftDone = true;
                 break;
 			case "clear right":
 				rightDone = false;
-                rightTrainCount = 0;
 				break;
 			case "clear left":
 				leftDone = false;
@@ -124,7 +138,6 @@ public class TrainingUI : MonoBehaviour {
             default:
                 break;
 		}
-        UpdateTrainCounts();
     }
 	/// <summary>
 	/// Updates all buttons according to user progress
@@ -152,10 +165,10 @@ public class TrainingUI : MonoBehaviour {
 				btnNeutralClear.gameObject.SetActive(false);
 
 				btnRight.gameObject.SetActive(false);
-				btnRightClear.gameObject.SetActive(false);
+			    rightClear.SetActive(false);
 
 				btnLeft.gameObject.SetActive(false);
-				btnLeftClear.gameObject.SetActive(false);
+			    leftClear.SetActive(false);
 
 				//Interactibility
 				btnRight.interactable = true;
@@ -168,24 +181,22 @@ public class TrainingUI : MonoBehaviour {
 				break;
 			case "Right":
                 //Activations
-                Debug.Log("right");
-				btnRightClear.gameObject.SetActive(true);
+				rightClear.SetActive(true);
 				break;
 			case "clear right":
                 //Activations
-				btnRightClear.gameObject.SetActive(false);
+				rightClear.SetActive(false);
                 //Interactibility
 				btnRight.interactable = true;
 				btnRightClear.interactable = true;
 				break;
 			case "Left":
-                Debug.Log("left");
                 //Activations
-				btnLeftClear.gameObject.SetActive(true);
+				leftClear.SetActive(true);
 				break;
 			case "clear left":
                 //Activations
-				btnLeftClear.gameObject.SetActive(false);
+				leftClear.SetActive(false);
 				//Interactibility
 				btnLeft.interactable = true;
 				btnLeftClear.interactable = true;

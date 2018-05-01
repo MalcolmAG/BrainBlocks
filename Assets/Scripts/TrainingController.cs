@@ -200,9 +200,8 @@ public class TrainingController : MonoBehaviour {
             default:
                 break;
         }
-
 		StartCoroutine(UI.UpdateSlider());
-
+        UI.IncreaseTrainCount(type);
         EmoMentalCommand.EnableMentalCommandAction(toTrain, true);
         EmoMentalCommand.EnableMentalCommandActionsList();
         EmoMentalCommand.StartTrainingMentalCommand(toTrain);

@@ -1,0 +1,15 @@
+﻿<Properties StartupConfiguration="{C0882332-2848-9677-AD0A-9431805B00E6}|">
+  <MonoDevelop.Ide.ItemProperties.BrainBlocks PreferredExecutionTarget="Unity.Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/TrainingUI.cs">
+    <Files>
+      <File FileName="Assets/Scripts/TrainingController.cs" Line="212" Column="52" />
+      <File FileName="Assets/Scripts/TrainingUI.cs" Line="21" Column="33" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+</Properties>
