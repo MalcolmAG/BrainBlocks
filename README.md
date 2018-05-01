@@ -4,8 +4,8 @@
 ## Description
 
 2-D Unity game that with two control schemes: 
-	-Brain Computer Interface (BCI) control using facial expression detection and trained mental command classification with the Emotiv EPOC (https://www.emotiv.com/epoc/)
-	-Traditional control using keyboard inputs
+	- Brain Computer Interface (BCI) control using facial expression detection and trained mental command classification with the Emotiv EPOC (https://www.emotiv.com/epoc/)
+	- Traditional control using keyboard inputs
 
 ## Senior Thesis submitted to The Division of Science, Mathematics, and Computing of Bard College
 This game was used in a study examinig the effect of BCIs on user experience, specifically immersion. The write-up of the thesis can be found at \Documents\posen_thesis.pdf. Its abtract is as follows:
