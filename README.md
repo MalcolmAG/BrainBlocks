@@ -25,7 +25,7 @@ To aquire this branch in addition to the experiment branch complete the followin
     
     $ git clone https://github.com/esposen/BrainBlocks.git
     $ cd BrainBlocks/
-    $ git checkout -t origin/branch-name
+    $ git checkout -t origin/consumer
 
 
 ### License
