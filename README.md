@@ -1,5 +1,5 @@
 
-# BrainBlocks: A Multi-Modal Tetris Game — Consumer Branch
+# BrainBlocks: A Multi-Modal Tetris Game — Consumer Version
 
 ## Description
 
