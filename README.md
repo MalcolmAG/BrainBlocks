@@ -7,7 +7,7 @@
 - Brain Computer Interface (BCI) control using facial expression detection and trained mental command classification with the Emotiv EPOC (https://www.emotiv.com/epoc/)
 - Traditional control using keyboard inputs
 
-## Senior Thesis submitted to The Division of Science, Mathematics, and Computing of Bard College
+## Part of a Senior Thesis submitted Bard College
 This game was used in a study examinig the effect of BCIs on user experience, specifically immersion. The write-up of the thesis can be found at \Documents\posen_thesis.pdf. Its abtract is as follows:
 
 *Immersion, the state of being fully engaged in one's current operation, is a descriptor commonly used to appraise user experience in computer games and software applications. As the use of brain-computer interfaces (BCIs) begins to expand into the consumer sphere, questions arise concerning the ability of BCIs to modulate user immersion. This study employed a computer game to examine the effect of a consumer-grade BCI (the Emotiv EPOC) on immersion. In doing so, this study also explored the relationship between BCI usability and immersion levels. An experiment with twenty-seven participants showed that users were significantly more immersed when controlling the testing game with a BCI in comparison to traditional control methods. The results suggest that increased immersion levels may be caused by the challenging nature of BCI control rather than the BCI's ability to directly translate user intent.*
