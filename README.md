@@ -1,5 +1,5 @@
 
-# BrainBlocks: A Multi-Modal Tetris Game — Experiment Branch
+# BrainBlocks: A Multi-Modal Tetris Game — Experiment Version
 
 ## Description
 
