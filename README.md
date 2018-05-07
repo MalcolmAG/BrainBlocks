@@ -19,15 +19,6 @@ Example Game-Play View:
 
 <img src="/Documents/example_game.png"/>
 
-## Download
-
-To aquire this branch in addition to the experiment branch complete the following commands:
-    
-    $ git clone https://github.com/esposen/BrainBlocks.git
-    $ cd BrainBlocks/
-    $ git checkout -t origin/consumer
-
-
 ### License
 
 The MIT License (MIT)
